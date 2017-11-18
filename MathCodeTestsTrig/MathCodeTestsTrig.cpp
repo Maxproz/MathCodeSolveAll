@@ -1807,9 +1807,14 @@ int RecursiveTest(int n)
 //	return 1 / x;
 //}
 
+//double TestFunc(const double& x)
+//{
+//	return 1 / std::pow(x,2);
+//}
+
 double TestFunc(const double& x)
 {
-	return 1 / std::pow(x,2);
+	return std::sqrt(x - 3.0);
 }
 
 int main()
@@ -1903,12 +1908,12 @@ int main()
 		//Limit TestRationalLimit(TestRational, -3.0);
 
 
-		RootFunction RootFuncTest(2.0, 1.0, -2.0, -1.0);
-		LinearFunction LinearFuncTest(1.0, 1.0);
+		//RootFunction RootFuncTest(2.0, 1.0, -2.0, -1.0);
+		//LinearFunction LinearFuncTest(1.0, 1.0);
 
-		RationalFunction RationalFuncTest(RootFuncTest, LinearFuncTest);
+		//RationalFunction RationalFuncTest(RootFuncTest, LinearFuncTest);
 
-		Limit LimitRootLinearTest(RationalFuncTest, -1.0);
+		//Limit LimitRootLinearTest(RationalFuncTest, -1.0);
 
 		//RootFunction RootFuncTest(2.0, 1.0, 1.0, -2.0);
 		//LinearFunction LinearFuncTest(1.0, -5.0);
@@ -1916,6 +1921,14 @@ int main()
 		//RationalFunction RationalFuncTest(RootFuncTest, LinearFuncTest);
 
 		//Limit LimitRootLinearTest(RationalFuncTest, 5.0);
+
+		//auto func = TestFunc;
+
+		//Limit TestLimit(TestFunc, 3.0);
+		
+		QuadraticFunction TestQuadStrRead("(x-3)^2+0");
+		Limit TakeLimitQUad(TestQuadStrRead, 2.0);
+
 
 	}
 	catch (const std::exception& ex)

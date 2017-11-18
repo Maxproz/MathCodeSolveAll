@@ -12,6 +12,7 @@
 #include <limits>
 #include <iomanip>
 #include <algorithm>
+#include <cctype>       // std::isdigit
 #include "Circle.h"
 
 #define NEGINFINITY   ((float)(_HUGE_ENUF * _HUGE_ENUF) *(-1))
@@ -402,6 +403,84 @@ public:
 		GetZerosQuadraticFormula(*this);
 
 	}
+
+	// assumes user has put in Vertex Form example y = a*(x - h)^2 + k
+	// TODO: This is an awesome function, polish it and finish it up
+	// TODO: need to add additional functionality for the different operator options
+	// TODO: need to try different values for the "a" input and see what happens and add fixes 
+	explicit QuadraticFunction(const std::string& FuncForm)
+	{
+		std::istringstream iss(FuncForm);
+
+		double a = 0;
+		char FirstParathensis;
+		char x;
+		char PlusOrMinusOpOne;
+		double h;
+		char PowerOp;
+		char TwoChar;
+		char SecondParathensis;
+		char PlusOrMinusOpTwo;
+		double k;
+
+		// TODO: Add check for an implicit + k missing
+
+		int MaybeA = iss.peek();
+		if (MaybeA == EOF) return;
+		if (!std::isdigit(MaybeA))
+		{
+			// Assume that we are dealing with an implicit 1 for the a variable
+			a = 1;
+			iss >> FirstParathensis >> x >> PlusOrMinusOpOne >> h >> PowerOp >> TwoChar >> SecondParathensis >> 
+				PlusOrMinusOpTwo >> k;
+		}
+		else
+		{
+			// otherwise read the function like normal
+			iss >> a >> FirstParathensis >> x >> PlusOrMinusOpOne >> h >> PowerOp >> TwoChar >> SecondParathensis >>
+				PlusOrMinusOpTwo >> k;
+		}
+
+		// TODO: remove debug code
+		std::cout << a << std::endl;
+		std::cout << FirstParathensis << std::endl;
+		std::cout << x << std::endl;
+		std::cout << PlusOrMinusOpOne << std::endl;
+		std::cout << h << std::endl;
+		std::cout << PowerOp << std::endl;
+		std::cout << TwoChar << std::endl;
+		std::cout << SecondParathensis << std::endl;
+		std::cout << PlusOrMinusOpTwo << std::endl;
+		std::cout << k << std::endl;
+
+		double TermInOne, TermInTwo, TermInThree;
+
+		if (PlusOrMinusOpOne == '-')
+		{
+			if (PlusOrMinusOpTwo == '+')
+			{
+				// y = a*(x-h)^2 + k
+				TermInOne = a;
+				TermInTwo = (((h) * (-1)) * 2);
+				TermInThree = (std::pow(h, 2) * (a)) + k;
+
+				m_a = TermInOne;
+				m_b = TermInTwo;
+				m_c = TermInThree;
+
+			}
+		}
+
+	}
+
+	double operator()(const double x) const
+	{
+		double TermOne, TermTwo, TermThree;
+		TermOne = m_a * std::pow(x, 2);
+		TermTwo = x*m_b;
+		TermThree = m_c;
+		return TermOne + TermTwo + TermThree;
+	}	
 	
 	inline std::tuple<double, double, double> GetABC() const
 	{
@@ -463,6 +542,9 @@ private:
 
 	// TODO: Set domain and range in constructor
 
+	// The domain goes to pos infinity in an even function 
+	// find the starting number by setting the expression inside of the root >= 0
+	double m_StartingDomainNum = 0;
 
 public:
 	RootFunction() = default;
@@ -488,10 +570,26 @@ public:
 		{
 			m_Domain = Domain::InclusiveZeroToPosInfinity;
 		}
+
+		if (m_b < 0)
+		{
+			// in the form of x + m_b >= 0 ----- [-m_b, PosInfinity)
+			m_StartingDomainNum = m_b*(-1); 
+		}
+		else if (m_b > 0)
+		{
+			// in the form x - m_B >= 0 ----- [m_b, PosInfinity)
+			m_StartingDomainNum = m_b;
+		}
 	}
 
 	double operator()(const double x) const
 	{
+		if (x <= 0)
+		{
+			throw std::domain_error("x has to be >= 0");
+		}
+
 		double Power = 1.0 / m_n;
 		double Base = x - m_b;
 		double RootRes = std::pow(Base, Power);
@@ -1550,6 +1648,11 @@ inline double GetAreaUnderCurve(const int& IntervalStart, const int& IntervalEnd
 // The limit of a constant is a constant 
 // The limit of x as x approaches a is a
 
+
+// TODO: need to add functionality for: ~ Evaluating a Limit by Simplifying a Complex Fraction
+// TODO: need to add functionality for: ~ Evaluating a Limit When the Limit Laws Do Not Apply 
+// Example: In this case, we find the limit by performing addition and then applying one of our previous strategies. 
+// - https://cnx.org/contents/i4nRcikn@2.66:-xC--8XH@6/The-Limit-Laws#fs-id1170571669713
 // TODO: maybe make a limit class file later?
 class Limit
 {
@@ -1638,6 +1741,14 @@ private:
 		double SecondLimit = ApplyBasicLimitRuleForConstants(Tempb);
 
 		return FirstLimit + SecondLimit;
+	}
+
+	// helper function to help evaluate a limit if its a linear function
+	inline double EvaluateQuadraticFuncLimit(const QuadraticFunction& InQuadraticFunc)
+	{
+		// TODO: maybe change this to use limit rules later
+		// Instead of doing limit rules I will just plug in the value
+		return InQuadraticFunc(m_a);
 	}
 
 	// TODO: This function really needs cleaned up.
@@ -2095,6 +2206,16 @@ public:
 	{
 
 		m_L = EvaluateRationalFuncLimit(InRationalFunc);
+
+		// TODO: remove debug code
+		DisplayLimitResult();
+	}
+
+	explicit Limit(const QuadraticFunction& InQuadraticFunc, const double& a)
+		: m_a(a)
+	{
+
+		m_L = EvaluateQuadraticFuncLimit(InQuadraticFunc);
 
 		// TODO: remove debug code
 		DisplayLimitResult();
