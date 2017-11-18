@@ -1640,6 +1640,7 @@ private:
 		return FirstLimit + SecondLimit;
 	}
 
+	// TODO: This function really needs cleaned up.
 	inline double EvaluateRationalFuncLimit(const RationalFunction& InRationalFunc)
 	{
 		double NumeratorRes = 0;
