@@ -13,6 +13,8 @@
 #include <iomanip>
 #include <algorithm>
 #include <cctype>       // std::isdigit
+#include <ratio>
+
 #include "Circle.h"
 
 // TODO: Move the important constants into one header
@@ -1647,6 +1649,52 @@ inline double GetAreaUnderCurve(const int& IntervalStart, const int& IntervalEnd
 	return OutResult;
 }
 
+
+class ComplexFraction
+{
+private:
+	std::pair<double, LinearFunction> m_NumeratorA;
+	std::pair<int, int> m_NumeratorConstantFraction;
+
+	LinearFunction m_Denominator;
+
+	mutable bool m_bNumDenomBothZero = false;
+
+public:
+
+	ComplexFraction() = default;
+
+	explicit ComplexFraction(std::pair<double, LinearFunction> NumA, std::pair<int, int> NumConstB, LinearFunction Denom)
+		: m_NumeratorA(NumA), m_NumeratorConstantFraction(NumConstB), m_Denominator(Denom)
+	{
+
+	}
+
+	//explicit ComplexFraction(LinearFunction Numerator, LinearFunction Denominator)
+	//{
+
+	//}
+
+	inline std::pair<double, LinearFunction> GetNumAData() const { return m_NumeratorA; }
+	inline std::pair<int, int> GetNumConstFractData() const { return m_NumeratorConstantFraction; }
+	inline LinearFunction GetDenomLinearFunc() const { return m_Denominator; }
+
+	double operator()(const double x) const
+	{
+		double Numerator = (m_NumeratorA.first / m_NumeratorA.second(x)) + (m_NumeratorConstantFraction.first / m_NumeratorConstantFraction.second);
+		double Denominator = m_Denominator(x);
+
+		if (Numerator == 0 && Denominator == 0)
+			m_bNumDenomBothZero = true;
+
+		return Numerator / Denominator;
+	}
+
+	inline bool GetLimitBothZeroCheck() const { return m_bNumDenomBothZero; }
+
+};
+
+
 // The limit of a constant is a constant 
 // The limit of x as x approaches a is a
 
@@ -1668,6 +1716,8 @@ private:
 	// triggers to true if a root function is detected in the numerator or denominator
 	// This disables the solution finding by factor/canceling
 	bool m_bTryConjSolution = false;
+
+	double SimpifyComplexFraction(const ComplexFraction& InComplexFract);
 
 	inline RationalFunction SolveByConjugateMultiplication(const RootFunction& Numerator, const LinearFunction& Denominator)
 	{
@@ -2222,6 +2272,17 @@ public:
 		// TODO: remove debug code
 		DisplayLimitResult();
 	}
+
+
+	explicit Limit(const ComplexFraction& InComplexFract, const double& a)
+		: m_a(a)
+	{
+
+		m_L = SimpifyComplexFraction(InComplexFract);
+
+		// TODO: remove debug code
+		DisplayLimitResult();
+	}
 	
 
 	// TODO: Clean this function up by adding helper functions
@@ -2454,7 +2515,11 @@ public:
 	}
 	
 
+
 	
+	
+
+
 };
 
 

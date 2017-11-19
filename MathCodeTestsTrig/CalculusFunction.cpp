@@ -409,3 +409,175 @@ double FindCompoundIntrest(
 	return TempResult;
 
 }
+
+double Limit::SimpifyComplexFraction(const ComplexFraction & InComplexFract)
+{
+	//ComplexFraction OutComplexFract;
+
+	// Run the test so I can see the limitBothZeroCheck result used just below
+	double LimitTest = InComplexFract(m_a);
+
+	if ((InComplexFract.GetLimitBothZeroCheck()) == true && m_bTryConjSolution == false)
+	{
+
+		// First simplify through multipliction
+		// Get common denominator
+		LinearFunction FirstNeededTerm = InComplexFract.GetNumAData().second;
+		int SecondNeededTerm = InComplexFract.GetNumConstFractData().second;
+
+
+
+		LinearFunction NewFactoredNumerator;
+		LinearFunction NewFactoredDenominator;
+
+		
+
+		std::vector<double> NumeratorZeros;
+		NumeratorZeros.push_back(SecondNeededTerm);
+		NumeratorZeros.push_back(FirstNeededTerm.GetB());
+
+		
+		std::vector<double> DenominatorZeros;
+		DenominatorZeros.push_back(InComplexFract.GetNumAData().second.GetB());
+
+		std::vector<double> NewNumerator;
+
+		for (int i = 0; i < NumeratorZeros.size(); ++i)
+		{
+			auto result1 = std::find(std::begin(DenominatorZeros), std::end(DenominatorZeros), NumeratorZeros[i]);
+
+			if (result1 != std::end(DenominatorZeros))
+			{
+				std::cout << "Numerator contains: " << NumeratorZeros[i] << '\n';
+			}
+			else
+			{
+				std::cout << "Numerator does not contain: " << NumeratorZeros[i] << '\n';
+				NewNumerator.push_back(NumeratorZeros[i]);
+			}
+		}
+
+		for (int i = 0; i < NewNumerator.size(); ++i)
+		{
+			std::cout << NewNumerator[i] << " ";
+			std::cout << std::endl;
+		}
+
+		//double One = std::abs(std::floor(NewNumerator[0]));
+		//double Two = NewNumerator[0];
+
+		//std::cout << "abs " << One << std::endl;
+		//std::cout << Two << std::endl;
+
+		if (/*std::abs*/(std::floor(NewNumerator[0])) == NewNumerator[0])
+		{
+			std::cout << "NewNumerator[0] is whole\n";
+
+
+			if (NewNumerator[0] == 0.0)
+			{
+				NewFactoredNumerator = LinearFunction(1, 0);
+			}
+			else
+			{
+				if (NewNumerator[0] < 0.0)
+				{
+					NewFactoredNumerator = LinearFunction(1, NewNumerator[0] * (-1));
+				}
+				else
+				{
+					NewFactoredNumerator = LinearFunction(1, NewNumerator[0]);
+				}
+			}
+		}
+		else
+		{
+			std::cout << "NewNumerator[0] is not whole\n";
+
+			std::pair<double, double> NumeratorFract = OutputDecimalAsFract(NewNumerator[0]);
+
+			std::cout << NumeratorFract.first << "/" << NumeratorFract.second << std::endl;
+
+			if (NumeratorFract.first < 0)
+			{
+				NewFactoredNumerator = LinearFunction(NumeratorFract.second, NumeratorFract.first);
+				//std::cout << DenominatorFract.first << "/" << DenominatorFract.second << std::endl;
+			}
+		}
+
+
+
+		std::vector<double> NewDenominator;
+
+		for (int i = 0; i < NumeratorZeros.size(); ++i)
+		{
+			auto result1 = std::find(std::begin(NumeratorZeros), std::end(NumeratorZeros), DenominatorZeros[i]);
+
+			if (result1 != std::end(NumeratorZeros))
+			{
+				std::cout << "Numerator contains: " << DenominatorZeros[i] << '\n';
+			}
+			else
+			{
+				std::cout << "Numerator does not contain: " << DenominatorZeros[i] << '\n';
+				NewDenominator.push_back(DenominatorZeros[i]);
+			}
+		}
+
+		for (int i = 0; i < NewDenominator.size(); ++i)
+		{
+			std::cout << NewDenominator[i] << " ";
+			std::cout << std::endl;
+		}
+
+		if (std::abs(std::floor(NewDenominator[0])) == NewDenominator[0])
+		{
+			std::cout << "NewDenominator[0] is whole\n";
+
+			if (NewDenominator[0] == 0.0)
+			{
+				NewFactoredDenominator = LinearFunction(1, 0);
+			}
+			else
+			{
+				if (NewDenominator[0] < 0.0)
+				{
+					NewFactoredDenominator = LinearFunction(1, NewDenominator[0]);
+				}
+				else
+				{
+					NewFactoredDenominator = LinearFunction(1, NewDenominator[0] * (-1));
+				}
+			}
+
+		}
+		else
+		{
+			std::cout << "NewDenominator[0] is not whole\n";
+
+			std::pair<double, double> DenominatorFract = OutputDecimalAsFract(NewDenominator[0]);
+			if (DenominatorFract.first < 0)
+			{
+				std::cout << DenominatorFract.first << "/" << DenominatorFract.second << std::endl;
+				NewFactoredDenominator = LinearFunction(DenominatorFract.second, DenominatorFract.first*(-1));
+
+			}
+		}
+
+		NewFactoredNumerator.PrintLinearFunctionInfo();
+		NewFactoredDenominator.PrintLinearFunctionInfo();
+
+		double FinalFactoredNumerator = EvaluateLinearFuncLimit(NewFactoredNumerator);
+		double FinalFactoredDenominator = EvaluateLinearFuncLimit(NewFactoredDenominator);
+
+		std::cout << "FF Num: " << FinalFactoredNumerator << std::endl;
+		std::cout << "FF Den: " << FinalFactoredDenominator << std::endl;
+
+		return FinalFactoredNumerator / FinalFactoredDenominator;
+
+	}
+
+
+
+	//return OutComplexFract;
+}
