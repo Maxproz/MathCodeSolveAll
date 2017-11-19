@@ -1489,6 +1489,8 @@ public:
 
 	}
 
+	// TODO: add functionality for a piecewise function that takes 3 functions
+
 
 	double operator()(const double& x) const
 	{
