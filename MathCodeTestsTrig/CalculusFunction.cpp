@@ -1,5 +1,6 @@
 ﻿#include "CalculusFunction.h"
 
+#include <math.h>       /* isnan, sqrt */
 
 
 
@@ -584,7 +585,9 @@ double Limit::SimpifyComplexFraction(const ComplexFraction & InComplexFract)
 
 double Limit::EvaluateRootFuncLimit(const RootFunction & InRootFunc)
 {
-	
+	bool bDoesNegDirLimitExist = true;
+
+
 	double Limit = InRootFunc(m_a);
 
 	double DomainStart = InRootFunc.GetStartingDomainNum();
@@ -593,6 +596,7 @@ double Limit::EvaluateRootFuncLimit(const RootFunction & InRootFunc)
 
 	// TODO: Find a way to use the starting domain number to trigger a bool that will display 
 	// Limit Does not Exist for the side that DNE
+	// UPDATE: sort of did it needs more polishing though
 
 	std::vector<std::pair<double, double>> PosDirVec;
 	// pos direction
@@ -622,6 +626,11 @@ double Limit::EvaluateRootFuncLimit(const RootFunction & InRootFunc)
 	std::pair<double, double> NegPairFirst;
 	NegPairFirst.first = m_a - 0.1;
 	NegPairFirst.second = InRootFunc(m_a - 0.1);
+
+	if (std::isnan(NegPairFirst.second))
+	{
+		bDoesNegDirLimitExist = false;
+	}
 
 	std::pair<double, double> NegPairSecond;
 	NegPairSecond.first = m_a - 0.01;
@@ -780,6 +789,7 @@ double Limit::EvaluateRootFuncLimit(const RootFunction & InRootFunc)
 	std::cout << "Limit: DNE (does not exist): \n\n";
 
 	std::cout << "As x approaches " << m_a << " from the positive direction f(x) = ";
+
 	if (bIsPosDirPosInfinity)
 	{
 		std::cout << INFINITY << std::endl;
@@ -790,16 +800,27 @@ double Limit::EvaluateRootFuncLimit(const RootFunction & InRootFunc)
 			<< std::setw(7) << PosDirVec[3].first << " " << PosDirVec[3].second << std::endl;
 	}
 
-	std::cout << "As x approaches " << m_a << " from the negative direction f(x) = ";
-	if (bIsNegDirNegInfinity)
+	if (bDoesNegDirLimitExist == false)
 	{
-		std::cout << NEGINFINITY << std::endl;
+		std::cout << "As x approaches " << m_a << " from the negative direction f(x) = DOES NOT EXIST";
 	}
 	else
 	{
-		std::cout << std::setprecision(std::numeric_limits<double>::digits10 + 1)
-			<< std::setw(7) << NegDirVec[3].first << " " << NegDirVec[3].second << std::endl;
+		// The limit Does Exist
+		std::cout << "As x approaches " << m_a << " from the negative direction f(x) = ";
+
+		if (bIsNegDirNegInfinity)
+		{
+			std::cout << NEGINFINITY << std::endl;
+		}
+		else
+		{
+			std::cout << std::setprecision(std::numeric_limits<double>::digits10 + 1)
+				<< std::setw(7) << NegDirVec[3].first << " " << NegDirVec[3].second << std::endl;
+		}
 	}
+	
+	
 
 	std::cout << std::endl;
 
