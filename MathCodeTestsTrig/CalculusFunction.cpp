@@ -62,31 +62,6 @@ void PrintSlopeInterceptForm(const Point& Point, const double& Slope)
 }
 
 
-// TODO: fix input ranges to be accepted elsewhere
-double SimpleFunction(const double& x)
-{
-	return 3 * x + 1;
-}
-
-double SimpleFunction2(const double& x)
-{
-	return std::pow(x, 2);
-}
-
-double SimpleFunction3(const double& x)
-{
-	return (3 * std::pow(x, 2)) + (2 * x) - 1;
-}
-
-
-CalculusFunction::CalculusFunction()
-{
-}
-
-
-CalculusFunction::~CalculusFunction()
-{
-}
 
 void QuadraticFunction::AutomaticSetRealZeroVariables()
 {
@@ -696,6 +671,8 @@ double Limit::EvaluateRootFuncLimit(const RootFunction & InRootFunc)
 	bool bIsPosDirNegInfinity = false;
 	bool bIsNegDirNegInfinity = false;
 	bool bIsNegDirPosInfinity = false;
+
+	
 
 	if (PosDirVec[1].second > PosDirVec[0].second)
 	{

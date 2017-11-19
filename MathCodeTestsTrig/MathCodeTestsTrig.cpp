@@ -124,8 +124,17 @@ int main()
 
 		//Limit TestComplexFractLimit(TestComplexFract, 1);
 
-		RootFunction TestRootFunc(2, 1, 3, 0);
-		Limit TestRootLimit(TestRootFunc, 3);
+		//RootFunction TestRootFunc(2, 1, 3, 0);
+		//Limit TestRootLimit(TestRootFunc, 3);
+
+		LinearFunction FirstFunc(4, -3);
+		QuadraticFunction SecondFunc("(x-3)^2 + 0");
+
+		PiecewiseFunction<LinearFunction, QuadraticFunction> 
+			PiecewiseFunc(FirstFunc, "<", SecondFunc, ">=", 2);
+
+		Limit PiecewiseLimitTest(PiecewiseFunc, 2);
+
 
 	}
 	catch (const std::exception& ex)
