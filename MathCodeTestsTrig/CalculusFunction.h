@@ -612,6 +612,7 @@ public:
 		return std::tuple<double, double, double, double>(m_n, m_a, m_b, m_c);
 	}
 
+	double GetStartingDomainNum() const { return m_StartingDomainNum; }
 
 };
 
@@ -1719,6 +1720,8 @@ private:
 
 	double SimpifyComplexFraction(const ComplexFraction& InComplexFract);
 
+	double EvaluateRootFuncLimit(const RootFunction& InRootFunc);
+
 	inline RationalFunction SolveByConjugateMultiplication(const RootFunction& Numerator, const LinearFunction& Denominator)
 	{
 		auto NumeratorVars = Numerator.GetNABC();
@@ -2283,6 +2286,16 @@ public:
 		// TODO: remove debug code
 		DisplayLimitResult();
 	}
+
+	explicit Limit(const RootFunction& InRootFunc, const double& a)
+		: m_a(a)
+	{
+
+		m_L = EvaluateRootFuncLimit(InRootFunc);
+
+		// TODO: remove debug code
+		DisplayLimitResult();
+	}
 	
 
 	// TODO: Clean this function up by adding helper functions
@@ -2514,7 +2527,7 @@ public:
 		std::cout << "Limit of f(x) as x --> " << m_a << " is " << m_L << std::endl;
 	}
 	
-
+	
 
 	
 	

@@ -114,15 +114,18 @@ int main()
 		//QuadraticFunction TestQuadStrRead("(x-3)^2+0");
 		//Limit TakeLimitQUad(TestQuadStrRead, 2.0);
 
-		std::pair<double, LinearFunction> NumeratorA(1, LinearFunction(1,1));
-		std::pair<int, int> NumeratorConstantFraction(-1,2);
+		//std::pair<double, LinearFunction> NumeratorA(1, LinearFunction(1,1));
+		//std::pair<int, int> NumeratorConstantFraction(-1,2);
 
-		LinearFunction Denominator(1,-1);
+		//LinearFunction Denominator(1,-1);
 
-		ComplexFraction TestComplexFract(NumeratorA, NumeratorConstantFraction,
-			Denominator);
+		//ComplexFraction TestComplexFract(NumeratorA, NumeratorConstantFraction,
+		//	Denominator);
 
-		Limit TestComplexFractLimit(TestComplexFract, 1);
+		//Limit TestComplexFractLimit(TestComplexFract, 1);
+
+		RootFunction TestRootFunc(2, 1, 3, 0);
+		Limit TestRootLimit(TestRootFunc, 3);
 
 	}
 	catch (const std::exception& ex)
