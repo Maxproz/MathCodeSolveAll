@@ -15,10 +15,12 @@
 #include <cctype>       // std::isdigit
 #include "Circle.h"
 
+// TODO: Move the important constants into one header
+// TODO: Calculate the domain and ranges of each individual function after splitting up files (and other data)
+
 #define NEGINFINITY   ((float)(_HUGE_ENUF * _HUGE_ENUF) *(-1))
 
 const double Eulere = 2.718282;
-
 
 using std::pair;
 
