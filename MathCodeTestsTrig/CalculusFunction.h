@@ -677,6 +677,10 @@ tan(theta) = y/x
 // The sine, cosine, secant, and cosecant functions have a period of 2π.
 // Since the tangent and cotangent functions repeat on an interval of length π
 
+// TODO: When im more experienced I need to figure out a way to implement the squeeze theorm for limits 
+// and implement it into this function 
+// https://cnx.org/contents/i4nRcikn@2.66:-xC--8XH@6/The-Limit-Laws
+
 class TrigonometricFunction : TranscendentalFunction
 {
 private:
@@ -1272,6 +1276,8 @@ inline double FindInverseHyperbolicCsc(const double& x)
 	return LastStep;
 }
 
+
+
 class RationalFunction : PolynomialFunction
 {
 private:
@@ -1343,6 +1349,7 @@ public:
 	}
 
 
+
 	inline PolynomialFunctionType GetNumeratorFunctionType() const
 	{
 		return m_NumeratorFuncType;
@@ -1366,6 +1373,7 @@ public:
 	RootFunction GetDenominatorRoot() const { return m_DenominatorRoot; } // Rational FUNCTIONS CANNOT HAVE ROOT FUNCTIONS AHHHHHHHHHHH
 
 };
+
 
 
 // TODO: Make this function print to std::cout
@@ -1759,12 +1767,12 @@ private:
 		auto B = std::get<2>(NumeratorVars);
 
 		auto C = std::get<3>(NumeratorVars);
-		
+
 		LinearFunction NumeratorRes;
 		RootFunction DenominatorRes;
 
 		bool bBInputIsPositive = (B > 0);
-		
+
 
 		LinearFunction TopRes;
 		RootFunction BottomRes;
@@ -1776,8 +1784,8 @@ private:
 			//double Conjugate = (A*(std::pow(m_a - B, (1.0 / N)))) + C;
 			if (bBInputIsPositive)
 			{
-				 TopRes = LinearFunction(1, B*(-1) + C*(-C));// == x + TopRes
-				 BottomRes = RootFunction(N, A, B*(1), (C*(-1))); // Bottom Res = 
+				TopRes = LinearFunction(1, B*(-1) + C*(-C));// == x + TopRes
+				BottomRes = RootFunction(N, A, B*(1), (C*(-1))); // Bottom Res = 
 			}
 			else
 			{
@@ -1792,7 +1800,7 @@ private:
 
 			if (TopRes.GetA() == Denominator.GetA() && TopRes.GetB() == Denominator.GetB())
 			{
-				
+
 
 				std::cout << "TEST INSIDE CANCEL FUNCS" << std::endl;
 				// Pretend these canceled Out
@@ -1837,6 +1845,174 @@ private:
 	{
 		double NumeratorRes = 0;
 		double DenominatorRes = 0;
+
+		if (InRationalFunc.GetNumeratorFunctionType() == PolynomialFunctionType::QUADRATIC &&
+			InRationalFunc.GetDenominatorFunctionType() == PolynomialFunctionType::LINEAR)
+		{
+			QuadraticFunction Numerator = InRationalFunc.GetNumeratorQuadratic();
+
+			LinearFunction Denominator = InRationalFunc.GetDenominatorLinear();
+
+
+
+
+			if ((NumeratorRes == 0 && DenominatorRes == 0) && m_bTryConjSolution == false)
+			{
+				LinearFunction NewFactoredNumerator;
+				LinearFunction NewFactoredDenominator;
+
+				std::vector<double> NumeratorZeros = Numerator.GetRealNumberZerosVec();
+				std::vector<double> DenominatorZeros;
+				DenominatorZeros.push_back(((Denominator.GetB() * (-1)) / Denominator.GetA()));
+
+				std::vector<double> NewNumerator;
+
+				for (int i = 0; i < NumeratorZeros.size(); ++i)
+				{
+					auto result1 = std::find(std::begin(DenominatorZeros), std::end(DenominatorZeros), NumeratorZeros[i]);
+
+					if (result1 != std::end(DenominatorZeros))
+					{
+						std::cout << "Numerator contains: " << NumeratorZeros[i] << '\n';
+					}
+					else
+					{
+						std::cout << "Numerator does not contain: " << NumeratorZeros[i] << '\n';
+						NewNumerator.push_back(NumeratorZeros[i]);
+					}
+				}
+
+				for (int i = 0; i < NewNumerator.size(); ++i)
+				{
+					std::cout << NewNumerator[i] << " ";
+					std::cout << std::endl;
+				}
+
+				//double One = std::abs(std::floor(NewNumerator[0]));
+				//double Two = NewNumerator[0];
+
+				//std::cout << "abs " << One << std::endl;
+				//std::cout << Two << std::endl;
+
+				if (/*std::abs*/(std::floor(NewNumerator[0])) == NewNumerator[0])
+				{
+					std::cout << "NewNumerator[0] is whole\n";
+
+
+					if (NewNumerator[0] == 0.0)
+					{
+						NewFactoredNumerator = LinearFunction(1, 0);
+					}
+					else
+					{
+						if (NewNumerator[0] < 0.0)
+						{
+							NewFactoredNumerator = LinearFunction(1, NewNumerator[0] * (-1));
+						}
+						else
+						{
+							NewFactoredNumerator = LinearFunction(1, NewNumerator[0]);
+						}
+					}
+				}
+				else
+				{
+					std::cout << "NewNumerator[0] is not whole\n";
+
+					std::pair<double, double> NumeratorFract = OutputDecimalAsFract(NewNumerator[0]);
+
+					std::cout << NumeratorFract.first << "/" << NumeratorFract.second << std::endl;
+
+					if (NumeratorFract.first < 0)
+					{
+						NewFactoredNumerator = LinearFunction(NumeratorFract.second, NumeratorFract.first);
+						//std::cout << DenominatorFract.first << "/" << DenominatorFract.second << std::endl;
+					}
+				}
+
+
+
+				std::vector<double> NewDenominator;
+
+				for (int i = 0; i < NumeratorZeros.size(); ++i)
+				{
+					auto result1 = std::find(std::begin(NumeratorZeros), std::end(NumeratorZeros), DenominatorZeros[i]);
+
+					if (result1 != std::end(NumeratorZeros))
+					{
+						std::cout << "Numerator contains: " << DenominatorZeros[i] << '\n';
+					}
+					else
+					{
+						std::cout << "Numerator does not contain: " << DenominatorZeros[i] << '\n';
+						NewDenominator.push_back(DenominatorZeros[i]);
+					}
+				}
+
+				for (int i = 0; i < NewDenominator.size(); ++i)
+				{
+					std::cout << NewDenominator[i] << " ";
+					std::cout << std::endl;
+				}
+
+				if (std::abs(std::floor(NewDenominator[0])) == NewDenominator[0])
+				{
+					std::cout << "NewDenominator[0] is whole\n";
+
+					if (NewDenominator[0] == 0.0)
+					{
+						NewFactoredDenominator = LinearFunction(1, 0);
+					}
+					else
+					{
+						if (NewDenominator[0] < 0.0)
+						{
+							NewFactoredDenominator = LinearFunction(1, NewDenominator[0]);
+						}
+						else
+						{
+							NewFactoredDenominator = LinearFunction(1, NewDenominator[0] * (-1));
+						}
+					}
+
+				}
+				else
+				{
+					std::cout << "NewDenominator[0] is not whole\n";
+
+					std::pair<double, double> DenominatorFract = OutputDecimalAsFract(NewDenominator[0]);
+					if (DenominatorFract.first < 0)
+					{
+						std::cout << DenominatorFract.first << "/" << DenominatorFract.second << std::endl;
+						NewFactoredDenominator = LinearFunction(DenominatorFract.second, DenominatorFract.first*(-1));
+
+					}
+				}
+
+				NewFactoredNumerator.PrintLinearFunctionInfo();
+				NewFactoredDenominator.PrintLinearFunctionInfo();
+
+				double FinalFactoredNumerator = EvaluateLinearFuncLimit(NewFactoredNumerator);
+				double FinalFactoredDenominator = EvaluateLinearFuncLimit(NewFactoredDenominator);
+
+				std::cout << "FF Num: " << FinalFactoredNumerator << std::endl;
+				std::cout << "FF Den: " << FinalFactoredDenominator << std::endl;
+
+				return FinalFactoredNumerator / FinalFactoredDenominator;
+
+			}
+
+
+
+			// TODO: remove debug code
+			std::cout << "Numerator:\t " << NumeratorRes << std::endl;
+			std::cout << "Denominator:\t " << DenominatorRes << std::endl;
+
+
+			return NumeratorRes / DenominatorRes;
+		}
+	
+
 
 		// TODO: For fraction functions that contain square roots. Conjugate multiplication. SET IT UP
 		if (InRationalFunc.GetNumeratorFunctionType() == PolynomialFunctionType::ROOT &&
@@ -2552,6 +2728,8 @@ public:
 		// TODO: remove debug code
 		//DisplayLimitResult();
 	}
+
+	
 	
 
 	// TODO: Clean this function up by adding helper functions
@@ -2784,17 +2962,57 @@ public:
 	}
 	
 	
-
+	double GetLimitResult() const { return m_L; }
 	
 	
 
 
 };
 
-
-
-inline void EvaluateLimit(const Limit& InLimit)
+inline bool DetermineContinunityAtAPoint(const RationalFunction& InFunc, const int& InPoint)
 {
+	QuadraticFunction Numerator = InFunc.GetNumeratorQuadratic();
+	LinearFunction Denominator = InFunc.GetDenominatorLinear();
 
+
+
+	// Step 1: check to see if f(a) is defined
+	double TestOne = Numerator(InPoint) / Denominator(InPoint);
+
+	if (std::isnan(TestOne))
+	{
+		// failed 
+		std::cout << "TestOneFailed: The function is not continuous at a.\n";
+		return false;
+	}
+	else
+	{
+		//  If f(a) is defined, continue to step 2.
+
+		// Step 2: Compute Limit from both sides
+		// If Limit does not exist (that is, it is not a real number),
+		// then the function is not continuous at a and the problem is solved.
+
+	
+		
+		Limit TestTwoLimit(InFunc, InPoint);
+		double TestTwo = TestTwoLimit.GetLimitResult();
+
+		// if Limit Exists go to step 3
+		// TODO: Need a rational function check to return bool to see if it exists
+		// TODO: Need more example data in order to fix
+
+		if (TestOne != TestTwo)
+		{
+			std::cout << "TestThreeFailed: The function is not continuous at a.\n";
+			return false;
+		}
+		else
+		{
+			std::cout << "TestThreePassed: The function is continuous at a.\n";
+			return true;
+		}
+
+	}
 }
 
