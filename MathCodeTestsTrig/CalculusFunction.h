@@ -906,6 +906,12 @@ public:
 			return OutResult;
 		}
 	}
+	
+
+	double operator()(const double x) const
+	{
+
+	}
 
 };
 
@@ -1444,33 +1450,7 @@ The range is {y|y>=4}
 
 */
 
-class BasicFunction
-{
-private:
-	std::function<double(const double&)> m_Function;
-	std::string m_InputRange; // used for piecewise func
-	int m_RangeVariable;
 
-public:
-	BasicFunction(std::function<double(const double&)> InFunc, const std::string& InInputRange,
-		int RangeVariable)
-		: m_Function(InFunc), m_InputRange(InInputRange), m_RangeVariable(RangeVariable)
-	{
-
-	}
-
-
-	int GetRange() const { return m_RangeVariable; }
-	std::string GetInputRange() const { return m_InputRange; }
-	void SetInputRange(const std::string& InRange) { m_InputRange = InRange; }
-	void SetRangeVariable(const int& Range) { m_RangeVariable = Range; }
-	std::function<double(const double&)> GetFunction() const { return m_Function; }
-
-	double RunFunctionNoRangeCheck(const double& x)
-	{
-		return this->GetFunction()(x);
-	}
-};
 
 template <typename FirstFunc, typename SecondFunc>
 class PiecewiseFunction
@@ -1485,14 +1465,14 @@ private:
 	int m_RangeVariable{ 0 };
 
 public:
-	PiecewiseFunction(const FirstFunc& InFirstFunc, const std::string& FirstFuncRangeOp, 
+	PiecewiseFunction(const FirstFunc& InFirstFunc, const std::string& FirstFuncRangeOp,
 		const SecondFunc& InSecondFunc, const std::string& SecondFuncRangeOp, const int& RangeVariable)
-		: m_FirstFunc(InFirstFunc), m_FirstFuncRangeOp(FirstFuncRangeOp), m_SecondFunc(InSecondFunc), 
+		: m_FirstFunc(InFirstFunc), m_FirstFuncRangeOp(FirstFuncRangeOp), m_SecondFunc(InSecondFunc),
 		m_SecondFuncRangeOp(SecondFuncRangeOp), m_RangeVariable(RangeVariable)
 	{
 
 		// Temp Testing
-	
+
 
 
 	}
@@ -1542,6 +1522,13 @@ public:
 				return m_FirstFunc(x);
 			}
 		}
+		else if (m_FirstFuncRangeOp == "!=")
+		{
+			if (x != RangeVar)
+			{
+				return m_FirstFunc(x);
+			}
+		}
 
 		// Second Function options
 		if (m_SecondFuncRangeOp == "<")
@@ -1580,10 +1567,206 @@ public:
 				return m_SecondFunc(x);
 			}
 		}
+		else if (m_SecondFuncRangeOp == "!=")
+		{
+			if (x != RangeVar)
+			{
+				return m_SecondFunc(x);
+			}
+		}
 	}
 
-	
+	////template <typename FirstFunc>
+	//FirstFunc GetFirstFunction() const { return m_FirstFunc; }
+	//
+	////template <typename SecondFunc>
+	//SecondFunc GetSecondFunction() const { return m_SecondFunc; }
+
 };
+
+
+template <typename FirstFunc, typename SecondFunc, int ThirdFunctionConstant>
+class PiecewiseFunctionThreeFunctions
+{
+private:
+	FirstFunc m_FirstFunc;
+	SecondFunc m_SecondFunc;
+	//int m_ThirdFunctionReturn = ThirdFunctionConstant;
+
+	std::string m_FirstFuncRangeOp;
+	std::string m_SecondFuncRangeOp;
+	std::string m_ThirdFuncRangeOp;
+
+	int m_RangeVariable = { 0 };
+
+public:
+	explicit PiecewiseFunctionThreeFunctions(const FirstFunc& InFirstFunc, const std::string& FirstFuncRangeOp,
+		const SecondFunc& InSecondFunc, const std::string& SecondFuncRangeOp, const int& RangeVariable,
+		const std::string& ThirdFunctionRangeOp)
+		: m_FirstFunc(InFirstFunc), m_FirstFuncRangeOp(FirstFuncRangeOp), m_SecondFunc(InSecondFunc),
+		m_SecondFuncRangeOp(SecondFuncRangeOp), m_RangeVariable(RangeVariable), m_ThirdFuncRangeOp(ThirdFunctionRangeOp)
+	{
+
+		// Temp Testing
+
+
+
+	}
+
+
+	// TODO: add functionality for a piecewise function that takes 3 functions
+
+
+	double operator()(const double& x) const
+	{
+
+		// Get the ranges with if else evaluate need to check all possiblites
+		const double RangeVar = m_RangeVariable;
+
+		// Check the x value options for the first function
+		if (m_FirstFuncRangeOp == "<")
+		{
+			if (x < RangeVar)
+			{
+				return m_FirstFunc(x);
+			}
+		}
+		else if (m_FirstFuncRangeOp == ">")
+		{
+			if (x > RangeVar)
+			{
+				return m_FirstFunc(x);
+			}
+		}
+		else if (m_FirstFuncRangeOp == "<=")
+		{
+			if (x <= RangeVar)
+			{
+				return m_FirstFunc(x);
+			}
+		}
+		else if (m_FirstFuncRangeOp == ">=")
+		{
+			if (x >= RangeVar)
+			{
+				return m_FirstFunc(x);
+			}
+		}
+		else if (m_FirstFuncRangeOp == "==")
+		{
+			if (x == RangeVar)
+			{
+				return m_FirstFunc(x);
+			}
+		}
+		else if (m_FirstFuncRangeOp == "!=")
+		{
+			if (x != RangeVar)
+			{
+				return m_FirstFunc(x);
+			}
+		}
+
+		// Second Function options
+		if (m_SecondFuncRangeOp == "<")
+		{
+			if (x < RangeVar)
+			{
+				return m_SecondFunc(x);
+			}
+		}
+		else if (m_SecondFuncRangeOp == ">")
+		{
+			if (x > RangeVar)
+			{
+				return m_SecondFunc(x);
+			}
+		}
+		else if (m_SecondFuncRangeOp == "<=")
+		{
+			if (x <= RangeVar)
+			{
+				return m_SecondFunc(x);
+			}
+		}
+		else if (m_SecondFuncRangeOp == ">=")
+		{
+			if (x >= RangeVar)
+			{
+				return m_SecondFunc(x);
+			}
+
+		}
+		else if (m_SecondFuncRangeOp == "==")
+		{
+			if (x == RangeVar)
+			{
+				return m_SecondFunc(x);
+			}
+		}
+		else if (m_SecondFuncRangeOp == "!=")
+		{
+			if (x != RangeVar)
+			{
+				return m_SecondFunc(x);
+			}
+		}
+
+		// Third Function options
+		if (m_ThirdFuncRangeOp == "<")
+		{
+			if (x < RangeVar)
+			{
+				return ThirdFunctionConstant;
+			}
+		}
+		else if (m_ThirdFuncRangeOp == ">")
+		{
+			if (x > RangeVar)
+			{
+				return ThirdFunctionConstant;
+			}
+		}
+		else if (m_ThirdFuncRangeOp == "<=")
+		{
+			if (x <= RangeVar)
+			{
+				return ThirdFunctionConstant;
+			}
+		}
+		else if (m_ThirdFuncRangeOp == ">=")
+		{
+			if (x >= RangeVar)
+			{
+				return ThirdFunctionConstant;
+			}
+
+		}
+		else if (m_ThirdFuncRangeOp == "==")
+		{
+			if (x == RangeVar)
+			{
+				return ThirdFunctionConstant;
+			}
+		}
+		else if (m_ThirdFuncRangeOp == "!=")
+		{
+			if (x != RangeVar)
+			{
+				return ThirdFunctionConstant;
+			}
+		}
+
+	}
+
+	////template <typename FirstFunc>
+	//FirstFunc GetFirstFunction() const { return m_FirstFunc; }
+	//
+	////template <typename SecondFunc>
+	//SecondFunc GetSecondFunction() const { return m_SecondFunc; }
+
+};
+
 
 
 
@@ -2645,7 +2828,231 @@ private:
 
 		std::cout << std::endl;
 
-		return 0.0;
+		return std::floor(LocalPosRes) / 100;
+	}
+
+	template <typename FirstFunc, typename SecondFunc, int ThirdFunctionConstant>
+	inline double EvaluatePiecewiseFuncLimitThreeFunctions(
+		const PiecewiseFunctionThreeFunctions<typename FirstFunc, typename SecondFunc, ThirdFunctionConstant>& InFunc)
+	{
+
+		std::vector<std::pair<double, double>> PosDirVec;
+		// pos direction
+		std::pair<double, double> PosPairFirst;
+		PosPairFirst.first = m_a + 0.1;
+		PosPairFirst.second = InFunc(m_a + 0.1);
+
+		std::pair<double, double> PosPairSecond;
+		PosPairSecond.first = m_a + 0.01;
+		PosPairSecond.second = InFunc(m_a + 0.01);
+
+		std::pair<double, double> PosPairThird;
+		PosPairThird.first = m_a + 0.001;
+		PosPairThird.second = InFunc(m_a + 0.001);
+
+		std::pair<double, double> PosPairFourth;
+		PosPairFourth.first = m_a + 0.0001;
+		PosPairFourth.second = InFunc(m_a + 0.0001);
+
+		PosDirVec.push_back(PosPairFirst);
+		PosDirVec.push_back(PosPairSecond);
+		PosDirVec.push_back(PosPairThird);
+		PosDirVec.push_back(PosPairFourth);
+
+		std::vector<std::pair<double, double>> NegDirVec;
+		// neg direction
+		std::pair<double, double> NegPairFirst;
+		NegPairFirst.first = m_a - 0.1;
+		NegPairFirst.second = InFunc(m_a - 0.1);
+
+		std::pair<double, double> NegPairSecond;
+		NegPairSecond.first = m_a - 0.01;
+		NegPairSecond.second = InFunc(m_a - 0.01);
+
+		std::pair<double, double> NegPairThird;
+		NegPairThird.first = m_a - 0.001;
+		NegPairThird.second = InFunc(m_a - 0.001);
+
+		std::pair<double, double> NegPairFourth;
+		NegPairFourth.first = m_a - 0.0001;
+		NegPairFourth.second = InFunc(m_a - 0.0001);
+
+		NegDirVec.push_back(NegPairFirst);
+		NegDirVec.push_back(NegPairSecond);
+		NegDirVec.push_back(NegPairThird);
+		NegDirVec.push_back(NegPairFourth);
+
+		std::cout << "Evaluating Limit: Please Wait...\n";
+
+		for (auto & num : PosDirVec)
+		{
+
+			std::cout << std::setprecision(std::numeric_limits<double>::digits10 + 1)
+				<< std::setw(7) << num.first << " " << num.second << std::endl;
+		}
+
+		std::cout << std::endl;
+
+		for (auto & num : NegDirVec)
+		{
+			std::cout << std::setprecision(std::numeric_limits<double>::digits10 + 1)
+				<< std::setw(7) << num.first << " " << num.second << std::endl;
+		}
+
+		double TopRes = PosDirVec[3].second;
+		double BottomRes = NegDirVec[3].second;
+		/*std::cout << TopRes << std::endl;
+		std::cout << BottomRes << std::endl;*/
+
+
+		std::string TopResStr = std::to_string(TopRes);
+		// TODO: remove debug code later
+		std::cout << TopResStr << std::endl;
+
+		std::string BottomResStr = std::to_string(BottomRes);
+		// TODO: remove debug code later
+		std::cout << BottomResStr << std::endl;
+
+		double LocalPosRes = std::stod(TopResStr) * 100;
+
+		double LocalNegRes = std::stod(BottomResStr) * 100;
+
+		//std::cout << std::setprecision(std::numeric_limits<double>::digits10 + 1)
+		//	<< std::setw(7) << std::floor(LocalPosRes) << std::endl;
+
+
+
+		std::cout << std::endl;
+
+		// Are these limits infinite?
+		bool bIsPosDirPosInfinity = false;
+		bool bIsPosDirNegInfinity = false;
+		bool bIsNegDirNegInfinity = false;
+		bool bIsNegDirPosInfinity = false;
+
+
+		// TODO: I need a better way to check for infinity here its not detecting a small increase to a limit at 1
+
+		if (PosDirVec[1].second > PosDirVec[0].second)
+		{
+			if (PosDirVec[2].second > PosDirVec[1].second)
+			{
+				bIsPosDirPosInfinity = true;
+
+			}
+		}
+
+		if (NegDirVec[1].second < NegDirVec[0].second)
+		{
+			if (NegDirVec[2].second < NegDirVec[1].second)
+			{
+				bIsNegDirNegInfinity = true;
+			}
+		}
+
+		if (PosDirVec[1].second < PosDirVec[0].second)
+		{
+			if (PosDirVec[2].second < PosDirVec[1].second)
+			{
+				bIsPosDirNegInfinity = true;
+			}
+		}
+		if (NegDirVec[1].second > NegDirVec[0].second)
+		{
+			if (NegDirVec[2].second > NegDirVec[1].second)
+			{
+				bIsNegDirPosInfinity = true;
+			}
+		}
+
+		if (std::ceil(LocalPosRes) == std::floor(LocalNegRes))
+		{
+			std::cout << "We have a working limit result! 1\n";
+
+
+			if (bIsPosDirPosInfinity)
+			{
+				if (bIsNegDirPosInfinity)
+				{
+					std::cout << "As x approaches " << m_a << " Limit of f(x) = ";
+					std::cout << INFINITY << std::endl;
+					return INFINITY;
+				}
+			}
+
+			if (bIsPosDirNegInfinity)
+			{
+				if (bIsNegDirNegInfinity)
+				{
+					std::cout << "As x approaches " << m_a << " Limit of f(x) = ";
+					std::cout << NEGINFINITY << std::endl;
+					return NEGINFINITY;
+				}
+			}
+
+			//std::cout << std::setprecision(std::numeric_limits<double>::digits10 + 1)
+			//	<< std::setw(7) << PosDirVec[3].first << " " << PosDirVec[3].second << std::endl;
+
+			//std::cout << "Limit: " << std::ceil(LocalPosRes) / 100 << "\n";
+
+			//std::cout << std::setprecision(std::numeric_limits<double>::digits10 + 1)
+			//	<< std::setw(7) << NegDirVec[3].first << " " << NegDirVec[3].second << std::endl;
+
+
+			//	// return either
+			//return std::ceil(LocalPosRes) / 100;
+		}
+
+		// if you have two results that are returning negatives
+		// you need to do some sort of swap with floor / ceil
+		if (std::floor(LocalPosRes) == std::ceil(LocalNegRes))
+		{
+			std::cout << "We have a working limit result! 2\n";
+
+			std::cout << std::setprecision(std::numeric_limits<double>::digits10 + 1)
+				<< std::setw(7) << PosDirVec[3].first << " " << PosDirVec[3].second << std::endl;
+
+			std::cout << "Limit: " << std::floor(LocalPosRes) / 100 << "\n";
+
+			std::cout << std::setprecision(std::numeric_limits<double>::digits10 + 1)
+				<< std::setw(7) << NegDirVec[3].first << " " << NegDirVec[3].second << std::endl;
+
+
+			// return either
+			return std::floor(LocalPosRes) / 100;
+		}
+
+
+		std::cout << "Limit: DNE (does not exist): \n\n";
+
+		std::cout << "As x approaches " << m_a << " from the positive direction f(x) = ";
+		if (bIsPosDirPosInfinity)
+		{
+			std::cout << INFINITY << std::endl;
+		}
+		else
+		{
+			std::cout << std::setprecision(std::numeric_limits<double>::digits10 + 1)
+				<< std::setw(7) << PosDirVec[3].first << " " << PosDirVec[3].second << std::endl;
+		}
+
+		std::cout << "As x approaches " << m_a << " from the negative direction f(x) = ";
+		if (bIsNegDirNegInfinity)
+		{
+			std::cout << NEGINFINITY << std::endl;
+		}
+		else
+		{
+			std::cout << std::setprecision(std::numeric_limits<double>::digits10 + 1)
+				<< std::setw(7) << NegDirVec[3].first << " " << NegDirVec[3].second << std::endl;
+		}
+
+		std::cout << std::endl;
+
+
+		std::cout << std::ceil(LocalPosRes) / 100 << std::endl;
+		// TODO: Temporary mesaure for this one function problem :: generalize later
+		return std::ceil(LocalPosRes) / 100;
 	}
 
 public:
@@ -2723,6 +3130,18 @@ public:
 	{
 
 		m_L = EvaluatePiecewiseFuncLimit(InPiecewiseFunc);
+
+
+		// TODO: remove debug code
+		//DisplayLimitResult();
+	}
+
+	template <typename FirstFunc, typename SecondFunc, int ThirdFunctionConstant>
+	explicit Limit(const PiecewiseFunctionThreeFunctions<typename FirstFunc, typename SecondFunc, ThirdFunctionConstant>& InPiecewiseFunc, const double& a)
+		: m_a(a)
+	{
+
+		m_L = EvaluatePiecewiseFuncLimitThreeFunctions(InPiecewiseFunc);
 
 
 		// TODO: remove debug code
@@ -2974,15 +3393,13 @@ inline bool DetermineContinunityAtAPoint(const RationalFunction& InFunc, const i
 	QuadraticFunction Numerator = InFunc.GetNumeratorQuadratic();
 	LinearFunction Denominator = InFunc.GetDenominatorLinear();
 
-
-
 	// Step 1: check to see if f(a) is defined
 	double TestOne = Numerator(InPoint) / Denominator(InPoint);
 
 	if (std::isnan(TestOne))
 	{
 		// failed 
-		std::cout << "TestOneFailed: The function is not continuous at a.\n";
+		std::cout << "TestOneFailed: The function is not continuous at " << InPoint << "\n";
 		return false;
 	}
 	else
@@ -3004,15 +3421,106 @@ inline bool DetermineContinunityAtAPoint(const RationalFunction& InFunc, const i
 
 		if (TestOne != TestTwo)
 		{
-			std::cout << "TestThreeFailed: The function is not continuous at a.\n";
+			std::cout << "TestThreeFailed: The function is not continuous at " << InPoint << "\n";
 			return false;
 		}
 		else
 		{
-			std::cout << "TestThreePassed: The function is continuous at a.\n";
+			std::cout << "TestThreePassed: The function is continuous at " << InPoint << "\n";
 			return true;
 		}
 
 	}
 }
 
+inline bool DetermineContinunityAtAPoint(const PiecewiseFunction<QuadraticFunction, LinearFunction>& InFunc, const int& InPoint)
+{
+	//QuadraticFunction FirstFuntion = InFunc.GetFirstFunction();
+	//LinearFunction SecondFunction = InFunc.GetSecondFunction();
+
+	// Step 1: check to see if f(a) is defined
+	double TestOne = InFunc(InPoint);
+
+	if (std::isnan(TestOne))
+	{
+		// failed 
+		std::cout << "TestOneFailed: The function is not continuous at " << InPoint << "\n";
+		return false;
+	}
+	else
+	{
+		//  If f(a) is defined, continue to step 2.
+
+		// Step 2: Compute Limit from both sides
+		// If Limit does not exist (that is, it is not a real number),
+		// then the function is not continuous at a and the problem is solved.
+
+
+
+		Limit TestTwoLimit(InFunc, InPoint);
+		double TestTwo = TestTwoLimit.GetLimitResult();
+
+		// if Limit Exists go to step 3
+		// TODO: Need a rational function check to return bool to see if it exists
+		// TODO: Need more example data in order to fix
+
+		if (TestOne != TestTwo)
+		{
+			std::cout << "TestThreeFailed: The function is not continuous at " << InPoint << "\n";
+			return false;
+		}
+		else
+		{
+			std::cout << "TestThreePassed: The function is continuous at " << InPoint << "\n";
+			return true;
+		}
+
+	}
+}
+
+template <typename FirstFunc, typename SecondFunc, int ThirdFunctionConstant>
+inline bool DetermineContinunityAtAPoint(const PiecewiseFunctionThreeFunctions<FirstFunc, SecondFunc, ThirdFunctionConstant>& InFunc, const int& InPoint)
+{
+	//QuadraticFunction FirstFuntion = InFunc.GetFirstFunction();
+	//LinearFunction SecondFunction = InFunc.GetSecondFunction();
+
+	// Step 1: check to see if f(a) is defined
+	double TestOne = InFunc(InPoint);
+
+	if (std::isnan(TestOne))
+	{
+		// failed 
+		std::cout << "TestOneFailed: The function is not continuous at " << InPoint << "\n";
+		return false;
+	}
+	else
+	{
+		//  If f(a) is defined, continue to step 2.
+
+		// Step 2: Compute Limit from both sides
+		// If Limit does not exist (that is, it is not a real number),
+		// then the function is not continuous at a and the problem is solved.
+
+
+
+		Limit TestTwoLimit(InFunc, InPoint);
+		double TestTwo = TestTwoLimit.GetLimitResult();
+
+		// if Limit Exists go to step 3
+		// TODO: Need a rational function check to return bool to see if it exists
+		// TODO: Need more example data in order to fix
+
+		if (TestOne != TestTwo)
+		{
+			std::cout << "TestThreeFailed: The function is not continuous at " << InPoint << "\n";
+			std::cout << "Because f(" << InPoint << ") " << " = " << TestOne << " != " << TestTwo << " = Limit fof(x)_x->m_a \n";
+			return false;
+		}
+		else
+		{
+			std::cout << "TestThreePassed: The function is continuous at " << InPoint << "\n";
+			return true;
+		}
+
+	}
+}

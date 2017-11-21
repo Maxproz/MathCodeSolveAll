@@ -135,14 +135,42 @@ int main()
 
 		//Limit PiecewiseLimitTest(PiecewiseFunc, 2);
 
-		QuadraticFunction QuadTestOne(1, 0, -4);
-		LinearFunction LinearTestOne(1, -2);
+		//QuadraticFunction QuadTestOne(1, 0, -4);
+		//LinearFunction LinearTestOne(1, -2);
 
-		RationalFunction RationalTestOne(QuadTestOne, LinearTestOne);
+		//RationalFunction RationalTestOne(QuadTestOne, LinearTestOne);
+		//
+		//const int PointToCheck = 2;
+
+		//DetermineContinunityAtAPoint(RationalTestOne, PointToCheck);
+
+
+
+	//	RationalFunction RationalTestOne(QuadTestOne, LinearTestOne);
+
 		
-		const int PointToCheck = 2;
 
-		DetermineContinunityAtAPoint(RationalTestOne, PointToCheck);
+
+		//QuadraticFunction QuadTestOne(-1, 0, 4);
+		//LinearFunction LinearTestOne(4, -8);
+
+		//const int PointToCheck = 3;
+
+
+		//PiecewiseFunction<QuadraticFunction, LinearFunction>
+		//	PiecewiseFunc(QuadTestOne, "<=", LinearTestOne, ">", 3);
+
+		//DetermineContinunityAtAPoint(PiecewiseFunc, PointToCheck);
+
+		LinearFunction TestFuncOne(2, 1);
+		const int ConstFuncReturn = 2;
+		LinearFunction TestFuncTwo(-1, 4);
+
+
+		PiecewiseFunctionThreeFunctions<LinearFunction, LinearFunction, ConstFuncReturn>
+			PiecewiseFuncOne(TestFuncOne, "<", TestFuncTwo, ">",1, "==");
+
+		DetermineContinunityAtAPoint(PiecewiseFuncOne, 1);
 
 
 	}
