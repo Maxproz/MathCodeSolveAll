@@ -14,6 +14,7 @@
 #include <algorithm>
 #include <cctype>       // std::isdigit
 #include <ratio>
+#include <memory>
 
 #include "Circle.h"
 
@@ -1284,6 +1285,47 @@ inline double FindInverseHyperbolicCsc(const double& x)
 
 
 
+// declaration needed to run this function inside of the rational function operator() func
+//bool DetermineContinunityAtAPoint(const RationalFunction& InFunc, const int& InPoint);
+
+
+enum class DiscontinunityType
+{
+	REMOVEABLE, 
+	JUMP,
+	INFINITE,
+};
+
+inline void PrintDiscontinunityType(const DiscontinunityType& InType)
+{
+	switch (InType)
+	{
+		case DiscontinunityType::REMOVEABLE:
+		{
+			std::cout << "REMOVEABLE\n";
+			break;
+		}
+		case DiscontinunityType::JUMP:
+		{
+			std::cout << "JUMP\n";
+			break;
+		}
+		case DiscontinunityType::INFINITE:
+		{
+			std::cout << "INFINITE\n";
+			break;
+		}
+		default:
+		{
+			throw std::logic_error("discontinuity assignment error in the print func");
+		}
+	}
+}
+
+class RationalFunction;
+bool DetermineContinunityAtAPoint(const RationalFunction& InFunc, const int& InPoint);
+
+
 class RationalFunction : PolynomialFunction
 {
 private:
@@ -1303,7 +1345,42 @@ private:
 	PolynomialFunctionType m_NumeratorFuncType;
 	PolynomialFunctionType m_DenominatorFuncType;
 
+	// Currently not using.
+	std::vector<int> m_CurrentDiscontinousLocations;
+	static int m_AmountOfDiscontinunitiesFound;
+
+	// Pointer to a type and a point it is discontinous at
+	std::unique_ptr<std::pair<DiscontinunityType, int>> m_Discontinuity = nullptr;
+
+	void IncreaseDiscontinunitiesFound() const { m_AmountOfDiscontinunitiesFound++; }
+
 public:
+
+
+	const int GetAmountOfDiscontinunitiesFound() const { return m_AmountOfDiscontinunitiesFound; }
+	std::vector<int> GetFoundDiscontinunityLocations() const { return m_CurrentDiscontinousLocations; }
+
+	void SetDiscontinunityPtr(const DiscontinunityType& Type, const int AtXEqualTo)
+		
+	{
+		// Implicit move operation into the variable that stores the result.
+		 m_Discontinuity = std::make_unique<std::pair<DiscontinunityType, int>>(Type, AtXEqualTo);
+	}
+
+	std::pair<DiscontinunityType, int> GetCurrentDiscontinunityPtrInfo()
+	{ 
+		if (m_Discontinuity != nullptr)
+		{
+			DiscontinunityType Type = m_Discontinuity->first;
+			int XLoc = m_Discontinuity->second;
+
+			std::pair<DiscontinunityType, int> OutRes(Type, XLoc);
+
+			return OutRes;
+		}
+	}
+
+	
 
 	//RationalFunction() = delete;
 
@@ -1365,6 +1442,43 @@ public:
 	{
 		return m_DenominatorFuncType;
 	}
+
+	double operator()(const double x) const
+	{
+		double NumeratorRes{ 0.0 };
+		double DenominatorRes{ 0.0 };
+
+
+		switch (GetNumeratorFunctionType())
+		{
+			case PolynomialFunctionType::QUADRATIC:
+			{
+				NumeratorRes = m_NumeratorQuadratic(x);
+			}
+		}
+
+		switch (GetDenominatorFunctionType())
+		{
+			case PolynomialFunctionType::LINEAR:
+			{
+				DenominatorRes = m_DenominatorLinear(x);
+			}
+		}
+
+
+		RationalFunction TestRat(m_NumeratorQuadratic, m_DenominatorLinear);
+
+		bool bIsContinous = DetermineContinunityAtAPoint(TestRat, x);
+		if (!bIsContinous)
+		{
+
+			GetFoundDiscontinunityLocations().push_back(x);
+			IncreaseDiscontinunitiesFound();
+		}
+
+		return NumeratorRes / DenominatorRes;
+	}
+
 
 
 	// Possible NumeratorGetters
@@ -2117,82 +2231,98 @@ private:
 
 				std::vector<double> NewDenominator;
 
-				for (int i = 0; i < NumeratorZeros.size(); ++i)
+				for (int i = 0; i < DenominatorZeros.size(); ++i)
 				{
 					auto result1 = std::find(std::begin(NumeratorZeros), std::end(NumeratorZeros), DenominatorZeros[i]);
 
 					if (result1 != std::end(NumeratorZeros))
 					{
-						std::cout << "Numerator contains: " << DenominatorZeros[i] << '\n';
+						std::cout << "Denominator contains: " << DenominatorZeros[i] << '\n';
 					}
 					else
 					{
-						std::cout << "Numerator does not contain: " << DenominatorZeros[i] << '\n';
+						std::cout << "Denominator does not contain: " << DenominatorZeros[i] << '\n';
 						NewDenominator.push_back(DenominatorZeros[i]);
 					}
 				}
 
-				for (int i = 0; i < NewDenominator.size(); ++i)
+				if (NewDenominator.empty())
 				{
-					std::cout << NewDenominator[i] << " ";
-					std::cout << std::endl;
-				}
+					NewFactoredNumerator.PrintLinearFunctionInfo();
 
-				if (std::abs(std::floor(NewDenominator[0])) == NewDenominator[0])
-				{
-					std::cout << "NewDenominator[0] is whole\n";
+					double FinalFactoredNumerator = EvaluateLinearFuncLimit(NewFactoredNumerator);
+				
+					std::cout << "FF Num: " << FinalFactoredNumerator << std::endl;
 
-					if (NewDenominator[0] == 0.0)
-					{
-						NewFactoredDenominator = LinearFunction(1, 0);
-					}
-					else
-					{
-						if (NewDenominator[0] < 0.0)
-						{
-							NewFactoredDenominator = LinearFunction(1, NewDenominator[0]);
-						}
-						else
-						{
-							NewFactoredDenominator = LinearFunction(1, NewDenominator[0] * (-1));
-						}
-					}
+					return FinalFactoredNumerator;
 
 				}
 				else
 				{
-					std::cout << "NewDenominator[0] is not whole\n";
 
-					std::pair<double, double> DenominatorFract = OutputDecimalAsFract(NewDenominator[0]);
-					if (DenominatorFract.first < 0)
+					for (int i = 0; i < NewDenominator.size(); ++i)
 					{
-						std::cout << DenominatorFract.first << "/" << DenominatorFract.second << std::endl;
-						NewFactoredDenominator = LinearFunction(DenominatorFract.second, DenominatorFract.first*(-1));
+						std::cout << NewDenominator[i] << " ";
+						std::cout << std::endl;
+					}
+
+					if (std::abs(std::floor(NewDenominator[0])) == NewDenominator[0])
+					{
+						std::cout << "NewDenominator[0] is whole\n";
+
+						if (NewDenominator[0] == 0.0)
+						{
+							NewFactoredDenominator = LinearFunction(1, 0);
+						}
+						else
+						{
+							if (NewDenominator[0] < 0.0)
+							{
+								NewFactoredDenominator = LinearFunction(1, NewDenominator[0]);
+							}
+							else
+							{
+								NewFactoredDenominator = LinearFunction(1, NewDenominator[0] * (-1));
+							}
+						}
 
 					}
+					else
+					{
+						std::cout << "NewDenominator[0] is not whole\n";
+
+						std::pair<double, double> DenominatorFract = OutputDecimalAsFract(NewDenominator[0]);
+						if (DenominatorFract.first < 0)
+						{
+							std::cout << DenominatorFract.first << "/" << DenominatorFract.second << std::endl;
+							NewFactoredDenominator = LinearFunction(DenominatorFract.second, DenominatorFract.first*(-1));
+
+						}
+					}
+
+					NewFactoredNumerator.PrintLinearFunctionInfo();
+					NewFactoredDenominator.PrintLinearFunctionInfo();
+
+					double FinalFactoredNumerator = EvaluateLinearFuncLimit(NewFactoredNumerator);
+					double FinalFactoredDenominator = EvaluateLinearFuncLimit(NewFactoredDenominator);
+
+					std::cout << "FF Num: " << FinalFactoredNumerator << std::endl;
+					std::cout << "FF Den: " << FinalFactoredDenominator << std::endl;
+
+					return FinalFactoredNumerator / FinalFactoredDenominator;
+
 				}
 
-				NewFactoredNumerator.PrintLinearFunctionInfo();
-				NewFactoredDenominator.PrintLinearFunctionInfo();
 
-				double FinalFactoredNumerator = EvaluateLinearFuncLimit(NewFactoredNumerator);
-				double FinalFactoredDenominator = EvaluateLinearFuncLimit(NewFactoredDenominator);
 
-				std::cout << "FF Num: " << FinalFactoredNumerator << std::endl;
-				std::cout << "FF Den: " << FinalFactoredDenominator << std::endl;
+				// TODO: remove debug code
+				std::cout << "Numerator:\t " << NumeratorRes << std::endl;
+				std::cout << "Denominator:\t " << DenominatorRes << std::endl;
 
-				return FinalFactoredNumerator / FinalFactoredDenominator;
 
+				return NumeratorRes / DenominatorRes;
 			}
 
-
-
-			// TODO: remove debug code
-			std::cout << "Numerator:\t " << NumeratorRes << std::endl;
-			std::cout << "Denominator:\t " << DenominatorRes << std::endl;
-
-
-			return NumeratorRes / DenominatorRes;
 		}
 	
 
@@ -3086,11 +3216,21 @@ public:
 	explicit Limit(const RationalFunction& InRationalFunc, const double& a)
 		: m_a(a)
 	{
-
 		m_L = EvaluateRationalFuncLimit(InRationalFunc);
 
 		// TODO: remove debug code
 		DisplayLimitResult();
+	}
+
+	void CheckAndSetRationalFuncDiscontinunities(RationalFunction& InRationalFunc)
+	{
+		if (!(std::isnan(m_L)))
+		{
+			// is a real number? maybe not sure exactly what it defines "as a number"
+			//	Since f is discontinuous at 2 and limx→2 exists, f has a removable discontinuity at x = 2.
+		
+			InRationalFunc.SetDiscontinunityPtr(DiscontinunityType::REMOVEABLE, m_L);
+		}
 	}
 
 	explicit Limit(const QuadraticFunction& InQuadraticFunc, const double& a)
@@ -3388,50 +3528,7 @@ public:
 
 };
 
-inline bool DetermineContinunityAtAPoint(const RationalFunction& InFunc, const int& InPoint)
-{
-	QuadraticFunction Numerator = InFunc.GetNumeratorQuadratic();
-	LinearFunction Denominator = InFunc.GetDenominatorLinear();
 
-	// Step 1: check to see if f(a) is defined
-	double TestOne = Numerator(InPoint) / Denominator(InPoint);
-
-	if (std::isnan(TestOne))
-	{
-		// failed 
-		std::cout << "TestOneFailed: The function is not continuous at " << InPoint << "\n";
-		return false;
-	}
-	else
-	{
-		//  If f(a) is defined, continue to step 2.
-
-		// Step 2: Compute Limit from both sides
-		// If Limit does not exist (that is, it is not a real number),
-		// then the function is not continuous at a and the problem is solved.
-
-	
-		
-		Limit TestTwoLimit(InFunc, InPoint);
-		double TestTwo = TestTwoLimit.GetLimitResult();
-
-		// if Limit Exists go to step 3
-		// TODO: Need a rational function check to return bool to see if it exists
-		// TODO: Need more example data in order to fix
-
-		if (TestOne != TestTwo)
-		{
-			std::cout << "TestThreeFailed: The function is not continuous at " << InPoint << "\n";
-			return false;
-		}
-		else
-		{
-			std::cout << "TestThreePassed: The function is continuous at " << InPoint << "\n";
-			return true;
-		}
-
-	}
-}
 
 inline bool DetermineContinunityAtAPoint(const PiecewiseFunction<QuadraticFunction, LinearFunction>& InFunc, const int& InPoint)
 {
@@ -3524,3 +3621,22 @@ inline bool DetermineContinunityAtAPoint(const PiecewiseFunctionThreeFunctions<F
 
 	}
 }
+
+
+/* Types of discontinunities 
+Intuitively, a removable discontinuity is a discontinuity for which there is a hole in the graph,
+a jump discontinuity is a noninfinite discontinuity for which the sections of the function do not meet up,
+and an infinite discontinuity is a discontinuity located at a vertical asymptote.
+*/
+
+// If a function is not continuous then you can classify what type its discontinunity is.
+
+// 1. Removeable if the limit exists
+
+// 2. Jump if limit exists from both sides but they are not equal.
+
+// 3. Infinity if limit is +- infinity on both sides
+
+
+
+

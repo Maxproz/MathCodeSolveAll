@@ -2,7 +2,7 @@
 
 #include <math.h>       /* isnan, sqrt */
 
-
+int RationalFunction::m_AmountOfDiscontinunitiesFound = 0;
 
 void PrintPointSlopeForm(const double& Slope, const Point& InPoint)
 {
@@ -802,4 +802,51 @@ double Limit::EvaluateRootFuncLimit(const RootFunction & InRootFunc)
 	std::cout << std::endl;
 
 	return 0.0;
+}
+
+
+
+bool DetermineContinunityAtAPoint(const RationalFunction& InFunc, const int& InPoint)
+{
+	QuadraticFunction Numerator = InFunc.GetNumeratorQuadratic();
+	LinearFunction Denominator = InFunc.GetDenominatorLinear();
+
+	// Step 1: check to see if f(a) is defined
+	double TestOne = Numerator(InPoint) / Denominator(InPoint);
+
+	if (std::isnan(TestOne))
+	{
+		// failed 
+		std::cout << "TestOneFailed: The function is not continuous at " << InPoint << "\n";
+		return false;
+	}
+	else
+	{
+		//  If f(a) is defined, continue to step 2.
+
+		// Step 2: Compute Limit from both sides
+		// If Limit does not exist (that is, it is not a real number),
+		// then the function is not continuous at a and the problem is solved.
+
+
+
+		Limit TestTwoLimit(InFunc, InPoint);
+		double TestTwo = TestTwoLimit.GetLimitResult();
+
+		// if Limit Exists go to step 3
+		// TODO: Need a rational function check to return bool to see if it exists
+		// TODO: Need more example data in order to fix
+
+		if (TestOne != TestTwo)
+		{
+			std::cout << "TestThreeFailed: The function is not continuous at " << InPoint << "\n";
+			return false;
+		}
+		else
+		{
+			std::cout << "TestThreePassed: The function is continuous at " << InPoint << "\n";
+			return true;
+		}
+
+	}
 }

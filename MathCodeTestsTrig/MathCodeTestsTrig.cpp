@@ -33,6 +33,7 @@
 #include "CalculusFunction.h"
 #include "Circle.h"
 
+
 typedef std::pair<double, double> Point;
 
 const double my_gravityfeet(32);  // f/s^2
@@ -162,16 +163,39 @@ int main()
 
 		//DetermineContinunityAtAPoint(PiecewiseFunc, PointToCheck);
 
-		LinearFunction TestFuncOne(2, 1);
-		const int ConstFuncReturn = 2;
-		LinearFunction TestFuncTwo(-1, 4);
+		//LinearFunction TestFuncOne(2, 1);
+		//const int ConstFuncReturn = 2;
+		//LinearFunction TestFuncTwo(-1, 4);
 
 
-		PiecewiseFunctionThreeFunctions<LinearFunction, LinearFunction, ConstFuncReturn>
-			PiecewiseFuncOne(TestFuncOne, "<", TestFuncTwo, ">",1, "==");
+		//PiecewiseFunctionThreeFunctions<LinearFunction, LinearFunction, ConstFuncReturn>
+		//	PiecewiseFuncOne(TestFuncOne, "<", TestFuncTwo, ">", 1, "==");
 
-		DetermineContinunityAtAPoint(PiecewiseFuncOne, 1);
+		//DetermineContinunityAtAPoint(PiecewiseFuncOne, 1);
 
+
+		QuadraticFunction QuadTestOne(1, 0, -4);
+		LinearFunction LinearTestOne(1, -2);
+
+		RationalFunction RationalTestOne(QuadTestOne, LinearTestOne);
+
+		const int PointToCheck = 2;
+
+		// evaluate at that point
+		RationalTestOne(PointToCheck);
+
+		// The point we checked should have pushed that discontinunity if it existed
+		if (RationalTestOne.GetAmountOfDiscontinunitiesFound() > 0)
+		{
+			Limit TestTwoLimit(RationalTestOne, PointToCheck);
+			TestTwoLimit.CheckAndSetRationalFuncDiscontinunities(RationalTestOne);
+		}
+		
+		auto TestRes = RationalTestOne.GetCurrentDiscontinunityPtrInfo();
+
+		std::cout << "Printing First Discontinunity Info\n";
+		PrintDiscontinunityType(TestRes.first);
+		std::cout << "At x = " << TestRes.second << std::endl;
 
 	}
 	catch (const std::exception& ex)
