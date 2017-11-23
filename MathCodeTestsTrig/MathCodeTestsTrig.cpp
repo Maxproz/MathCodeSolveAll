@@ -152,16 +152,7 @@ int main()
 		
 
 
-		//QuadraticFunction QuadTestOne(-1, 0, 4);
-		//LinearFunction LinearTestOne(4, -8);
 
-		//const int PointToCheck = 3;
-
-
-		//PiecewiseFunction<QuadraticFunction, LinearFunction>
-		//	PiecewiseFunc(QuadTestOne, "<=", LinearTestOne, ">", 3);
-
-		//DetermineContinunityAtAPoint(PiecewiseFunc, PointToCheck);
 
 		//LinearFunction TestFuncOne(2, 1);
 		//const int ConstFuncReturn = 2;
@@ -174,28 +165,57 @@ int main()
 		//DetermineContinunityAtAPoint(PiecewiseFuncOne, 1);
 
 
-		QuadraticFunction QuadTestOne(1, 0, -4);
-		LinearFunction LinearTestOne(1, -2);
+		//QuadraticFunction QuadTestOne(1, 0, -4);
+		//LinearFunction LinearTestOne(1, -2);
 
-		RationalFunction RationalTestOne(QuadTestOne, LinearTestOne);
+		//RationalFunction RationalTestOne(QuadTestOne, LinearTestOne);
 
-		const int PointToCheck = 2;
+		//const int PointToCheck = 2;
 
-		// evaluate at that point
-		RationalTestOne(PointToCheck);
+		//// evaluate at that point
+		//RationalTestOne(PointToCheck);
+
+		//// The point we checked should have pushed that discontinunity if it existed
+		//if (RationalTestOne.GetAmountOfDiscontinunitiesFound() > 0)
+		//{
+		//	Limit TestTwoLimit(RationalTestOne, PointToCheck);
+		//	TestTwoLimit.CheckAndSetRationalFuncDiscontinunities(RationalTestOne);
+		//}
+		//
+		//auto TestRes = RationalTestOne.GetCurrentDiscontinunityPtrInfo();
+
+		//std::cout << "Printing First Discontinunity Info\n";
+		//PrintDiscontinunityType(TestRes.first);
+		//std::cout << "At x = " << TestRes.second << std::endl;
+
+
+		QuadraticFunction QuadTestOne(-1, 0, 4);
+		LinearFunction LinearTestOne(4, -8);
+
+		const int PointToCheck = 3;
+
+		
+		PiecewiseFunction<QuadraticFunction, LinearFunction>
+			PiecewiseFunc(QuadTestOne, "<=", LinearTestOne, ">", 3);
+
+		//// evaluate at that point
+		PiecewiseFunc(PointToCheck);
 
 		// The point we checked should have pushed that discontinunity if it existed
-		if (RationalTestOne.GetAmountOfDiscontinunitiesFound() > 0)
+		if (PiecewiseFunc.GetAmountOfDiscontinunitiesFound() > 0)
 		{
-			Limit TestTwoLimit(RationalTestOne, PointToCheck);
-			TestTwoLimit.CheckAndSetRationalFuncDiscontinunities(RationalTestOne);
-		}
 		
-		auto TestRes = RationalTestOne.GetCurrentDiscontinunityPtrInfo();
+			bool DetermineContCheck = DetermineContinunityAtAPoint(PiecewiseFunc, PointToCheck);
+		}
 
-		std::cout << "Printing First Discontinunity Info\n";
-		PrintDiscontinunityType(TestRes.first);
-		std::cout << "At x = " << TestRes.second << std::endl;
+		auto PiecewisePtrInfoResult = PiecewiseFunc.GetCurrentDiscontinunityPtrInfo();
+
+		std::cout << "\nPrinting First Discontinunity Info\n";
+		PrintDiscontinunityType(PiecewisePtrInfoResult.first);
+		std::cout << "At x = " << PiecewisePtrInfoResult.second << std::endl;
+
+
+
 
 	}
 	catch (const std::exception& ex)

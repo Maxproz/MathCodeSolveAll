@@ -4,6 +4,8 @@
 
 int RationalFunction::m_AmountOfDiscontinunitiesFound = 0;
 
+int PiecewiseFunction<QuadraticFunction, LinearFunction>::m_AmountOfDiscontinunitiesFound = 0;
+
 void PrintPointSlopeForm(const double& Slope, const Point& InPoint)
 {
 	double X1 = InPoint.first;
@@ -840,6 +842,76 @@ bool DetermineContinunityAtAPoint(const RationalFunction& InFunc, const int& InP
 		if (TestOne != TestTwo)
 		{
 			std::cout << "TestThreeFailed: The function is not continuous at " << InPoint << "\n";
+			return false;
+		}
+		else
+		{
+			std::cout << "TestThreePassed: The function is continuous at " << InPoint << "\n";
+			return true;
+		}
+
+	}
+}
+
+bool DetermineContinunityAtAPoint(PiecewiseFunction<QuadraticFunction, LinearFunction>& InFunc, const int& InPoint)
+{
+	//QuadraticFunction FirstFuntion = InFunc.GetFirstFunction();
+	//LinearFunction SecondFunction = InFunc.GetSecondFunction();
+
+	// Step 1: check to see if f(a) is defined
+	double TestOne = InFunc.GetLastEvaluatedResult();
+
+	if (std::isnan(TestOne))
+	{
+		// failed 
+		std::cout << "TestOneFailed: The function is not continuous at " << InPoint << "\n";
+		return false;
+	}
+	else
+	{
+		//  If f(a) is defined, continue to step 2.
+
+		// Step 2: Compute Limit from both sides
+		// If Limit does not exist (that is, it is not a real number),
+		// then the function is not continuous at a and the problem is solved.
+
+
+
+		//Limit TestTwoLimit(InFunc, InPoint);
+		
+
+		Limit TestTwoLimit(InFunc, InPoint);
+		double TestTwoLimitNegDir = TestTwoLimit.GetLimitFromNegDir();
+		double TestTwoLimitPosDir = TestTwoLimit.GetLimitFromPosDir();
+
+		bool BothSidedLimitsAreEqual = (TestTwoLimitNegDir == TestTwoLimitPosDir);
+			//TestTwoLimit.GetLimitResult();
+
+		//std::cout << "TestTwo: = " << TestTwo << std::endl;
+
+		double TestTwo = 0;
+
+		if (BothSidedLimitsAreEqual == false)
+		{
+			TestTwoLimit.CheckAndSetPiecewiseFuncQuadLinearDiscontinunities(InFunc, InPoint);
+
+			std::cout << "TestTwoFailed: The function is not continuous at " << InPoint << "\n";
+			return false;
+
+		}
+		else
+		{
+			TestTwo = TestTwoLimit.GetLimitResult();
+		}
+		
+		// if Limit Exists go to step 3
+		// TODO: Need a rational function check to return bool to see if it exists
+		// TODO: Need more example data in order to fix
+
+		if (TestOne != TestTwo)
+		{
+			std::cout << "TestThreeFailed: The function is not continuous at " << InPoint << "\n";
+
 			return false;
 		}
 		else

@@ -15,6 +15,8 @@
 #include <cctype>       // std::isdigit
 #include <ratio>
 #include <memory>
+#include <cfenv>
+
 
 #include "Circle.h"
 
@@ -481,7 +483,7 @@ public:
 	double operator()(const double x) const
 	{
 		double TermOne, TermTwo, TermThree;
-		TermOne = m_a * std::pow(x, 2);
+		TermOne = (m_a * (std::pow(x, 2)));
 		TermTwo = x*m_b;
 		TermThree = m_c;
 		return TermOne + TermTwo + TermThree;
@@ -1345,7 +1347,7 @@ private:
 	PolynomialFunctionType m_NumeratorFuncType;
 	PolynomialFunctionType m_DenominatorFuncType;
 
-	// Currently not using.
+
 	std::vector<int> m_CurrentDiscontinousLocations;
 	static int m_AmountOfDiscontinunitiesFound;
 
@@ -1566,6 +1568,8 @@ The range is {y|y>=4}
 
 
 
+
+
 template <typename FirstFunc, typename SecondFunc>
 class PiecewiseFunction
 {
@@ -1577,6 +1581,17 @@ private:
 	std::string m_SecondFuncRangeOp;
 
 	int m_RangeVariable{ 0 };
+
+
+	std::vector<int> m_CurrentDiscontinousLocations;
+	static int m_AmountOfDiscontinunitiesFound;
+
+	// Pointer to a type and a point it is discontinous at
+	std::unique_ptr<std::pair<DiscontinunityType, int>> m_Discontinuity = nullptr;
+
+	void IncreaseDiscontinunitiesFound() const { m_AmountOfDiscontinunitiesFound++; }
+
+	 mutable double m_LastEvaluatedResult = 0.0;
 
 public:
 	PiecewiseFunction(const FirstFunc& InFirstFunc, const std::string& FirstFuncRangeOp,
@@ -1591,11 +1606,38 @@ public:
 
 	}
 
+	double GetLastEvaluatedResult() const { return m_LastEvaluatedResult; }
+
+	const int GetAmountOfDiscontinunitiesFound() const { return m_AmountOfDiscontinunitiesFound; }
+	std::vector<int> GetFoundDiscontinunityLocations() const { return m_CurrentDiscontinousLocations; }
+
+	void SetDiscontinunityPtr(const DiscontinunityType& Type, const int AtXEqualTo)
+
+	{
+		// Implicit move operation into the variable that stores the result.
+		m_Discontinuity = std::make_unique<std::pair<DiscontinunityType, int>>(Type, AtXEqualTo);
+	}
+
+	std::pair<DiscontinunityType, int> GetCurrentDiscontinunityPtrInfo()
+	{
+		if (m_Discontinuity != nullptr)
+		{
+			DiscontinunityType Type = m_Discontinuity->first;
+			int XLoc = m_Discontinuity->second;
+
+			std::pair<DiscontinunityType, int> OutRes(Type, XLoc);
+
+			return OutRes;
+		}
+	}
+
 	// TODO: add functionality for a piecewise function that takes 3 functions
 
 
-	double operator()(const double& x) const
+	double operator()(const double& x) const 
 	{
+		
+		 double Res{ 0.0 };
 
 		// Get the ranges with if else evaluate need to check all possiblites
 		const double RangeVar = m_RangeVariable;
@@ -1605,42 +1647,74 @@ public:
 		{
 			if (x < RangeVar)
 			{
-				return m_FirstFunc(x);
+				//return m_FirstFunc(x);
+				Res = m_FirstFunc(x);
+				m_LastEvaluatedResult = Res;
+				TestAndPushResForDiscontinunity(Res, x);
+				return Res;
 			}
 		}
 		else if (m_FirstFuncRangeOp == ">")
 		{
 			if (x > RangeVar)
 			{
-				return m_FirstFunc(x);
+				//return m_FirstFunc(x);
+				Res = m_FirstFunc(x);
+				m_LastEvaluatedResult = Res;
+				TestAndPushResForDiscontinunity(Res, x);
+				return Res;
 			}
 		}
 		else if (m_FirstFuncRangeOp == "<=")
 		{
 			if (x <= RangeVar)
 			{
-				return m_FirstFunc(x);
+				//return m_FirstFunc(x);
+				Res = m_FirstFunc(x);
+				m_LastEvaluatedResult = Res;
+				TestAndPushResForDiscontinunity(Res, x);
+				return Res;
+			}
+			else
+			{
+				//return m_FirstFunc(x);
+				Res = m_SecondFunc(x);
+				m_LastEvaluatedResult = Res;
+				TestAndPushResForDiscontinunity(Res, x);
+				return Res;
 			}
 		}
 		else if (m_FirstFuncRangeOp == ">=")
 		{
 			if (x >= RangeVar)
 			{
-				return m_FirstFunc(x);
+				//return m_FirstFunc(x);
+				Res = m_FirstFunc(x);
+				m_LastEvaluatedResult = Res;
+				TestAndPushResForDiscontinunity(Res, x);
+				return Res;
 			}
 		}
 		else if (m_FirstFuncRangeOp == "==")
 		{
 			if (x == RangeVar)
 			{
-				return m_FirstFunc(x);
+				//return m_FirstFunc(x);
+				Res = m_FirstFunc(x);
+				m_LastEvaluatedResult = Res;
+				TestAndPushResForDiscontinunity(Res, x);
+				return Res;
 			}
 		}
 		else if (m_FirstFuncRangeOp == "!=")
 		{
 			if (x != RangeVar)
 			{
-				return m_FirstFunc(x);
+				//return m_FirstFunc(x);
+				Res = m_FirstFunc(x);
+				m_LastEvaluatedResult = Res;
+				TestAndPushResForDiscontinunity(Res, x);
+				return Res;
 			}
 		}
 
@@ -1649,28 +1723,45 @@ public:
 		{
 			if (x < RangeVar)
 			{
-				return m_SecondFunc(x);
+				//return m_SecondFunc(x);
+				Res = m_FirstFunc(x);
+				m_LastEvaluatedResult = Res;
+				TestAndPushResForDiscontinunity(Res, x);
+				return Res;
 			}
 		}
 		else if (m_SecondFuncRangeOp == ">")
 		{
 			if (x > RangeVar)
 			{
-				return m_SecondFunc(x);
+				//return m_SecondFunc(x);
+				Res = m_FirstFunc(x);
+				m_LastEvaluatedResult = Res;
+				TestAndPushResForDiscontinunity(Res, x);
+				return Res;
 			}
 		}
 		else if (m_SecondFuncRangeOp == "<=")
 		{
 			if (x <= RangeVar)
 			{
-				return m_SecondFunc(x);
+				//return m_SecondFunc(x);
+				Res = m_FirstFunc(x);
+				m_LastEvaluatedResult = Res;
+				TestAndPushResForDiscontinunity(Res, x);
+				return Res;
 			}
 		}
 		else if (m_SecondFuncRangeOp == ">=")
 		{
 			if (x >= RangeVar)
 			{
-				return m_SecondFunc(x);
+				//return m_SecondFunc(x);
+				Res = m_FirstFunc(x);
+				m_LastEvaluatedResult = Res;
+				TestAndPushResForDiscontinunity(Res, x);
+
+				return Res;
 			}
 
 		}
@@ -1678,15 +1769,36 @@ public:
 		{
 			if (x == RangeVar)
 			{
-				return m_SecondFunc(x);
+				//return m_SecondFunc(x);
+				Res = m_FirstFunc(x);
+				m_LastEvaluatedResult = Res;
+				TestAndPushResForDiscontinunity(Res, x);
+				return Res;
 			}
 		}
 		else if (m_SecondFuncRangeOp == "!=")
 		{
 			if (x != RangeVar)
 			{
-				return m_SecondFunc(x);
+				//return m_SecondFunc(x);
+				Res = m_FirstFunc(x);
+				m_LastEvaluatedResult = Res;
+				TestAndPushResForDiscontinunity(Res,x);
+				return Res;
 			}
+		}
+
+		
+		return Res;
+
+	}
+	
+	inline void TestAndPushResForDiscontinunity(const double& Res, const int& x) const
+	{
+		if (!(std::isnan(Res)))
+		{
+			GetFoundDiscontinunityLocations().push_back(x);
+			IncreaseDiscontinunitiesFound();
 		}
 	}
 
@@ -1697,6 +1809,7 @@ public:
 	//SecondFunc GetSecondFunction() const { return m_SecondFunc; }
 
 };
+
 
 
 template <typename FirstFunc, typename SecondFunc, int ThirdFunctionConstant>
@@ -2044,6 +2157,9 @@ private:
 	std::function<double(const double&)> m_Function;
 
 	double m_L;
+
+	double m_LimitFromNegDir = 0;
+	double m_LimitFromPosDir = 0;
 
 	// triggers to true if a root function is detected in the numerator or denominator
 	// This disables the solution finding by factor/canceling
@@ -2842,37 +2958,43 @@ private:
 
 		// TODO: I need a better way to check for infinity here its not detecting a small increase to a limit at 1
 
-		if (PosDirVec[1].second > PosDirVec[0].second)
-		{
-			if (PosDirVec[2].second > PosDirVec[1].second)
-			{
-				bIsPosDirPosInfinity = true;
+		//if (PosDirVec[1].second > PosDirVec[0].second)
+		//{
+		//	if (PosDirVec[2].second > PosDirVec[1].second)
+		//	{
+		//		bIsPosDirPosInfinity = true;
 
-			}
-		}
+		//	}
+		//}
 
-		if (NegDirVec[1].second < NegDirVec[0].second)
-		{
-			if (NegDirVec[2].second < NegDirVec[1].second)
-			{
-				bIsNegDirNegInfinity = true;
-			}
-		}
+		//if (NegDirVec[1].second < NegDirVec[0].second)
+		//{
+		//	if (NegDirVec[2].second < NegDirVec[1].second)
+		//	{
+		//		bIsNegDirNegInfinity = true;
+		//	}
+		//}
 
-		if (PosDirVec[1].second < PosDirVec[0].second)
-		{
-			if (PosDirVec[2].second < PosDirVec[1].second)
-			{
-				bIsPosDirNegInfinity = true;
-			}
-		}
-		if (NegDirVec[1].second > NegDirVec[0].second)
-		{
-			if (NegDirVec[2].second > NegDirVec[1].second)
-			{
-				bIsNegDirPosInfinity = true;
-			}
-		}
+		//if (PosDirVec[1].second < PosDirVec[0].second)
+		//{
+		//	if (PosDirVec[2].second < PosDirVec[1].second)
+		//	{
+		//		bIsPosDirNegInfinity = true;
+		//	}
+		//}
+		//if (NegDirVec[1].second > NegDirVec[0].second)
+		//{
+		//	if (NegDirVec[2].second > NegDirVec[1].second)
+		//	{
+		//		bIsNegDirPosInfinity = true;
+		//	}
+		//}
+
+	
+
+
+
+
 
 		if (std::ceil(LocalPosRes) == std::floor(LocalNegRes))
 		{
@@ -2941,8 +3063,9 @@ private:
 		}
 		else
 		{
+			//std::fesetround(FE_TONEAREST);
 			std::cout << std::setprecision(std::numeric_limits<double>::digits10 + 1)
-				<< std::setw(7) << PosDirVec[3].first << " " << PosDirVec[3].second << std::endl;
+				<< std::setw(7) << PosDirVec[3].first << " " << std::nearbyint(PosDirVec[3].second) << std::endl;
 		}
 
 		std::cout << "As x approaches " << m_a << " from the negative direction f(x) = ";
@@ -2952,9 +3075,18 @@ private:
 		}
 		else
 		{
+			//std::fesetround(FE_TONEAREST);
 			std::cout << std::setprecision(std::numeric_limits<double>::digits10 + 1)
-				<< std::setw(7) << NegDirVec[3].first << " " << NegDirVec[3].second << std::endl;
+				<< std::setw(7) << NegDirVec[3].first << " ";
+				std::cout << (std::nearbyint(NegDirVec[3].second)) << std::endl;
 		}
+
+
+		auto LimitFromPosDir = std::nearbyint(PosDirVec[3].second);
+		auto LimitFromNegDir = std::nearbyint(NegDirVec[3].second);
+
+		m_LimitFromPosDir = LimitFromPosDir;
+		m_LimitFromNegDir = LimitFromNegDir;
 
 		std::cout << std::endl;
 
@@ -3187,6 +3319,33 @@ private:
 
 public:
 
+	double GetLimitFromPosDir() const { return m_LimitFromPosDir; }
+	double GetLimitFromNegDir() const { return m_LimitFromNegDir; }
+
+	void CheckAndSetRationalFuncDiscontinunities(RationalFunction& InRationalFunc)
+	{
+		if (!(std::isnan(m_L)))
+		{
+			// is a real number? maybe not sure exactly what it defines "as a number"
+			//	Since f is discontinuous at 2 and limx→2 exists, f has a removable discontinuity at x = 2.
+
+			InRationalFunc.SetDiscontinunityPtr(DiscontinunityType::REMOVEABLE, m_L);
+		}
+	}
+
+	void CheckAndSetPiecewiseFuncQuadLinearDiscontinunities(PiecewiseFunction<QuadraticFunction, LinearFunction>& InPiecewiseFunc, const double& x)
+	{
+		//std::cout << " TESTING " << m_L << std::endl;
+
+		bool LimitFromPosDirExists = !(std::isnan(m_LimitFromPosDir));
+		bool LimitFromNegDirExists = !(std::isnan(m_LimitFromNegDir));
+
+		if (LimitFromPosDirExists && LimitFromNegDirExists)
+		{
+			InPiecewiseFunc.SetDiscontinunityPtr(DiscontinunityType::JUMP, x);
+		}
+	}
+
 	explicit Limit(std::function<double(const double&)> InFunc, const double& a)
 		: m_Function(InFunc), m_a(a)
 	{
@@ -3222,16 +3381,7 @@ public:
 		DisplayLimitResult();
 	}
 
-	void CheckAndSetRationalFuncDiscontinunities(RationalFunction& InRationalFunc)
-	{
-		if (!(std::isnan(m_L)))
-		{
-			// is a real number? maybe not sure exactly what it defines "as a number"
-			//	Since f is discontinuous at 2 and limx→2 exists, f has a removable discontinuity at x = 2.
-		
-			InRationalFunc.SetDiscontinunityPtr(DiscontinunityType::REMOVEABLE, m_L);
-		}
-	}
+
 
 	explicit Limit(const QuadraticFunction& InQuadraticFunc, const double& a)
 		: m_a(a)
@@ -3270,6 +3420,7 @@ public:
 	{
 
 		m_L = EvaluatePiecewiseFuncLimit(InPiecewiseFunc);
+
 
 
 		// TODO: remove debug code
@@ -3530,50 +3681,7 @@ public:
 
 
 
-inline bool DetermineContinunityAtAPoint(const PiecewiseFunction<QuadraticFunction, LinearFunction>& InFunc, const int& InPoint)
-{
-	//QuadraticFunction FirstFuntion = InFunc.GetFirstFunction();
-	//LinearFunction SecondFunction = InFunc.GetSecondFunction();
-
-	// Step 1: check to see if f(a) is defined
-	double TestOne = InFunc(InPoint);
-
-	if (std::isnan(TestOne))
-	{
-		// failed 
-		std::cout << "TestOneFailed: The function is not continuous at " << InPoint << "\n";
-		return false;
-	}
-	else
-	{
-		//  If f(a) is defined, continue to step 2.
-
-		// Step 2: Compute Limit from both sides
-		// If Limit does not exist (that is, it is not a real number),
-		// then the function is not continuous at a and the problem is solved.
-
-
-
-		Limit TestTwoLimit(InFunc, InPoint);
-		double TestTwo = TestTwoLimit.GetLimitResult();
-
-		// if Limit Exists go to step 3
-		// TODO: Need a rational function check to return bool to see if it exists
-		// TODO: Need more example data in order to fix
-
-		if (TestOne != TestTwo)
-		{
-			std::cout << "TestThreeFailed: The function is not continuous at " << InPoint << "\n";
-			return false;
-		}
-		else
-		{
-			std::cout << "TestThreePassed: The function is continuous at " << InPoint << "\n";
-			return true;
-		}
-
-	}
-}
+bool DetermineContinunityAtAPoint(PiecewiseFunction<QuadraticFunction, LinearFunction>& InFunc, const int& InPoint);
 
 template <typename FirstFunc, typename SecondFunc, int ThirdFunctionConstant>
 inline bool DetermineContinunityAtAPoint(const PiecewiseFunctionThreeFunctions<FirstFunc, SecondFunc, ThirdFunctionConstant>& InFunc, const int& InPoint)
