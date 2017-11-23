@@ -20,6 +20,11 @@
 
 #include "Circle.h"
 
+/* newest includes */
+#include "TranscendentalFunction.h"
+#include "PolynomialFunction.h"
+
+
 // TODO: Move the important constants into one header
 // TODO: Calculate the domain and ranges of each individual function after splitting up files (and other data)
 
@@ -59,55 +64,8 @@ inline std::pair<double, double> OutputDecimalAsFract(const double& input)
 
 
 
-// Inclusive uses bracket notation
-enum class Domain
-{
-	NegInfinityToPosInfinity,
-	InclusiveZeroToPosInfinity,
-	ExclusiveZeroToPosInfinity,
-	Reciprocal,
-	ExactGiven
-};
-
-enum class Range
-{
-	NegInfinityToPosInfinity,
-	InclusiveZeroToPosInfinity,
-	ExclusiveZeroToPosInfinity,
-	Reciprocal,
-	ExactGiven
-};
-
-enum class LineBehavior
-{
-	Increasing,
-	Decreasing,
-	Horizontal
-};
-
-enum class EndBehavior
-{
-	// The two behaviors for quadratic functions
-	AsXGoesToPosOrNegInfinityFOfXGoesToPosInfinity,
-	AsXGoesToPosOrNegInfinityFOfXGoesToNegInfinity,
-
-	// TODO: maybe add more behaviors for other more functions later(cubic etc)
-
-	// Exponential Func Behaviors
-	// b > 1
-	AsXGoesToPosInfinityFOfXGoesToPosInfinity,
-	AsXGoesToNegInfinityFOfXGoesToZero,
-	// 0 < b < 1
-	AsXGoesToPosInfinityFOfXGoesToZero,
-	AsXGoesToNegInfinityFOfXGoesToPosInfinity,
-};
 
 
-enum class ParabolaOpen
-{
-	UP,
-	DOWN
-};
 
 
 // Basic Important Notes on Functions
@@ -129,35 +87,6 @@ double evaluate_at(double x, const T& Function)
 	return Function(x);
 }
 
-enum class PolynomialFunctionType
-{
-	LINEAR,
-	RATIONAL,
-	CUBIC,
-	QUADRATIC,
-	ROOT,
-};
-
-class PolynomialFunction
-{
-private:
-	
-
-protected:
-	int m_Degree;
-	bool m_bIsEvenFunction;
-	EndBehavior m_EndBehavior;
-
-	Domain m_Domain;
-	Range m_Range;
-
-	PolynomialFunctionType m_PolyFunctionType;
-
-public:
-
-	PolynomialFunctionType GetCurrentFunctionType() const { return m_PolyFunctionType; }
-
-};
 
 
 // The function of the coefficient aa in the general equation is to make the graph 
@@ -634,10 +563,6 @@ class PowerFunction : PolynomialFunction
 
 };
 
-class TranscendentalFunction
-{
-
-};
 
 // Formally, a function f is periodic if there exists a number p such that f(x + p) = f(x) 
 // for all x. The smallest possible value of p is the period.
@@ -1234,6 +1159,7 @@ inline double FindInverseHyperbolicSin(const double& x)
 
 }
 
+// cosh^-1
 inline double FindInverseHyperbolicCos(const double& x)
 {
 	// setup the formula and return result
@@ -1667,6 +1593,8 @@ public:
 		}
 		else if (m_FirstFuncRangeOp == "<=")
 		{
+
+			// TODO: I probably want to make the rest of them like this too huh..
 			if (x <= RangeVar)
 			{
 				//return m_FirstFunc(x);
