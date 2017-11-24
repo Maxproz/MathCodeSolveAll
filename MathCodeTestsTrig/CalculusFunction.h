@@ -62,8 +62,9 @@ inline std::pair<double, double> OutputDecimalAsFract(const double& input)
 	return std::pair<double, double>(numerator, denominator);
 }
 
+class RationalFunction;
 
-
+//typedef double (RationalFunction::* memfunptr)(const double&);
 
 
 
@@ -1251,7 +1252,7 @@ inline void PrintDiscontinunityType(const DiscontinunityType& InType)
 }
 
 class RationalFunction;
-bool DetermineContinunityAtAPoint(const RationalFunction& InFunc, const int& InPoint);
+bool DetermineContinunityAtAPoint(RationalFunction& InFunc, const int& InPoint);
 
 
 class RationalFunction : PolynomialFunction
@@ -1282,8 +1283,13 @@ private:
 
 	void IncreaseDiscontinunitiesFound() const { m_AmountOfDiscontinunitiesFound++; }
 
+	mutable double m_LastCalculatedRes = 0;
+
 public:
 
+	RationalFunction() = default;
+	RationalFunction(const RationalFunction&) = default;
+	RationalFunction(RationalFunction&&) = default;
 
 	const int GetAmountOfDiscontinunitiesFound() const { return m_AmountOfDiscontinunitiesFound; }
 	std::vector<int> GetFoundDiscontinunityLocations() const { return m_CurrentDiscontinousLocations; }
@@ -1310,7 +1316,7 @@ public:
 
 	
 
-	//RationalFunction() = delete;
+	
 
 	explicit RationalFunction(const QuadraticFunction& Numerator, const CubicFunction& Denominator)
 		: m_NumeratorQuadratic(Numerator), m_DenominatorCubic(Denominator)
@@ -1359,7 +1365,14 @@ public:
 		m_DenominatorFuncType = Denominator.GetCurrentFunctionType();
 	}
 
+	explicit RationalFunction(const LinearFunction& Numerator, const LinearFunction& Denominator)
+		: m_NumeratorLinear(Numerator), m_DenominatorLinear(Denominator)
+	{
+		m_PolyFunctionType = PolynomialFunctionType::RATIONAL;
 
+		m_NumeratorFuncType = Numerator.GetCurrentFunctionType();
+		m_DenominatorFuncType = Denominator.GetCurrentFunctionType();
+	}
 
 	inline PolynomialFunctionType GetNumeratorFunctionType() const
 	{
@@ -1371,17 +1384,27 @@ public:
 		return m_DenominatorFuncType;
 	}
 
-	double operator()(const double x) const
+	double CallingRationalFunctionFuncOperator(const double& x)
+	{
+		return operator()(x);
+	}
+
+	double operator()(const double& x) 
 	{
 		double NumeratorRes{ 0.0 };
 		double DenominatorRes{ 0.0 };
-
 
 		switch (GetNumeratorFunctionType())
 		{
 			case PolynomialFunctionType::QUADRATIC:
 			{
 				NumeratorRes = m_NumeratorQuadratic(x);
+				break;
+			}
+			case PolynomialFunctionType::LINEAR:
+			{
+				NumeratorRes = m_NumeratorLinear(x);
+				break;
 			}
 		}
 
@@ -1390,24 +1413,31 @@ public:
 			case PolynomialFunctionType::LINEAR:
 			{
 				DenominatorRes = m_DenominatorLinear(x);
+				break;
 			}
 		}
 
 
-		RationalFunction TestRat(m_NumeratorQuadratic, m_DenominatorLinear);
 
-		bool bIsContinous = DetermineContinunityAtAPoint(TestRat, x);
-		if (!bIsContinous)
+		m_LastCalculatedRes = NumeratorRes / DenominatorRes;
+
+		if (!(std::isnan(m_LastCalculatedRes)))
 		{
-
 			GetFoundDiscontinunityLocations().push_back(x);
 			IncreaseDiscontinunitiesFound();
 		}
+	
 
 		return NumeratorRes / DenominatorRes;
 	}
 
+	public:
 
+
+
+	double GetLastCalculatedRes() const { return m_LastCalculatedRes; }
+
+	//friend double CallMemberFunctionFuncOperator(const double& x);
 
 	// Possible NumeratorGetters
 	QuadraticFunction GetNumeratorQuadratic() const { return m_NumeratorQuadratic; }
@@ -1422,7 +1452,73 @@ public:
 
 };
 
+template <typename Function>
+inline void RunFunctionFromPosAndNegDirections(
+	std::vector<std::pair<double, double>>& PosDirVec,
+	std::vector<std::pair<double, double>>& NegDirVec,
+	Function m_Function,
+	const double& m_a)
+{
 
+
+	std::pair<double, double> PosPairFirst;
+	PosPairFirst.first = m_a + 0.1;
+	PosPairFirst.second = m_Function(m_a + 0.1);
+
+	std::pair<double, double> PosPairSecond;
+	PosPairSecond.first = m_a + 0.01;
+	PosPairSecond.second = m_Function(m_a + 0.01);
+
+	std::pair<double, double> PosPairThird;
+	PosPairThird.first = m_a + 0.001;
+	PosPairThird.second = m_Function(m_a + 0.001);
+
+	std::pair<double, double> PosPairFourth;
+	PosPairFourth.first = m_a + 0.0001;
+	PosPairFourth.second = m_Function(m_a + 0.0001);
+
+	PosDirVec.push_back(PosPairFirst);
+	PosDirVec.push_back(PosPairSecond);
+	PosDirVec.push_back(PosPairThird);
+	PosDirVec.push_back(PosPairFourth);
+
+
+	// neg direction
+	std::pair<double, double> NegPairFirst;
+	NegPairFirst.first = m_a - 0.1;
+	NegPairFirst.second = m_Function(m_a - 0.1);
+
+	std::pair<double, double> NegPairSecond;
+	NegPairSecond.first = m_a - 0.01;
+	NegPairSecond.second = m_Function(m_a - 0.01);
+
+	std::pair<double, double> NegPairThird;
+	NegPairThird.first = m_a - 0.001;
+	NegPairThird.second = m_Function(m_a - 0.001);
+
+	std::pair<double, double> NegPairFourth;
+	NegPairFourth.first = m_a - 0.0001;
+	NegPairFourth.second = m_Function(m_a - 0.0001);
+
+	NegDirVec.push_back(NegPairFirst);
+	NegDirVec.push_back(NegPairSecond);
+	NegDirVec.push_back(NegPairThird);
+	NegDirVec.push_back(NegPairFourth);
+
+}
+
+//
+////template <typename Func>
+//double CallMemberFunctionFuncOperator(const double& x)
+//{
+//	RationalFunction NewFunc;
+//	return NewFunc(x);
+//}
+//
+
+
+
+//std::function<double(const double&)> m_Function
 
 // TODO: Make this function print to std::cout
 // TODO: Connect this functionality to work with the other function classes
@@ -1520,6 +1616,8 @@ private:
 	 mutable double m_LastEvaluatedResult = 0.0;
 
 public:
+
+
 	PiecewiseFunction(const FirstFunc& InFirstFunc, const std::string& FirstFuncRangeOp,
 		const SecondFunc& InSecondFunc, const std::string& SecondFuncRangeOp, const int& RangeVariable)
 		: m_FirstFunc(InFirstFunc), m_FirstFuncRangeOp(FirstFuncRangeOp), m_SecondFunc(InSecondFunc),
@@ -1531,6 +1629,13 @@ public:
 
 
 	}
+
+	//PiecewiseFunction(const PiecewiseFunction&) = default;
+
+	//PiecewiseFunction<QuadraticFunction, LinearFunction>
+
+	
+	//PiecewiseFunction(const PiecewiseFunction<QuadraticFunction, LinearFunction>&) = default;
 
 	double GetLastEvaluatedResult() const { return m_LastEvaluatedResult; }
 
@@ -1755,6 +1860,9 @@ private:
 	int m_RangeVariable = { 0 };
 
 public:
+
+
+
 	explicit PiecewiseFunctionThreeFunctions(const FirstFunc& InFirstFunc, const std::string& FirstFuncRangeOp,
 		const SecondFunc& InSecondFunc, const std::string& SecondFuncRangeOp, const int& RangeVariable,
 		const std::string& ThirdFunctionRangeOp)
@@ -2186,6 +2294,232 @@ private:
 	{
 		double NumeratorRes = 0;
 		double DenominatorRes = 0;
+
+		if (InRationalFunc.GetNumeratorFunctionType() == PolynomialFunctionType::LINEAR &&
+			InRationalFunc.GetDenominatorFunctionType() == PolynomialFunctionType::LINEAR)
+		{
+			LinearFunction Numerator = InRationalFunc.GetNumeratorLinear();
+			LinearFunction Denominator = InRationalFunc.GetDenominatorLinear();
+
+			std::vector<std::pair<double, double>> PosDirVec;
+			std::vector<std::pair<double, double>> NegDirVec;
+
+			RunFunctionFromPosAndNegDirections(PosDirVec, NegDirVec, RationalFunction(Numerator,Denominator), m_a);
+		
+
+
+			std::cout << "Evaluating Limit: Please Wait...\n";
+
+			for (auto & num : PosDirVec)
+			{
+
+				std::cout << std::setprecision(std::numeric_limits<double>::digits10 + 1)
+					<< std::setw(7) << num.first << " " << num.second << std::endl;
+			}
+
+			std::cout << std::endl;
+
+			for (auto & num : NegDirVec)
+			{
+				std::cout << std::setprecision(std::numeric_limits<double>::digits10 + 1)
+					<< std::setw(7) << num.first << " " << num.second << std::endl;
+			}
+
+			double TopRes = PosDirVec[3].second;
+			double BottomRes = NegDirVec[3].second;
+			/*std::cout << TopRes << std::endl;
+			std::cout << BottomRes << std::endl;*/
+
+
+			std::string TopResStr = std::to_string(TopRes);
+			// TODO: remove debug code later
+			std::cout << TopResStr << std::endl;
+
+			std::string BottomResStr = std::to_string(BottomRes);
+			// TODO: remove debug code later
+			std::cout << BottomResStr << std::endl;
+
+			double LocalPosRes = std::stod(TopResStr) * 100;
+
+			double LocalNegRes = std::stod(BottomResStr) * 100;
+
+			//std::cout << std::setprecision(std::numeric_limits<double>::digits10 + 1)
+			//	<< std::setw(7) << std::floor(LocalPosRes) << std::endl;
+
+
+
+			std::cout << std::endl;
+
+			// Are these limits infinite?
+			bool bIsPosDirPosInfinity = false;
+			bool bIsPosDirNegInfinity = false;
+			bool bIsNegDirNegInfinity = false;
+			bool bIsNegDirPosInfinity = false;
+
+
+			// TODO: I need a better way to check for infinity here its not detecting a small increase to a limit at 1
+
+			if (PosDirVec[1].second > PosDirVec[0].second)
+			{
+				if (PosDirVec[2].second > (PosDirVec[1].second * 9))
+				{
+					bIsPosDirPosInfinity = true;
+				}
+			}
+
+			if (NegDirVec[1].second < NegDirVec[0].second)
+			{
+				if (NegDirVec[2].second < (NegDirVec[1].second * 9))
+				{
+					bIsNegDirNegInfinity = true;
+				}
+			}
+
+			if (PosDirVec[1].second < PosDirVec[0].second)
+			{
+				if (PosDirVec[2].second < (PosDirVec[1].second * 9))
+				{
+					bIsPosDirNegInfinity = true;
+				}
+			}
+			if (NegDirVec[1].second > NegDirVec[0].second)
+			{
+				if (NegDirVec[2].second > (NegDirVec[1].second *9 ))
+				{
+					bIsNegDirPosInfinity = true;
+				}
+			}
+
+
+			double LimitFromPosDir = 0;
+			double LimitFromNegDir = 0;
+
+
+
+
+			if (std::ceil(LocalPosRes) == std::floor(LocalNegRes))
+			{
+				std::cout << "We have a working limit result! 1\n";
+
+
+				if (bIsPosDirPosInfinity)
+				{
+					if (bIsNegDirPosInfinity)
+					{
+						std::cout << "As x approaches " << m_a << " Limit of f(x) = ";
+						std::cout << INFINITY << std::endl;
+						return INFINITY;
+					}
+				}
+
+				if (bIsPosDirNegInfinity)
+				{
+					if (bIsNegDirNegInfinity)
+					{
+						std::cout << "As x approaches " << m_a << " Limit of f(x) = ";
+						std::cout << NEGINFINITY << std::endl;
+						return NEGINFINITY;
+					}
+				}
+
+				//std::cout << std::setprecision(std::numeric_limits<double>::digits10 + 1)
+				//	<< std::setw(7) << PosDirVec[3].first << " " << PosDirVec[3].second << std::endl;
+
+				//std::cout << "Limit: " << std::ceil(LocalPosRes) / 100 << "\n";
+
+				//std::cout << std::setprecision(std::numeric_limits<double>::digits10 + 1)
+				//	<< std::setw(7) << NegDirVec[3].first << " " << NegDirVec[3].second << std::endl;
+
+
+				//	// return either
+				//return std::ceil(LocalPosRes) / 100;
+			}
+
+			// if you have two results that are returning negatives
+			// you need to do some sort of swap with floor / ceil
+			if (std::floor(LocalPosRes) == std::ceil(LocalNegRes))
+			{
+				std::cout << "We have a working limit result! 2\n";
+
+				std::cout << std::setprecision(std::numeric_limits<double>::digits10 + 1)
+					<< std::setw(7) << PosDirVec[3].first << " " << PosDirVec[3].second << std::endl;
+
+				std::cout << "Limit: " << std::floor(LocalPosRes) / 100 << "\n";
+
+				std::cout << std::setprecision(std::numeric_limits<double>::digits10 + 1)
+					<< std::setw(7) << NegDirVec[3].first << " " << NegDirVec[3].second << std::endl;
+
+
+				// return either
+				return std::floor(LocalPosRes) / 100;
+				
+			}
+
+
+			std::cout << "Limit: DNE (does not exist): \n\n";
+
+			std::cout << "As x approaches " << m_a << " from the positive direction f(x) = ";
+			if (bIsPosDirPosInfinity)
+			{
+				std::cout << INFINITY << std::endl;
+
+				LimitFromPosDir = INFINITY;
+			}
+			else if (bIsPosDirNegInfinity)
+			{
+				std::cout << NEGINFINITY << std::endl;
+
+				LimitFromPosDir = NEGINFINITY;
+			}
+			else
+			{
+				//std::fesetround(FE_TONEAREST);
+				std::cout << std::setprecision(std::numeric_limits<double>::digits10 + 1)
+					<< std::setw(7) << PosDirVec[3].first << " " << std::nearbyint(PosDirVec[3].second) << std::endl;
+
+
+				LimitFromPosDir = std::nearbyint(PosDirVec[3].second);
+				LimitFromNegDir = std::nearbyint(NegDirVec[3].second);
+			}
+
+			std::cout << "As x approaches " << m_a << " from the negative direction f(x) = ";
+			if (bIsNegDirNegInfinity)
+			{
+				std::cout << NEGINFINITY << std::endl;
+
+				LimitFromNegDir = NEGINFINITY;
+			}
+			else if (bIsNegDirPosInfinity)
+			{
+				std::cout << INFINITY << std::endl;
+
+				LimitFromNegDir = INFINITY;
+			}
+			else
+			{
+				//std::fesetround(FE_TONEAREST);
+				std::cout << std::setprecision(std::numeric_limits<double>::digits10 + 1)
+					<< std::setw(7) << NegDirVec[3].first << " ";
+				std::cout << (std::nearbyint(NegDirVec[3].second)) << std::endl;
+
+				LimitFromPosDir = std::nearbyint(PosDirVec[3].second);
+				LimitFromNegDir = std::nearbyint(NegDirVec[3].second);
+
+			}
+
+
+			m_LimitFromPosDir = LimitFromPosDir;
+			m_LimitFromNegDir = LimitFromNegDir;
+
+			std::cout << std::endl;
+
+			// TODO: What do I return here, does it matter?
+			//return std::floor(LocalPosRes) / 100;
+			return InRationalFunc.GetLastCalculatedRes();
+
+		}
+
+
 
 		if (InRationalFunc.GetNumeratorFunctionType() == PolynomialFunctionType::QUADRATIC &&
 			InRationalFunc.GetDenominatorFunctionType() == PolynomialFunctionType::LINEAR)
@@ -2790,50 +3124,59 @@ private:
 	{
 
 		std::vector<std::pair<double, double>> PosDirVec;
-		// pos direction
-		std::pair<double, double> PosPairFirst;
-		PosPairFirst.first = m_a + 0.1;
-		PosPairFirst.second = InFunc(m_a + 0.1);
-
-		std::pair<double, double> PosPairSecond;
-		PosPairSecond.first = m_a + 0.01;
-		PosPairSecond.second = InFunc(m_a + 0.01);
-
-		std::pair<double, double> PosPairThird;
-		PosPairThird.first = m_a + 0.001;
-		PosPairThird.second = InFunc(m_a + 0.001);
-
-		std::pair<double, double> PosPairFourth;
-		PosPairFourth.first = m_a + 0.0001;
-		PosPairFourth.second = InFunc(m_a + 0.0001);
-
-		PosDirVec.push_back(PosPairFirst);
-		PosDirVec.push_back(PosPairSecond);
-		PosDirVec.push_back(PosPairThird);
-		PosDirVec.push_back(PosPairFourth);
-
 		std::vector<std::pair<double, double>> NegDirVec;
-		// neg direction
-		std::pair<double, double> NegPairFirst;
-		NegPairFirst.first = m_a - 0.1;
-		NegPairFirst.second = InFunc(m_a - 0.1);
 
-		std::pair<double, double> NegPairSecond;
-		NegPairSecond.first = m_a - 0.01;
-		NegPairSecond.second = InFunc(m_a - 0.01);
+		//PiecewiseFunction<FirstFunc, SecondFunc> Piecewise = InFunc;
 
-		std::pair<double, double> NegPairThird;
-		NegPairThird.first = m_a - 0.001;
-		NegPairThird.second = InFunc(m_a - 0.001);
+		// TODO: no idea how to fix this deleted function problem
+		//RunFunctionFromPosAndNegDirections(PosDirVec, NegDirVec, InFunc, m_a);
 
-		std::pair<double, double> NegPairFourth;
-		NegPairFourth.first = m_a - 0.0001;
-		NegPairFourth.second = InFunc(m_a - 0.0001);
 
-		NegDirVec.push_back(NegPairFirst);
-		NegDirVec.push_back(NegPairSecond);
-		NegDirVec.push_back(NegPairThird);
-		NegDirVec.push_back(NegPairFourth);
+		//std::vector<std::pair<double, double>> PosDirVec;
+		//// pos direction
+		//std::pair<double, double> PosPairFirst;
+		//PosPairFirst.first = m_a + 0.1;
+		//PosPairFirst.second = InFunc(m_a + 0.1);
+
+		//std::pair<double, double> PosPairSecond;
+		//PosPairSecond.first = m_a + 0.01;
+		//PosPairSecond.second = InFunc(m_a + 0.01);
+
+		//std::pair<double, double> PosPairThird;
+		//PosPairThird.first = m_a + 0.001;
+		//PosPairThird.second = InFunc(m_a + 0.001);
+
+		//std::pair<double, double> PosPairFourth;
+		//PosPairFourth.first = m_a + 0.0001;
+		//PosPairFourth.second = InFunc(m_a + 0.0001);
+
+		//PosDirVec.push_back(PosPairFirst);
+		//PosDirVec.push_back(PosPairSecond);
+		//PosDirVec.push_back(PosPairThird);
+		//PosDirVec.push_back(PosPairFourth);
+
+		//std::vector<std::pair<double, double>> NegDirVec;
+		//// neg direction
+		//std::pair<double, double> NegPairFirst;
+		//NegPairFirst.first = m_a - 0.1;
+		//NegPairFirst.second = InFunc(m_a - 0.1);
+
+		//std::pair<double, double> NegPairSecond;
+		//NegPairSecond.first = m_a - 0.01;
+		//NegPairSecond.second = InFunc(m_a - 0.01);
+
+		//std::pair<double, double> NegPairThird;
+		//NegPairThird.first = m_a - 0.001;
+		//NegPairThird.second = InFunc(m_a - 0.001);
+
+		//std::pair<double, double> NegPairFourth;
+		//NegPairFourth.first = m_a - 0.0001;
+		//NegPairFourth.second = InFunc(m_a - 0.0001);
+
+		//NegDirVec.push_back(NegPairFirst);
+		//NegDirVec.push_back(NegPairSecond);
+		//NegDirVec.push_back(NegPairThird);
+		//NegDirVec.push_back(NegPairFourth);
 
 		std::cout << "Evaluating Limit: Please Wait...\n";
 
@@ -3250,7 +3593,7 @@ public:
 	double GetLimitFromPosDir() const { return m_LimitFromPosDir; }
 	double GetLimitFromNegDir() const { return m_LimitFromNegDir; }
 
-	void CheckAndSetRationalFuncDiscontinunities(RationalFunction& InRationalFunc)
+	void CheckAndSetRationalFuncDiscontinunities(RationalFunction& InRationalFunc, const double& x)
 	{
 		if (!(std::isnan(m_L)))
 		{
@@ -3259,6 +3602,15 @@ public:
 
 			InRationalFunc.SetDiscontinunityPtr(DiscontinunityType::REMOVEABLE, m_L);
 		}
+		
+		//std::cout << " TESTING " << m_L << std::endl;
+
+		bool LimitFromPosDirPosOrNegInfinity = (std::isinf(m_LimitFromPosDir));
+		bool LimitFromNegDirPosOrNegInfinity = (std::isinf(m_LimitFromNegDir));
+
+		if (LimitFromPosDirPosOrNegInfinity && LimitFromNegDirPosOrNegInfinity)
+			InRationalFunc.SetDiscontinunityPtr(DiscontinunityType::INFINITE, x);
+	
 	}
 
 	void CheckAndSetPiecewiseFuncQuadLinearDiscontinunities(PiecewiseFunction<QuadraticFunction, LinearFunction>& InPiecewiseFunc, const double& x)
@@ -3672,7 +4024,4 @@ and an infinite discontinuity is a discontinuity located at a vertical asymptote
 // 2. Jump if limit exists from both sides but they are not equal.
 
 // 3. Infinity if limit is +- infinity on both sides
-
-
-
 

@@ -808,15 +808,17 @@ double Limit::EvaluateRootFuncLimit(const RootFunction & InRootFunc)
 
 
 
-bool DetermineContinunityAtAPoint(const RationalFunction& InFunc, const int& InPoint)
+bool DetermineContinunityAtAPoint(RationalFunction& InFunc, const int& InPoint)
 {
-	QuadraticFunction Numerator = InFunc.GetNumeratorQuadratic();
-	LinearFunction Denominator = InFunc.GetDenominatorLinear();
+	//QuadraticFunction Numerator = InFunc.GetNumeratorQuadratic();
+	//LinearFunction Denominator = InFunc.GetDenominatorLinear();
 
 	// Step 1: check to see if f(a) is defined
-	double TestOne = Numerator(InPoint) / Denominator(InPoint);
+	double TestOne = InFunc.GetLastCalculatedRes();
 
-	if (std::isnan(TestOne))
+	std::cout << "TESTONE" <<  TestOne << std::endl;
+
+	if (std::isnan(TestOne))// || std::isinf(TestOne))
 	{
 		// failed 
 		std::cout << "TestOneFailed: The function is not continuous at " << InPoint << "\n";
@@ -832,23 +834,39 @@ bool DetermineContinunityAtAPoint(const RationalFunction& InFunc, const int& InP
 
 
 
-		Limit TestTwoLimit(InFunc, InPoint);
-		double TestTwo = TestTwoLimit.GetLimitResult();
+		//Limit TestTwoLimit(InFunc, InPoint);
+		//double TestTwo = TestTwoLimit.GetLimitResult();
 
 		// if Limit Exists go to step 3
 		// TODO: Need a rational function check to return bool to see if it exists
 		// TODO: Need more example data in order to fix
 
-		if (TestOne != TestTwo)
+		Limit TestTwoLimit(InFunc, InPoint);
+		double TestTwoLimitNegDir = TestTwoLimit.GetLimitFromNegDir();
+		double TestTwoLimitPosDir = TestTwoLimit.GetLimitFromPosDir();
+
+		bool NegDirIsPosOrNegInf = (std::isinf(TestTwoLimitNegDir));
+		bool PosDirIsPosOrNegInf = (std::isinf(TestTwoLimitPosDir));
+
+		if (NegDirIsPosOrNegInf &&  PosDirIsPosOrNegInf)
 		{
-			std::cout << "TestThreeFailed: The function is not continuous at " << InPoint << "\n";
+			TestTwoLimit.CheckAndSetRationalFuncDiscontinunities(InFunc, InPoint);
+
+			std::cout << "TestTwoFailed: The function is not continuous at " << InPoint << "\n";
 			return false;
+
 		}
-		else
-		{
-			std::cout << "TestThreePassed: The function is continuous at " << InPoint << "\n";
-			return true;
-		}
+
+		//if (TestOne != TestTwo)
+		//{
+		//	std::cout << "TestThreeFailed: The function is not continuous at " << InPoint << "\n";
+		//	return false;
+		//}
+		//else
+		//{
+		//	std::cout << "TestThreePassed: The function is continuous at " << InPoint << "\n";
+		//	return true;
+		//}
 
 	}
 }
@@ -922,3 +940,6 @@ bool DetermineContinunityAtAPoint(PiecewiseFunction<QuadraticFunction, LinearFun
 
 	}
 }
+
+
+

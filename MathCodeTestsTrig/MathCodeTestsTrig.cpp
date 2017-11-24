@@ -189,31 +189,51 @@ int main()
 		//std::cout << "At x = " << TestRes.second << std::endl;
 
 
-		QuadraticFunction QuadTestOne(-1, 0, 4);
-		LinearFunction LinearTestOne(4, -8);
+		//QuadraticFunction QuadTestOne(-1, 0, 4);
+		//LinearFunction LinearTestOne(4, -8);
 
-		const int PointToCheck = 3;
+		//const int PointToCheck = 3;
 
-		
-		PiecewiseFunction<QuadraticFunction, LinearFunction>
-			PiecewiseFunc(QuadTestOne, "<=", LinearTestOne, ">", 3);
+		//
+		//PiecewiseFunction<QuadraticFunction, LinearFunction>
+		//	PiecewiseFunc(QuadTestOne, "<=", LinearTestOne, ">", 3);
 
-		//// evaluate at that point
-		PiecewiseFunc(PointToCheck);
+		////// evaluate at that point
+		//PiecewiseFunc(PointToCheck);
 
-		// The point we checked should have pushed that discontinunity if it existed
-		if (PiecewiseFunc.GetAmountOfDiscontinunitiesFound() > 0)
+		//// The point we checked should have pushed that discontinunity if it existed
+		//if (PiecewiseFunc.GetAmountOfDiscontinunitiesFound() > 0)
+		//{
+		//
+		//	bool DetermineContCheck = DetermineContinunityAtAPoint(PiecewiseFunc, PointToCheck);
+		//}
+
+		//auto PiecewisePtrInfoResult = PiecewiseFunc.GetCurrentDiscontinunityPtrInfo();
+
+		//std::cout << "\nPrinting First Discontinunity Info\n";
+		//PrintDiscontinunityType(PiecewisePtrInfoResult.first);
+		//std::cout << "At x = " << PiecewisePtrInfoResult.second << std::endl;
+
+
+		LinearFunction Numer(1, 2);
+		LinearFunction Denom(1, 1);
+
+		RationalFunction RatFunc(Numer, Denom);
+		const int PointToCheck = -1;
+
+		RatFunc(PointToCheck);
+
+		if (RatFunc.GetAmountOfDiscontinunitiesFound() > 0)
 		{
-		
-			bool DetermineContCheck = DetermineContinunityAtAPoint(PiecewiseFunc, PointToCheck);
+
+			bool bIsContinous = DetermineContinunityAtAPoint(RatFunc, PointToCheck);
 		}
 
-		auto PiecewisePtrInfoResult = PiecewiseFunc.GetCurrentDiscontinunityPtrInfo();
+		auto ResPtr = RatFunc.GetCurrentDiscontinunityPtrInfo();
 
 		std::cout << "\nPrinting First Discontinunity Info\n";
-		PrintDiscontinunityType(PiecewisePtrInfoResult.first);
-		std::cout << "At x = " << PiecewisePtrInfoResult.second << std::endl;
-
+		PrintDiscontinunityType(ResPtr.first);
+		std::cout << "At x = " << ResPtr.second << std::endl;
 
 
 
