@@ -167,6 +167,20 @@ public:
 
 	std::tuple<double, double, double> GetACDForm() const { return m_ACDForm; }
 
+
+	// Runs the full function form version
+	double operator()(const double& x) const 
+	{ 
+		double TermOne, TermTwo, TermThree, TermFour;
+		TermOne = (m_a * (std::pow(x, 3)));
+		TermTwo = (m_b * (std::pow(x, 2)));
+		TermThree = x*m_c;
+		TermFour = m_d;
+
+		return TermOne + TermTwo + TermThree + TermFour;
+	}
+
+
 };
 
 // f(x)=ax+b
@@ -609,6 +623,9 @@ tan(theta) = y/x
 // TODO: When im more experienced I need to figure out a way to implement the squeeze theorm for limits 
 // and implement it into this function 
 // https://cnx.org/contents/i4nRcikn@2.66:-xC--8XH@6/The-Limit-Laws
+
+
+// Trigonometric functions are continuous over their entire domains.
 
 class TrigonometricFunction : TranscendentalFunction
 {
@@ -2185,9 +2202,16 @@ public:
 // Example: In this case, we find the limit by performing addition and then applying one of our previous strategies. 
 // - https://cnx.org/contents/i4nRcikn@2.66:-xC--8XH@6/The-Limit-Laws#fs-id1170571669713
 // TODO: maybe make a limit class file later?
+
+//template <typename T>
 class Limit
 {
 private:
+
+	// TempVariable
+	bool m_bIsLinearFuncLimit = false;
+	LinearFunction m_LinearFunction;
+
 
 	double m_a;
 	std::function<double(const double&)> m_Function;
@@ -3453,7 +3477,7 @@ private:
 		//std::cout << std::setprecision(std::numeric_limits<double>::digits10 + 1)
 		//	<< std::setw(7) << std::floor(LocalPosRes) << std::endl;
 
-
+	
 
 		std::cout << std::endl;
 
@@ -3588,7 +3612,18 @@ private:
 		return std::ceil(LocalPosRes) / 100;
 	}
 
+	bool GetIsLinearFunctionLimit() const { return m_bIsLinearFuncLimit; }
+
 public:
+
+	LinearFunction GetLinearFunctionIfExists() const 
+	{
+		if (GetIsLinearFunctionLimit() == false)
+			throw std::logic_error("This limit does not hold a single linear function");
+
+		return m_LinearFunction;
+	}
+	
 
 	double GetLimitFromPosDir() const { return m_LimitFromPosDir; }
 	double GetLimitFromNegDir() const { return m_LimitFromNegDir; }
@@ -3638,7 +3673,9 @@ public:
 		: m_a(a)
 	{
 		m_L = EvaluateLinearFuncLimit(InLinearFunc);
-		
+		m_bIsLinearFuncLimit = true;
+		m_LinearFunction = InLinearFunc;
+
 		// TODO: remove debug code
 		DisplayLimitResult();
 	}
@@ -4025,3 +4062,93 @@ and an infinite discontinuity is a discontinuity located at a vertical asymptote
 
 // 3. Infinity if limit is +- infinity on both sides
 
+inline bool ApplyIntermediateValueTherom(const CubicFunction& InCubicFunc, const int& ClosedIntervalStart, const int& ClosedIntervalEnd)
+{
+	auto FullFunctionForm = InCubicFunc.GetABCD();
+
+	//auto a = std::get<0>(FullFunctionForm);
+	//auto b = std::get<1>(FullFunctionForm);
+	//auto c = std::get<2>(FullFunctionForm);
+	//auto d = std::get<3>(FullFunctionForm);
+
+	double StartIntervalRes = InCubicFunc(ClosedIntervalStart);
+	double EndIntervalRes = InCubicFunc(ClosedIntervalEnd);
+
+	bool OppositeSigns = (StartIntervalRes > 0 && EndIntervalRes < 0) || (StartIntervalRes < 0 && EndIntervalRes > 0);
+
+	if (OppositeSigns)
+	{
+		// There exists at least one zero in the interval
+		return true;
+	}
+}
+
+
+inline void ProveLinearFunctionLimitEpsilonDelta(const Limit& LinearFunctionLimit)
+{
+	LinearFunction LinearFunc = LinearFunctionLimit.GetLinearFunctionIfExists();
+
+	double a = LinearFunc.GetA();
+	double b = LinearFunc.GetB();
+
+	// Let  epsilon > 0
+
+	double Epsilon = 1;
+	double Delta = 1;
+	// This means we must prove that whatever follows is true no matter what positive value of ε is chosen.
+
+	auto L = LinearFunctionLimit.GetLimitResult();
+
+	// Factor the form
+	// (ax + b) = L
+	if (L > 0)
+	{
+		b = b - L;
+	}
+	else if (L < 0)
+	{
+		b = b + L;
+	}
+	else
+	{
+		// shouldnt reach here
+		throw std::logic_error("reached invalid location Prove epsilon delta linear func");
+	}
+
+	// current form is |ax + b| < epsilon
+	// check if needs factoring
+	
+	// Should only need this variable sometimes?
+	double Divisor = 0;
+	
+	if (a == b)
+	{
+		Divisor = a;
+
+		a = a / Divisor;
+		b = b / Divisor;
+		// Epsilion = Epsilion / Divisior;
+
+		// current form
+		// std::abs(LinearFunction NewForm(a, b)) <  Epsilion / Divisior;
+		
+		// Thus, it would seem that delta = Epsilion / Divisior is appropriate.
+		// Delta is std::abs(LinearFunction NewForm(a, b)) 
+		// Delta = Epsilion / Divisior;
+
+
+	}
+
+	// Now Assume 0 < | x − 1 | < Delta
+	// When Delta has been chosen
+
+	// Then 0<|x−1|< delta ,  then |(2x+1)−3|< epsilion.
+
+	// |2| |x-1|
+	// 2 *|x-1|
+	// < 2 * Delta ~~~~~~ here’s where we use the assumption that 0<|x−1|< delta
+	// Let our choice of delta = epsilion / divisior
+	// = 2*epsilion/divisor  // if divisior == 2  = epsilion
+
+
+}
