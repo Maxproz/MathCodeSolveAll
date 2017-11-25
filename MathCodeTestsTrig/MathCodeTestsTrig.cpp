@@ -260,9 +260,9 @@ int main()
 		const int x = 1;
 
 		Limit TestLimit(TestLinear, x);
-		auto Res = TestLimit.GetLimitResult();
+		
 
-		std::cout << Res << std::endl;
+		//std::cout << Res << std::endl;
 
 
 		// prove using epsilon delta
