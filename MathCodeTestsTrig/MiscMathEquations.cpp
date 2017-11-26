@@ -3,8 +3,10 @@
 
 
 #include <cmath>
+#include <iostream>
 
-
+using std::endl;
+using std::cout;
 
 
 double PercentageOfAValue(const double& Percent, const double& InVal)
@@ -71,6 +73,19 @@ double HeronsFormulaFindArea(const double & SideA, const double & SideB, const d
 	return OutArea;
 }
 
+// TODO: Move this to misc math functions
+long mygcd(long a, long b)
+{
+	if (a == 0)
+		return b;
+	else if (b == 0)
+		return a;
+
+	if (a < b)
+		return mygcd(a, b % a);
+	else
+		return mygcd(b, a % b);
+}
 
 std::pair<double, double> OutputDecimalAsFract(const double& input)
 {
@@ -94,4 +109,25 @@ std::pair<double, double> OutputDecimalAsFract(const double& input)
 
 	//std::cout << numerator << "/" << denominator << std::endl;
 	return std::pair<double, double>(numerator, denominator);
+}
+
+void PrintDecimalAsFraction(double input)
+{
+	double integral = std::floor(input);
+	double frac = input - integral;
+
+	const long precision = 100; // This is the accuracy. // was 1 million or so
+
+	long gcd_ = mygcd(round(frac * precision), precision);
+
+	long denominator = precision / gcd_;
+	long numerator = round(frac * precision) / gcd_;
+
+	/*
+	if (integral != 0)
+	{
+	std::cout << integral << " + ";
+	}*/
+
+	std::cout << numerator << "/" << denominator << std::endl;
 }

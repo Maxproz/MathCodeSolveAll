@@ -11,7 +11,7 @@ using std::function;
 using std::cout;
 using std::endl;
 
-const double my_gravityfeet(32);  // f/s^2
+//const double my_gravityfeet(32);  // f/s^2
 const double pi(3.14159);
 
 

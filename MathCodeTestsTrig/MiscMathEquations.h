@@ -27,6 +27,9 @@ double HeronsFormulaFindArea(const double& SideA, const double& SideB,
 // This forward declaration is needed
 long mygcd(long a, long b);
 
+
+void PrintDecimalAsFraction(double input);
+
 std::pair<double, double> OutputDecimalAsFract(const double& input);
 
 

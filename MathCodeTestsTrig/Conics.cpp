@@ -172,7 +172,7 @@ void WriteEquationOfRatatedConicStandardForm(
 
 	// Numerator == adjacent
 	// Denominator == opposite
-	std::pair<double, double> COT2ThetaPair = OutputDecimalAsFraction(COT2Theta);
+	std::pair<double, double> COT2ThetaPair = OutputDecimalAsFract(COT2Theta);
 
 	double Hypotenuse = std::sqrt(
 		std::pow(COT2ThetaPair.first,2) + 

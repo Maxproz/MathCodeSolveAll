@@ -1,5 +1,8 @@
 ﻿#pragma once
 
+
+#include "MiscMathEquations.h"
+
 #include <utility>
 #include <string>
 #include <map>
@@ -91,7 +94,7 @@ void WriteEquationOfRatatedConicStandardForm(
 	const double& C,
 	const double& Equals);
 
-std::pair<double, double> OutputDecimalAsFraction(double input);
+//std::pair<double, double> OutputDecimalAsFract(double input);
 
 ConicType UseDescrimentToFindConicType(
 	const double& B,
