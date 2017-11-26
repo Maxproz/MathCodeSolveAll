@@ -57,6 +57,10 @@ public:
 
 	QuadraticFunction() = default;
 
+	QuadraticFunction(const QuadraticFunction&) = default;
+
+	QuadraticFunction(QuadraticFunction&&) = default;
+
 	explicit QuadraticFunction(double a, double b, double c = 0) : m_a(a), m_b(b), m_c(c)
 	{
 		m_PolyFunctionType = PolynomialFunctionType::QUADRATIC;

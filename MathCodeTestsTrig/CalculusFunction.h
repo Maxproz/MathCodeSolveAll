@@ -137,8 +137,9 @@ inline double GetAreaUnderCurve(const int& IntervalStart, const int& IntervalEnd
 	return OutResult;
 }
 
+//template <typename FirstFunc, typename SecondFunc>
+//bool DetermineContinunityAtAPoint(RationalFunction<FirstFunc,SecondFunc>& InFunc, const int& InPoint);
 
-bool DetermineContinunityAtAPoint(RationalFunction& InFunc, const int& InPoint);
 bool DetermineContinunityAtAPoint(PiecewiseFunction<QuadraticFunction, LinearFunction>& InFunc, const int& InPoint);
 
 
@@ -227,71 +228,71 @@ inline bool ApplyIntermediateValueTherom(const CubicFunction& InCubicFunc, const
 }
 
 
-inline void ProveLinearFunctionLimitEpsilonDelta(const Limit& LinearFunctionLimit)
-{
-	LinearFunction LinearFunc = LinearFunctionLimit.GetLinearFunctionIfExists();
-
-	double a = LinearFunc.GetA();
-	double b = LinearFunc.GetB();
-
-	// Let  epsilon > 0
-
-	double Epsilon = 1;
-	double Delta = 1;
-	// This means we must prove that whatever follows is true no matter what positive value of ε is chosen.
-
-	auto L = LinearFunctionLimit.GetLimitResult();
-
-	// Factor the form
-	// (ax + b) = L
-	if (L > 0)
-	{
-		b = b - L;
-	}
-	else if (L < 0)
-	{
-		b = b + L;
-	}
-	else
-	{
-		// shouldnt reach here
-		throw std::logic_error("reached invalid location Prove epsilon delta linear func");
-	}
-
-	// current form is |ax + b| < epsilon
-	// check if needs factoring
-	
-	// Should only need this variable sometimes?
-	double Divisor = 0;
-	
-	if (a == b)
-	{
-		Divisor = a;
-
-		a = a / Divisor;
-		b = b / Divisor;
-		// Epsilion = Epsilion / Divisior;
-
-		// current form
-		// std::abs(LinearFunction NewForm(a, b)) <  Epsilion / Divisior;
-		
-		// Thus, it would seem that delta = Epsilion / Divisior is appropriate.
-		// Delta is std::abs(LinearFunction NewForm(a, b)) 
-		// Delta = Epsilion / Divisior;
-
-
-	}
-
-	// Now Assume 0 < | x − 1 | < Delta
-	// When Delta has been chosen
-
-	// Then 0<|x−1|< delta ,  then |(2x+1)−3|< epsilion.
-
-	// |2| |x-1|
-	// 2 *|x-1|
-	// < 2 * Delta ~~~~~~ here’s where we use the assumption that 0<|x−1|< delta
-	// Let our choice of delta = epsilion / divisior
-	// = 2*epsilion/divisor  // if divisior == 2  = epsilion
-
-
-}
+//inline void ProveLinearFunctionLimitEpsilonDelta(const Limit& LinearFunctionLimit)
+//{
+//	LinearFunction LinearFunc = LinearFunctionLimit.GetLinearFunctionIfExists();
+//
+//	double a = LinearFunc.GetA();
+//	double b = LinearFunc.GetB();
+//
+//	// Let  epsilon > 0
+//
+//	double Epsilon = 1;
+//	double Delta = 1;
+//	// This means we must prove that whatever follows is true no matter what positive value of ε is chosen.
+//
+//	auto L = LinearFunctionLimit.GetLimitResult();
+//
+//	// Factor the form
+//	// (ax + b) = L
+//	if (L > 0)
+//	{
+//		b = b - L;
+//	}
+//	else if (L < 0)
+//	{
+//		b = b + L;
+//	}
+//	else
+//	{
+//		// shouldnt reach here
+//		throw std::logic_error("reached invalid location Prove epsilon delta linear func");
+//	}
+//
+//	// current form is |ax + b| < epsilon
+//	// check if needs factoring
+//	
+//	// Should only need this variable sometimes?
+//	double Divisor = 0;
+//	
+//	if (a == b)
+//	{
+//		Divisor = a;
+//
+//		a = a / Divisor;
+//		b = b / Divisor;
+//		// Epsilion = Epsilion / Divisior;
+//
+//		// current form
+//		// std::abs(LinearFunction NewForm(a, b)) <  Epsilion / Divisior;
+//		
+//		// Thus, it would seem that delta = Epsilion / Divisior is appropriate.
+//		// Delta is std::abs(LinearFunction NewForm(a, b)) 
+//		// Delta = Epsilion / Divisior;
+//
+//
+//	}
+//
+//	// Now Assume 0 < | x − 1 | < Delta
+//	// When Delta has been chosen
+//
+//	// Then 0<|x−1|< delta ,  then |(2x+1)−3|< epsilion.
+//
+//	// |2| |x-1|
+//	// 2 *|x-1|
+//	// < 2 * Delta ~~~~~~ here’s where we use the assumption that 0<|x−1|< delta
+//	// Let our choice of delta = epsilion / divisior
+//	// = 2*epsilion/divisor  // if divisior == 2  = epsilion
+//
+//
+//}

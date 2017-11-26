@@ -40,6 +40,12 @@ public:
 
 	LinearFunction() = default;
 
+	LinearFunction(const LinearFunction&) = default;
+
+	LinearFunction(LinearFunction&&) = default;
+
+	LinearFunction& operator =(const LinearFunction &) = default;
+
 	explicit LinearFunction(double a, double b) : m_a(a), m_b(b)
 	{
 		m_PolyFunctionType = PolynomialFunctionType::LINEAR;

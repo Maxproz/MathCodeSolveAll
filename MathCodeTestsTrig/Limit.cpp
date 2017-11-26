@@ -1,8 +1,8 @@
 #include "Limit.h"
 
 
-
-double Limit::EvaluateRootFuncLimit(const RootFunction & InRootFunc)
+template <typename Function>
+double Limit<Function>::EvaluateRootFuncLimit(const RootFunction & InRootFunc)
 {
 	bool bDoesNegDirLimitExist = true;
 
@@ -245,6 +245,7 @@ double Limit::EvaluateRootFuncLimit(const RootFunction & InRootFunc)
 
 	std::cout << std::endl;
 
+	// return 0.0???
 	return 0.0;
 }
 

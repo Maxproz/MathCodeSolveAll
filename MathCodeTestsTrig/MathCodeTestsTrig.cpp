@@ -1,8 +1,6 @@
 ﻿// MathCodeTestsTrig.cpp : Defines the entry point for the console application.
 
 
-
-
 #include "stdafx.h"
 
 #include "CalculusFunction.h"
@@ -58,17 +56,28 @@ int main()
 		//delete IntervalEnd;
 
 
-		LinearFunction TestLinear(2, 1);
+		//LinearFunction TestLinear(2, 1);
 
-		const int x = 1;
+		//const int x = 1;
 
-		Limit TestLimit(TestLinear, x);
-		
-		//std::cout << Res << std::endl;
+		//Limit TestLimit(TestLinear, x);
+		//
+		////std::cout << Res << std::endl;
 
-		// prove using epsilon delta
+		//// prove using epsilon delta
 
-		ProveLinearFunctionLimitEpsilonDelta(TestLimit);
+		//ProveLinearFunctionLimitEpsilonDelta(TestLimit);
+
+
+		QuadraticFunction TestQuad(2, -3, 1);
+		LinearFunction TestLinear(5, 4);
+
+		RationalFunction<QuadraticFunction, LinearFunction> TestRational(TestQuad, TestLinear);
+
+		Limit<RationalFunction<QuadraticFunction, LinearFunction>> TestLimit(TestRational, 3);
+
+
+
 
 	}
 	catch (const std::exception& ex)

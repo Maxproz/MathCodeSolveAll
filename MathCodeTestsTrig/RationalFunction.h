@@ -19,22 +19,25 @@ using std::pair;
 using std::make_unique;
 
 
-
+template<typename NumFunc, typename DenomFunc>
 class RationalFunction : PolynomialFunction
 {
 private:
 
-	// Possible Numerator Functions
-	QuadraticFunction m_NumeratorQuadratic;
-	RootFunction m_NumeratorRoot; // Rational FUNCTIONS CANNOT HAVE ROOT FUNCTIONS AHHHHHHHHHHH
-	LinearFunction m_NumeratorLinear; // denominator func cannot be ==  to 0
+	NumFunc m_NumeratorFunction;
+	DenomFunc m_DenominatorFunction;
+
+	//// Possible Numerator Functions
+	//QuadraticFunction m_NumeratorQuadratic;
+	//RootFunction m_NumeratorRoot; // Rational FUNCTIONS CANNOT HAVE ROOT FUNCTIONS AHHHHHHHHHHH
+	//LinearFunction m_NumeratorLinear; // denominator func cannot be ==  to 0
 
 
-									  // Possible Denominator Functions
-	CubicFunction m_DenominatorCubic; // denominator func cannot be == to 0
-	LinearFunction m_DenominatorLinear; // denominator func cannot be ==  to 0
-	QuadraticFunction m_DenominatorQuadratic; // denominator func cannot be ==  to 0
-	RootFunction m_DenominatorRoot; // Rational FUNCTIONS CANNOT HAVE ROOT FUNCTIONS AHHHHHHHHHHH
+	//								  // Possible Denominator Functions
+	//CubicFunction m_DenominatorCubic; // denominator func cannot be == to 0
+	//LinearFunction m_DenominatorLinear; // denominator func cannot be ==  to 0
+	//QuadraticFunction m_DenominatorQuadratic; // denominator func cannot be ==  to 0
+	//RootFunction m_DenominatorRoot; // Rational FUNCTIONS CANNOT HAVE ROOT FUNCTIONS AHHHHHHHHHHH
 
 	PolynomialFunctionType m_NumeratorFuncType;
 	PolynomialFunctionType m_DenominatorFuncType;
@@ -52,9 +55,13 @@ private:
 
 public:
 
-	RationalFunction() = default;
-	RationalFunction(const RationalFunction&) = default;
-	RationalFunction(RationalFunction&&) = default;
+	//RationalFunction<NumFunc,DenomFunc>() = default;
+
+	////template <typename NumFunc, typename DenomFunc>
+	//RationalFunction(const RationalFunction<NumFunc, DenomFunc>&) = default;
+
+	////template<typename NumFunc, typename DenomFunc>
+	//RationalFunction(RationalFunction<NumFunc, DenomFunc>&&) = default;
 
 	const int GetAmountOfDiscontinunitiesFound() const { return m_AmountOfDiscontinunitiesFound; }
 	std::vector<int> GetFoundDiscontinunityLocations() const { return m_CurrentDiscontinousLocations; }
@@ -80,64 +87,85 @@ public:
 	}
 
 
+	//RationalFunction<NumFunc, DenomFunc>(const RationalFunction<NumFunc, DenomFunc>&) = default;
+	//RationalFunction<NumFunc,DenomFunc>& operator=(const RationalFunction<NumFunc, DenomFunc>&) = default;
+	//RationalFunction(const RationalFunction<NumFunc, DenomFunc>&) = default;
 
+	//RationalFunction(const RationalFunction<NumFunc, DenomFunc> &) = default;
 
-
-	explicit RationalFunction(const QuadraticFunction& Numerator, const CubicFunction& Denominator)
-		: m_NumeratorQuadratic(Numerator), m_DenominatorCubic(Denominator)
+	explicit RationalFunction(const NumFunc& Numerator, const DenomFunc& Denominator)
+		: m_NumeratorFunction(Numerator), m_DenominatorFunction(Denominator)
 	{
+
 		m_PolyFunctionType = PolynomialFunctionType::RATIONAL;
 
 		m_NumeratorFuncType = Numerator.GetCurrentFunctionType();
 		m_DenominatorFuncType = Denominator.GetCurrentFunctionType();
+
 	}
 
-	explicit RationalFunction(const QuadraticFunction& Numerator, const LinearFunction& Denominator)
-		: m_NumeratorQuadratic(Numerator), m_DenominatorLinear(Denominator)
-	{
-		m_PolyFunctionType = PolynomialFunctionType::RATIONAL;
+	//RationalFunction(const RationalFunction&) = delete;
+	//RationalFunction& operator =(const RationalFunction&) = delete;
 
-		m_NumeratorFuncType = Numerator.GetCurrentFunctionType();
-		m_DenominatorFuncType = Denominator.GetCurrentFunctionType();
-	}
+	//explicit RationalFunction(const QuadraticFunction& Numerator, const CubicFunction& Denominator)
+	//	: m_NumeratorQuadratic(Numerator), m_DenominatorCubic(Denominator)
+	//{
 
-	explicit RationalFunction(const QuadraticFunction& Numerator, const QuadraticFunction& Denominator)
-		: m_NumeratorQuadratic(Numerator), m_DenominatorQuadratic(Denominator)
-	{
-		m_PolyFunctionType = PolynomialFunctionType::RATIONAL;
 
-		m_NumeratorFuncType = Numerator.GetCurrentFunctionType();
-		m_DenominatorFuncType = Denominator.GetCurrentFunctionType();
-	}
+	//	m_PolyFunctionType = PolynomialFunctionType::RATIONAL;
 
-	// Rational FUNCTIONS CANNOT HAVE ROOT FUNCTIONS AHHHHHHHHHHH
-	explicit RationalFunction(const RootFunction& Numerator, const LinearFunction& Denominator)
-		: m_NumeratorRoot(Numerator), m_DenominatorLinear(Denominator)
-	{
-		m_PolyFunctionType = PolynomialFunctionType::RATIONAL;
+	//	m_NumeratorFuncType = Numerator.GetCurrentFunctionType();
+	//	m_DenominatorFuncType = Denominator.GetCurrentFunctionType();
 
-		m_NumeratorFuncType = Numerator.GetCurrentFunctionType();
-		m_DenominatorFuncType = Denominator.GetCurrentFunctionType();
-	}
 
-	// Rational FUNCTIONS CANNOT HAVE ROOT FUNCTIONS AHHHHHHHHHHH
-	explicit RationalFunction(const LinearFunction& Numerator, const RootFunction& Denominator)
-		: m_NumeratorLinear(Numerator), m_DenominatorRoot(Denominator)
-	{
-		m_PolyFunctionType = PolynomialFunctionType::RATIONAL;
+	//}
 
-		m_NumeratorFuncType = Numerator.GetCurrentFunctionType();
-		m_DenominatorFuncType = Denominator.GetCurrentFunctionType();
-	}
+	//explicit RationalFunction(const QuadraticFunction& Numerator, const LinearFunction& Denominator)
+	//	: m_NumeratorQuadratic(Numerator), m_DenominatorLinear(Denominator)
+	//{
+	//	m_PolyFunctionType = PolynomialFunctionType::RATIONAL;
 
-	explicit RationalFunction(const LinearFunction& Numerator, const LinearFunction& Denominator)
-		: m_NumeratorLinear(Numerator), m_DenominatorLinear(Denominator)
-	{
-		m_PolyFunctionType = PolynomialFunctionType::RATIONAL;
+	//	m_NumeratorFuncType = Numerator.GetCurrentFunctionType();
+	//	m_DenominatorFuncType = Denominator.GetCurrentFunctionType();
+	//}
 
-		m_NumeratorFuncType = Numerator.GetCurrentFunctionType();
-		m_DenominatorFuncType = Denominator.GetCurrentFunctionType();
-	}
+	//explicit RationalFunction(const QuadraticFunction& Numerator, const QuadraticFunction& Denominator)
+	//	: m_NumeratorQuadratic(Numerator), m_DenominatorQuadratic(Denominator)
+	//{
+	//	m_PolyFunctionType = PolynomialFunctionType::RATIONAL;
+
+	//	m_NumeratorFuncType = Numerator.GetCurrentFunctionType();
+	//	m_DenominatorFuncType = Denominator.GetCurrentFunctionType();
+	//}
+
+	//// Rational FUNCTIONS CANNOT HAVE ROOT FUNCTIONS AHHHHHHHHHHH
+	//explicit RationalFunction(const RootFunction& Numerator, const LinearFunction& Denominator)
+	//	: m_NumeratorRoot(Numerator), m_DenominatorLinear(Denominator)
+	//{
+	//	m_PolyFunctionType = PolynomialFunctionType::RATIONAL;
+
+	//	m_NumeratorFuncType = Numerator.GetCurrentFunctionType();
+	//	m_DenominatorFuncType = Denominator.GetCurrentFunctionType();
+	//}
+
+	//// Rational FUNCTIONS CANNOT HAVE ROOT FUNCTIONS AHHHHHHHHHHH
+	//explicit RationalFunction(const LinearFunction& Numerator, const RootFunction& Denominator)
+	//	: m_NumeratorLinear(Numerator), m_DenominatorRoot(Denominator)
+	//{
+	//	m_PolyFunctionType = PolynomialFunctionType::RATIONAL;
+
+	//	m_NumeratorFuncType = Numerator.GetCurrentFunctionType();
+	//	m_DenominatorFuncType = Denominator.GetCurrentFunctionType();
+	//}
+
+	//explicit RationalFunction(const LinearFunction& Numerator, const LinearFunction& Denominator)
+	//	: m_NumeratorLinear(Numerator), m_DenominatorLinear(Denominator)
+	//{
+	//	m_PolyFunctionType = PolynomialFunctionType::RATIONAL;
+
+	//	m_NumeratorFuncType = Numerator.GetCurrentFunctionType();
+	//	m_DenominatorFuncType = Denominator.GetCurrentFunctionType();
+	//}
 
 	inline PolynomialFunctionType GetNumeratorFunctionType() const
 	{
@@ -149,10 +177,10 @@ public:
 		return m_DenominatorFuncType;
 	}
 
-	double CallingRationalFunctionFuncOperator(const double& x)
-	{
-		return operator()(x);
-	}
+	//double CallingRationalFunctionFuncOperator(const double& x)
+	//{
+	//	return operator()(x);
+	//}
 
 	double operator()(const double& x)
 	{
@@ -204,16 +232,19 @@ public:
 
 	//friend double CallMemberFunctionFuncOperator(const double& x);
 
-	// Possible NumeratorGetters
-	QuadraticFunction GetNumeratorQuadratic() const { return m_NumeratorQuadratic; }
-	RootFunction GetNumeratorRoot() const { return m_NumeratorRoot; } // Rational FUNCTIONS CANNOT HAVE ROOT FUNCTIONS AHHHHHHHHHHH
-	LinearFunction GetNumeratorLinear() const { return m_NumeratorLinear; }
+	NumFunc GetNumeratorFunction() const { return m_NumeratorFunction; }
+	DenomFunc GetDenominatorFunction() const { return m_DenominatorFunction; }
 
-	// Possible Denominator Getters
-	CubicFunction GetDenominatorCubic() const { return m_DenominatorCubic; }
-	LinearFunction GetDenominatorLinear() const { return m_DenominatorLinear; }
-	QuadraticFunction GetDenominatorQuadratic() const { return m_DenominatorQuadratic; }
-	RootFunction GetDenominatorRoot() const { return m_DenominatorRoot; } // Rational FUNCTIONS CANNOT HAVE ROOT FUNCTIONS AHHHHHHHHHHH
+	//// Possible NumeratorGetters
+	//QuadraticFunction GetNumeratorQuadratic() const { return m_NumeratorQuadratic; }
+	//RootFunction GetNumeratorRoot() const { return m_NumeratorRoot; } // Rational FUNCTIONS CANNOT HAVE ROOT FUNCTIONS AHHHHHHHHHHH
+	//LinearFunction GetNumeratorLinear() const { return m_NumeratorLinear; }
+
+	//// Possible Denominator Getters
+	//CubicFunction GetDenominatorCubic() const { return m_DenominatorCubic; }
+	//LinearFunction GetDenominatorLinear() const { return m_DenominatorLinear; }
+	//QuadraticFunction GetDenominatorQuadratic() const { return m_DenominatorQuadratic; }
+	//RootFunction GetDenominatorRoot() const { return m_DenominatorRoot; } // Rational FUNCTIONS CANNOT HAVE ROOT FUNCTIONS AHHHHHHHHHHH
 
 };
 

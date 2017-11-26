@@ -1,5 +1,6 @@
 #include "RationalFunction.h"
 
 
-int RationalFunction::m_AmountOfDiscontinunitiesFound = 0;
+template <typename FirstFunc, typename SecondFunc>
+int RationalFunction<FirstFunc,SecondFunc>::m_AmountOfDiscontinunitiesFound = 0;
 
