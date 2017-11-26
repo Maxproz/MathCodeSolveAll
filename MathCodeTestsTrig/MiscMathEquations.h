@@ -1,6 +1,8 @@
 #pragma once
 
+#include <utility>
 
+using std::pair;
 
 // http://www.rapidtables.com/calc/math/Percentage_Calculator.htm
 
@@ -21,3 +23,18 @@ double HeronsFormulaCalculateS(const double& SideA, const double& SideB,
 
 double HeronsFormulaFindArea(const double& SideA, const double& SideB,
 	const double& SideC);
+
+// This forward declaration is needed
+long mygcd(long a, long b);
+
+std::pair<double, double> OutputDecimalAsFract(const double& input);
+
+
+// Maybe I will have a use for these later
+template<typename T>
+double evaluate_at(double x, const T& Function)
+{
+	return Function(x);
+}
+
+//typedef double (RationalFunction::* memfunptr)(const double&);

@@ -5,13 +5,21 @@
 #define MathConstants_H
 
 
-namespace MathConstants
-{
-	// forward declarations only
-	extern const double pi;
-	extern const double avogadro;
-	extern const double my_gravitymeters;
-	extern const double my_gravityfeet;
-}
+//namespace MathConstants
+//{
+//	// forward declarations only
+//	extern const double pi;
+//	extern const double avogadro;
+//	extern const double my_gravitymeters;
+//	extern const double my_gravityfeet;
+//}
+
+
+#define NEGINFINITY   ((float)(_HUGE_ENUF * _HUGE_ENUF) *(-1))
+
+const double Eulere = 2.718282;
+
+
+
 
 #endif

@@ -5,6 +5,8 @@
 #define FUNCTIONENUMS_H
 
 
+
+
 // Inclusive uses bracket notation
 enum class Domain
 {
@@ -55,6 +57,14 @@ enum class ParabolaOpen
 	DOWN
 };
 
+enum class DiscontinunityType
+{
+	REMOVEABLE,
+	JUMP,
+	INFINITE,
+};
+
+void PrintDiscontinunityType(const DiscontinunityType& InType);
 
 
 

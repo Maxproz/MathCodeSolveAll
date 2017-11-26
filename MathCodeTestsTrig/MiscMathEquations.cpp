@@ -1,7 +1,11 @@
 #include "stdafx.h"
 #include "MiscMathEquations.h"
 
+
 #include <cmath>
+
+
+
 
 double PercentageOfAValue(const double& Percent, const double& InVal)
 {
@@ -65,4 +69,29 @@ double HeronsFormulaFindArea(const double & SideA, const double & SideB, const d
 	
 	// return the area in square units.
 	return OutArea;
+}
+
+
+std::pair<double, double> OutputDecimalAsFract(const double& input)
+{
+	double integral = std::floor(input);
+	double frac = input - integral;
+
+	const long precision = 10; // This is the accuracy. // was 1 million or so
+
+	long gcd_ = mygcd(round(frac * precision), precision);
+
+	long denominator = precision / gcd_;
+	long numerator = round(frac * precision) / gcd_;
+
+	/*
+	if (integral != 0)
+	{
+	std::cout << integral << " + ";
+	}*/
+	if (input < 0)
+		numerator = numerator*-1;
+
+	//std::cout << numerator << "/" << denominator << std::endl;
+	return std::pair<double, double>(numerator, denominator);
 }
