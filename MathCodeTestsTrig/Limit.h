@@ -37,7 +37,7 @@ template <typename Function>
 inline void RunFunctionFromPosAndNegDirections(
 	std::vector<std::pair<double, double>>& PosDirVec,
 	std::vector<std::pair<double, double>>& NegDirVec,
-	Function m_Function,
+	Function& m_Function,
 	const double& m_a)
 {
 
@@ -192,7 +192,7 @@ private:
 		return FirstLimit + SecondLimit;
 	}
 
-	// helper function to help evaluate a limit if its a linear function
+
 	inline double EvaluateQuadraticFuncLimit(const QuadraticFunction& InQuadraticFunc)
 	{
 		// TODO: maybe change this to use limit rules later
@@ -200,425 +200,497 @@ private:
 		return InQuadraticFunc(m_a);
 	}
 
-	// TODO: This function really needs cleaned up.
-	//inline double EvaluateRationalFuncLimit(const RationalFunction& InRationalFunc)
-	template <typename Function>
-	inline double EvaluateFuncLimit(const Function& InFunction)
+
+	inline double EvaluateRationalFuncLimitQuadLinear(RationalFunction<QuadraticFunction, LinearFunction>& InFunction)
 	{
 		double NumeratorRes = 0;
 		double DenominatorRes = 0;
 
-		if (InFunction.GetNumeratorFunctionType() == PolynomialFunctionType::LINEAR &&
-			InFunction.GetDenominatorFunctionType() == PolynomialFunctionType::LINEAR)
-		{
+		QuadraticFunction Numerator = InFunction.GetNumeratorFunction();
+		LinearFunction Denominator = InFunction.GetDenominatorFunction();
 
+		DenominatorRes = Denominator(m_a);
+
+		if (DenominatorRes == 0)
+			throw std::domain_error("Denominator function cannot == 0");
+
+		NumeratorRes = Numerator(m_a);
+
+
+		std::vector<std::pair<double, double>> PosDirVec;
+		std::vector<std::pair<double, double>> NegDirVec;
+
+		RunFunctionFromPosAndNegDirections(PosDirVec, NegDirVec, std::move(InFunction)/*(Numerator, Denominator)*/, m_a);
+
+		std::cout << "Evaluating Limit: Please Wait...\n";
+
+		for (auto & num : PosDirVec)
+		{
+			std::cout << std::setprecision(std::numeric_limits<double>::digits10 + 1)
+				<< std::setw(7) << num.first << " " << num.second << std::endl;
 		}
 
-		//	LinearFunction Numerator = InFunction.GetNumeratorFunction();
-		//	LinearFunction Denominator = InFunction.GetDenominatorFunction();
+		std::cout << std::endl;
 
-		//	std::vector<std::pair<double, double>> PosDirVec;
-		//	std::vector<std::pair<double, double>> NegDirVec;
-
-		//	RunFunctionFromPosAndNegDirections(PosDirVec, NegDirVec, InFunction(Numerator, Denominator), m_a);
-
-
-
-		//	std::cout << "Evaluating Limit: Please Wait...\n";
-
-		//	for (auto & num : PosDirVec)
-		//	{
-
-		//		std::cout << std::setprecision(std::numeric_limits<double>::digits10 + 1)
-		//			<< std::setw(7) << num.first << " " << num.second << std::endl;
-		//	}
-
-		//	std::cout << std::endl;
-
-		//	for (auto & num : NegDirVec)
-		//	{
-		//		std::cout << std::setprecision(std::numeric_limits<double>::digits10 + 1)
-		//			<< std::setw(7) << num.first << " " << num.second << std::endl;
-		//	}
-
-		//	double TopRes = PosDirVec[3].second;
-		//	double BottomRes = NegDirVec[3].second;
-		//	/*std::cout << TopRes << std::endl;
-		//	std::cout << BottomRes << std::endl;*/
-
-
-		//	std::string TopResStr = std::to_string(TopRes);
-		//	// TODO: remove debug code later
-		//	std::cout << TopResStr << std::endl;
-
-		//	std::string BottomResStr = std::to_string(BottomRes);
-		//	// TODO: remove debug code later
-		//	std::cout << BottomResStr << std::endl;
-
-		//	double LocalPosRes = std::stod(TopResStr) * 100;
-
-		//	double LocalNegRes = std::stod(BottomResStr) * 100;
-
-		//	//std::cout << std::setprecision(std::numeric_limits<double>::digits10 + 1)
-		//	//	<< std::setw(7) << std::floor(LocalPosRes) << std::endl;
-
-
-
-		//	std::cout << std::endl;
-
-		//	// Are these limits infinite?
-		//	bool bIsPosDirPosInfinity = false;
-		//	bool bIsPosDirNegInfinity = false;
-		//	bool bIsNegDirNegInfinity = false;
-		//	bool bIsNegDirPosInfinity = false;
-
-
-		//	// TODO: I need a better way to check for infinity here its not detecting a small increase to a limit at 1
-
-		//	if (PosDirVec[1].second > PosDirVec[0].second)
-		//	{
-		//		if (PosDirVec[2].second > (PosDirVec[1].second * 9))
-		//		{
-		//			bIsPosDirPosInfinity = true;
-		//		}
-		//	}
-
-		//	if (NegDirVec[1].second < NegDirVec[0].second)
-		//	{
-		//		if (NegDirVec[2].second < (NegDirVec[1].second * 9))
-		//		{
-		//			bIsNegDirNegInfinity = true;
-		//		}
-		//	}
-
-		//	if (PosDirVec[1].second < PosDirVec[0].second)
-		//	{
-		//		if (PosDirVec[2].second < (PosDirVec[1].second * 9))
-		//		{
-		//			bIsPosDirNegInfinity = true;
-		//		}
-		//	}
-		//	if (NegDirVec[1].second > NegDirVec[0].second)
-		//	{
-		//		if (NegDirVec[2].second >(NegDirVec[1].second * 9))
-		//		{
-		//			bIsNegDirPosInfinity = true;
-		//		}
-		//	}
-
-
-		//	double LimitFromPosDir = 0;
-		//	double LimitFromNegDir = 0;
-
-
-
-
-		//	if (std::ceil(LocalPosRes) == std::floor(LocalNegRes))
-		//	{
-		//		std::cout << "We have a working limit result! 1\n";
-
-
-		//		if (bIsPosDirPosInfinity)
-		//		{
-		//			if (bIsNegDirPosInfinity)
-		//			{
-		//				std::cout << "As x approaches " << m_a << " Limit of f(x) = ";
-		//				std::cout << INFINITY << std::endl;
-		//				return INFINITY;
-		//			}
-		//		}
-
-		//		if (bIsPosDirNegInfinity)
-		//		{
-		//			if (bIsNegDirNegInfinity)
-		//			{
-		//				std::cout << "As x approaches " << m_a << " Limit of f(x) = ";
-		//				std::cout << NEGINFINITY << std::endl;
-		//				return NEGINFINITY;
-		//			}
-		//		}
-
-		//		//std::cout << std::setprecision(std::numeric_limits<double>::digits10 + 1)
-		//		//	<< std::setw(7) << PosDirVec[3].first << " " << PosDirVec[3].second << std::endl;
-
-		//		//std::cout << "Limit: " << std::ceil(LocalPosRes) / 100 << "\n";
-
-		//		//std::cout << std::setprecision(std::numeric_limits<double>::digits10 + 1)
-		//		//	<< std::setw(7) << NegDirVec[3].first << " " << NegDirVec[3].second << std::endl;
-
-
-		//		//	// return either
-		//		//return std::ceil(LocalPosRes) / 100;
-		//	}
-
-		//	// if you have two results that are returning negatives
-		//	// you need to do some sort of swap with floor / ceil
-		//	if (std::floor(LocalPosRes) == std::ceil(LocalNegRes))
-		//	{
-		//		std::cout << "We have a working limit result! 2\n";
-
-		//		std::cout << std::setprecision(std::numeric_limits<double>::digits10 + 1)
-		//			<< std::setw(7) << PosDirVec[3].first << " " << PosDirVec[3].second << std::endl;
-
-		//		std::cout << "Limit: " << std::floor(LocalPosRes) / 100 << "\n";
-
-		//		std::cout << std::setprecision(std::numeric_limits<double>::digits10 + 1)
-		//			<< std::setw(7) << NegDirVec[3].first << " " << NegDirVec[3].second << std::endl;
-
-
-		//		// return either
-		//		return std::floor(LocalPosRes) / 100;
-
-		//	}
-
-
-		//	std::cout << "Limit: DNE (does not exist): \n\n";
-
-		//	std::cout << "As x approaches " << m_a << " from the positive direction f(x) = ";
-		//	if (bIsPosDirPosInfinity)
-		//	{
-		//		std::cout << INFINITY << std::endl;
-
-		//		LimitFromPosDir = INFINITY;
-		//	}
-		//	else if (bIsPosDirNegInfinity)
-		//	{
-		//		std::cout << NEGINFINITY << std::endl;
-
-		//		LimitFromPosDir = NEGINFINITY;
-		//	}
-		//	else
-		//	{
-		//		//std::fesetround(FE_TONEAREST);
-		//		std::cout << std::setprecision(std::numeric_limits<double>::digits10 + 1)
-		//			<< std::setw(7) << PosDirVec[3].first << " " << std::nearbyint(PosDirVec[3].second) << std::endl;
-
-
-		//		LimitFromPosDir = std::nearbyint(PosDirVec[3].second);
-		//		LimitFromNegDir = std::nearbyint(NegDirVec[3].second);
-		//	}
-
-		//	std::cout << "As x approaches " << m_a << " from the negative direction f(x) = ";
-		//	if (bIsNegDirNegInfinity)
-		//	{
-		//		std::cout << NEGINFINITY << std::endl;
-
-		//		LimitFromNegDir = NEGINFINITY;
-		//	}
-		//	else if (bIsNegDirPosInfinity)
-		//	{
-		//		std::cout << INFINITY << std::endl;
-
-		//		LimitFromNegDir = INFINITY;
-		//	}
-		//	else
-		//	{
-		//		//std::fesetround(FE_TONEAREST);
-		//		std::cout << std::setprecision(std::numeric_limits<double>::digits10 + 1)
-		//			<< std::setw(7) << NegDirVec[3].first << " ";
-		//		std::cout << (std::nearbyint(NegDirVec[3].second)) << std::endl;
-
-		//		LimitFromPosDir = std::nearbyint(PosDirVec[3].second);
-		//		LimitFromNegDir = std::nearbyint(NegDirVec[3].second);
-
-		//	}
-
-
-		//	m_LimitFromPosDir = LimitFromPosDir;
-		//	m_LimitFromNegDir = LimitFromNegDir;
-
-		//	std::cout << std::endl;
-
-		//	// TODO: What do I return here, does it matter?
-		//	//return std::floor(LocalPosRes) / 100;
-		//	return InFunction.GetLastCalculatedRes();
-
-		//}
-
-
-
-		if (InFunction.GetNumeratorFunctionType() == PolynomialFunctionType::QUADRATIC &&
-			InFunction.GetDenominatorFunctionType() == PolynomialFunctionType::LINEAR)
+		for (auto & num : NegDirVec)
 		{
-			QuadraticFunction Numerator = InFunction.GetNumeratorFunction();
+			std::cout << std::setprecision(std::numeric_limits<double>::digits10 + 1)
+				<< std::setw(7) << num.first << " " << num.second << std::endl;
+		}
 
-			LinearFunction Denominator = InFunction.GetDenominatorFunction();
+		return NumeratorRes / DenominatorRes;
+
+		//if ((NumeratorRes == 0 && DenominatorRes == 0) && m_bTryConjSolution == false)
+		//{
+		//	LinearFunction NewFactoredNumerator;
+		//	LinearFunction NewFactoredDenominator;
+
+		//	std::vector<double> NumeratorZeros = Numerator.GetRealNumberZerosVec();
+		//	std::vector<double> DenominatorZeros;
+		//	DenominatorZeros.push_back(((Denominator.GetB() * (-1)) / Denominator.GetA()));
+
+		//	std::vector<double> NewNumerator;
+
+		//	for (int i = 0; i < NumeratorZeros.size(); ++i)
+		//	{
+		//		auto result1 = std::find(std::begin(DenominatorZeros), std::end(DenominatorZeros), NumeratorZeros[i]);
+
+		//		if (result1 != std::end(DenominatorZeros))
+		//		{
+		//			std::cout << "Numerator contains: " << NumeratorZeros[i] << '\n';
+		//		}
+		//		else
+		//		{
+		//			std::cout << "Numerator does not contain: " << NumeratorZeros[i] << '\n';
+		//			NewNumerator.push_back(NumeratorZeros[i]);
+		//		}
+		//	}
+
+		//	for (int i = 0; i < NewNumerator.size(); ++i)
+		//	{
+		//		std::cout << NewNumerator[i] << " ";
+		//		std::cout << std::endl;
+		//	}
+
+		//	//double One = std::abs(std::floor(NewNumerator[0]));
+		//	//double Two = NewNumerator[0];
+
+		//	//std::cout << "abs " << One << std::endl;
+		//	//std::cout << Two << std::endl;
+
+		//	if (/*std::abs*/(std::floor(NewNumerator[0])) == NewNumerator[0])
+		//	{
+		//		std::cout << "NewNumerator[0] is whole\n";
+
+
+		//		if (NewNumerator[0] == 0.0)
+		//		{
+		//			NewFactoredNumerator = LinearFunction(1, 0);
+		//		}
+		//		else
+		//		{
+		//			if (NewNumerator[0] < 0.0)
+		//			{
+		//				NewFactoredNumerator = LinearFunction(1, NewNumerator[0] * (-1));
+		//			}
+		//			else
+		//			{
+		//				NewFactoredNumerator = LinearFunction(1, NewNumerator[0]);
+		//			}
+		//		}
+		//	}
+		//	else
+		//	{
+		//		std::cout << "NewNumerator[0] is not whole\n";
+
+		//		std::pair<double, double> NumeratorFract = OutputDecimalAsFract(NewNumerator[0]);
+
+		//		std::cout << NumeratorFract.first << "/" << NumeratorFract.second << std::endl;
+
+		//		if (NumeratorFract.first < 0)
+		//		{
+		//			NewFactoredNumerator = LinearFunction(NumeratorFract.second, NumeratorFract.first);
+		//			//std::cout << DenominatorFract.first << "/" << DenominatorFract.second << std::endl;
+		//		}
+		//	}
 
 
 
+		//	std::vector<double> NewDenominator;
 
-			if ((NumeratorRes == 0 && DenominatorRes == 0) && m_bTryConjSolution == false)
+		//	for (int i = 0; i < DenominatorZeros.size(); ++i)
+		//	{
+		//		auto result1 = std::find(std::begin(NumeratorZeros), std::end(NumeratorZeros), DenominatorZeros[i]);
+
+		//		if (result1 != std::end(NumeratorZeros))
+		//		{
+		//			std::cout << "Denominator contains: " << DenominatorZeros[i] << '\n';
+		//		}
+		//		else
+		//		{
+		//			std::cout << "Denominator does not contain: " << DenominatorZeros[i] << '\n';
+		//			NewDenominator.push_back(DenominatorZeros[i]);
+		//		}
+		//	}
+
+		//	if (NewDenominator.empty())
+		//	{
+		//		NewFactoredNumerator.PrintLinearFunctionInfo();
+
+		//		double FinalFactoredNumerator = EvaluateLinearFuncLimit(NewFactoredNumerator);
+
+		//		std::cout << "FF Num: " << FinalFactoredNumerator << std::endl;
+
+		//		return FinalFactoredNumerator;
+
+		//	}
+		//	else
+		//	{
+
+		//		for (int i = 0; i < NewDenominator.size(); ++i)
+		//		{
+		//			std::cout << NewDenominator[i] << " ";
+		//			std::cout << std::endl;
+		//		}
+
+		//		if (std::abs(std::floor(NewDenominator[0])) == NewDenominator[0])
+		//		{
+		//			std::cout << "NewDenominator[0] is whole\n";
+
+		//			if (NewDenominator[0] == 0.0)
+		//			{
+		//				NewFactoredDenominator = LinearFunction(1, 0);
+		//			}
+		//			else
+		//			{
+		//				if (NewDenominator[0] < 0.0)
+		//				{
+		//					NewFactoredDenominator = LinearFunction(1, NewDenominator[0]);
+		//				}
+		//				else
+		//				{
+		//					NewFactoredDenominator = LinearFunction(1, NewDenominator[0] * (-1));
+		//				}
+		//			}
+
+		//		}
+		//		else
+		//		{
+		//			std::cout << "NewDenominator[0] is not whole\n";
+
+		//			std::pair<double, double> DenominatorFract = OutputDecimalAsFract(NewDenominator[0]);
+		//			if (DenominatorFract.first < 0)
+		//			{
+		//				std::cout << DenominatorFract.first << "/" << DenominatorFract.second << std::endl;
+		//				NewFactoredDenominator = LinearFunction(DenominatorFract.second, DenominatorFract.first*(-1));
+
+		//			}
+		//		}
+
+		//		NewFactoredNumerator.PrintLinearFunctionInfo();
+		//		NewFactoredDenominator.PrintLinearFunctionInfo();
+
+		//		double FinalFactoredNumerator = EvaluateLinearFuncLimit(NewFactoredNumerator);
+		//		double FinalFactoredDenominator = EvaluateLinearFuncLimit(NewFactoredDenominator);
+
+		//		std::cout << "FF Num: " << FinalFactoredNumerator << std::endl;
+		//		std::cout << "FF Den: " << FinalFactoredDenominator << std::endl;
+
+		//		return FinalFactoredNumerator / FinalFactoredDenominator;
+
+		//	}
+
+
+
+			//// TODO: remove debug code
+			//std::cout << "Numerator:\t " << NumeratorRes << std::endl;
+			//std::cout << "Denominator:\t " << DenominatorRes << std::endl;
+
+
+			//return NumeratorRes / DenominatorRes;
+		
+	}
+
+	
+	inline double EvaluateRationalFuncLimitNumDenomBothLinear(const RationalFunction<LinearFunction, LinearFunction>& InFunction)
+	{
+
+		LinearFunction Numerator = InFunction.GetNumeratorFunction();
+		LinearFunction Denominator = InFunction.GetDenominatorFunction();
+
+		std::vector<std::pair<double, double>> PosDirVec;
+		std::vector<std::pair<double, double>> NegDirVec;
+
+		RunFunctionFromPosAndNegDirections(PosDirVec, NegDirVec, InFunction(Numerator, Denominator), m_a);
+
+
+
+		std::cout << "Evaluating Limit: Please Wait...\n";
+
+		for (auto & num : PosDirVec)
+		{
+
+			std::cout << std::setprecision(std::numeric_limits<double>::digits10 + 1)
+				<< std::setw(7) << num.first << " " << num.second << std::endl;
+		}
+
+		std::cout << std::endl;
+
+		for (auto & num : NegDirVec)
+		{
+			std::cout << std::setprecision(std::numeric_limits<double>::digits10 + 1)
+				<< std::setw(7) << num.first << " " << num.second << std::endl;
+		}
+
+		double TopRes = PosDirVec[3].second;
+		double BottomRes = NegDirVec[3].second;
+		/*std::cout << TopRes << std::endl;
+		std::cout << BottomRes << std::endl;*/
+
+
+		std::string TopResStr = std::to_string(TopRes);
+		// TODO: remove debug code later
+		std::cout << TopResStr << std::endl;
+
+		std::string BottomResStr = std::to_string(BottomRes);
+		// TODO: remove debug code later
+		std::cout << BottomResStr << std::endl;
+
+		double LocalPosRes = std::stod(TopResStr) * 100;
+
+		double LocalNegRes = std::stod(BottomResStr) * 100;
+
+		//std::cout << std::setprecision(std::numeric_limits<double>::digits10 + 1)
+		//	<< std::setw(7) << std::floor(LocalPosRes) << std::endl;
+
+
+
+		std::cout << std::endl;
+
+		// Are these limits infinite?
+		bool bIsPosDirPosInfinity = false;
+		bool bIsPosDirNegInfinity = false;
+		bool bIsNegDirNegInfinity = false;
+		bool bIsNegDirPosInfinity = false;
+
+
+		// TODO: I need a better way to check for infinity here its not detecting a small increase to a limit at 1
+
+		if (PosDirVec[1].second > PosDirVec[0].second)
+		{
+			if (PosDirVec[2].second > (PosDirVec[1].second * 9))
 			{
-				LinearFunction NewFactoredNumerator;
-				LinearFunction NewFactoredDenominator;
+				bIsPosDirPosInfinity = true;
+			}
+		}
 
-				std::vector<double> NumeratorZeros = Numerator.GetRealNumberZerosVec();
-				std::vector<double> DenominatorZeros;
-				DenominatorZeros.push_back(((Denominator.GetB() * (-1)) / Denominator.GetA()));
+		if (NegDirVec[1].second < NegDirVec[0].second)
+		{
+			if (NegDirVec[2].second < (NegDirVec[1].second * 9))
+			{
+				bIsNegDirNegInfinity = true;
+			}
+		}
 
-				std::vector<double> NewNumerator;
+		if (PosDirVec[1].second < PosDirVec[0].second)
+		{
+			if (PosDirVec[2].second < (PosDirVec[1].second * 9))
+			{
+				bIsPosDirNegInfinity = true;
+			}
+		}
+		if (NegDirVec[1].second > NegDirVec[0].second)
+		{
+			if (NegDirVec[2].second > (NegDirVec[1].second * 9))
+			{
+				bIsNegDirPosInfinity = true;
+			}
+		}
 
-				for (int i = 0; i < NumeratorZeros.size(); ++i)
+
+		double LimitFromPosDir = 0;
+		double LimitFromNegDir = 0;
+
+
+
+
+		if (std::ceil(LocalPosRes) == std::floor(LocalNegRes))
+		{
+			std::cout << "We have a working limit result! 1\n";
+
+
+			if (bIsPosDirPosInfinity)
+			{
+				if (bIsNegDirPosInfinity)
 				{
-					auto result1 = std::find(std::begin(DenominatorZeros), std::end(DenominatorZeros), NumeratorZeros[i]);
-
-					if (result1 != std::end(DenominatorZeros))
-					{
-						std::cout << "Numerator contains: " << NumeratorZeros[i] << '\n';
-					}
-					else
-					{
-						std::cout << "Numerator does not contain: " << NumeratorZeros[i] << '\n';
-						NewNumerator.push_back(NumeratorZeros[i]);
-					}
+					std::cout << "As x approaches " << m_a << " Limit of f(x) = ";
+					std::cout << INFINITY << std::endl;
+					return INFINITY;
 				}
-
-				for (int i = 0; i < NewNumerator.size(); ++i)
-				{
-					std::cout << NewNumerator[i] << " ";
-					std::cout << std::endl;
-				}
-
-				//double One = std::abs(std::floor(NewNumerator[0]));
-				//double Two = NewNumerator[0];
-
-				//std::cout << "abs " << One << std::endl;
-				//std::cout << Two << std::endl;
-
-				if (/*std::abs*/(std::floor(NewNumerator[0])) == NewNumerator[0])
-				{
-					std::cout << "NewNumerator[0] is whole\n";
-
-
-					if (NewNumerator[0] == 0.0)
-					{
-						NewFactoredNumerator = LinearFunction(1, 0);
-					}
-					else
-					{
-						if (NewNumerator[0] < 0.0)
-						{
-							NewFactoredNumerator = LinearFunction(1, NewNumerator[0] * (-1));
-						}
-						else
-						{
-							NewFactoredNumerator = LinearFunction(1, NewNumerator[0]);
-						}
-					}
-				}
-				else
-				{
-					std::cout << "NewNumerator[0] is not whole\n";
-
-					std::pair<double, double> NumeratorFract = OutputDecimalAsFract(NewNumerator[0]);
-
-					std::cout << NumeratorFract.first << "/" << NumeratorFract.second << std::endl;
-
-					if (NumeratorFract.first < 0)
-					{
-						NewFactoredNumerator = LinearFunction(NumeratorFract.second, NumeratorFract.first);
-						//std::cout << DenominatorFract.first << "/" << DenominatorFract.second << std::endl;
-					}
-				}
-
-
-
-				std::vector<double> NewDenominator;
-
-				for (int i = 0; i < DenominatorZeros.size(); ++i)
-				{
-					auto result1 = std::find(std::begin(NumeratorZeros), std::end(NumeratorZeros), DenominatorZeros[i]);
-
-					if (result1 != std::end(NumeratorZeros))
-					{
-						std::cout << "Denominator contains: " << DenominatorZeros[i] << '\n';
-					}
-					else
-					{
-						std::cout << "Denominator does not contain: " << DenominatorZeros[i] << '\n';
-						NewDenominator.push_back(DenominatorZeros[i]);
-					}
-				}
-
-				if (NewDenominator.empty())
-				{
-					NewFactoredNumerator.PrintLinearFunctionInfo();
-
-					double FinalFactoredNumerator = EvaluateLinearFuncLimit(NewFactoredNumerator);
-
-					std::cout << "FF Num: " << FinalFactoredNumerator << std::endl;
-
-					return FinalFactoredNumerator;
-
-				}
-				else
-				{
-
-					for (int i = 0; i < NewDenominator.size(); ++i)
-					{
-						std::cout << NewDenominator[i] << " ";
-						std::cout << std::endl;
-					}
-
-					if (std::abs(std::floor(NewDenominator[0])) == NewDenominator[0])
-					{
-						std::cout << "NewDenominator[0] is whole\n";
-
-						if (NewDenominator[0] == 0.0)
-						{
-							NewFactoredDenominator = LinearFunction(1, 0);
-						}
-						else
-						{
-							if (NewDenominator[0] < 0.0)
-							{
-								NewFactoredDenominator = LinearFunction(1, NewDenominator[0]);
-							}
-							else
-							{
-								NewFactoredDenominator = LinearFunction(1, NewDenominator[0] * (-1));
-							}
-						}
-
-					}
-					else
-					{
-						std::cout << "NewDenominator[0] is not whole\n";
-
-						std::pair<double, double> DenominatorFract = OutputDecimalAsFract(NewDenominator[0]);
-						if (DenominatorFract.first < 0)
-						{
-							std::cout << DenominatorFract.first << "/" << DenominatorFract.second << std::endl;
-							NewFactoredDenominator = LinearFunction(DenominatorFract.second, DenominatorFract.first*(-1));
-
-						}
-					}
-
-					NewFactoredNumerator.PrintLinearFunctionInfo();
-					NewFactoredDenominator.PrintLinearFunctionInfo();
-
-					double FinalFactoredNumerator = EvaluateLinearFuncLimit(NewFactoredNumerator);
-					double FinalFactoredDenominator = EvaluateLinearFuncLimit(NewFactoredDenominator);
-
-					std::cout << "FF Num: " << FinalFactoredNumerator << std::endl;
-					std::cout << "FF Den: " << FinalFactoredDenominator << std::endl;
-
-					return FinalFactoredNumerator / FinalFactoredDenominator;
-
-				}
-
-
-
-				// TODO: remove debug code
-				std::cout << "Numerator:\t " << NumeratorRes << std::endl;
-				std::cout << "Denominator:\t " << DenominatorRes << std::endl;
-
-
-				return NumeratorRes / DenominatorRes;
 			}
 
+			if (bIsPosDirNegInfinity)
+			{
+				if (bIsNegDirNegInfinity)
+				{
+					std::cout << "As x approaches " << m_a << " Limit of f(x) = ";
+					std::cout << NEGINFINITY << std::endl;
+					return NEGINFINITY;
+				}
+			}
+
+			//std::cout << std::setprecision(std::numeric_limits<double>::digits10 + 1)
+			//	<< std::setw(7) << PosDirVec[3].first << " " << PosDirVec[3].second << std::endl;
+
+			//std::cout << "Limit: " << std::ceil(LocalPosRes) / 100 << "\n";
+
+			//std::cout << std::setprecision(std::numeric_limits<double>::digits10 + 1)
+			//	<< std::setw(7) << NegDirVec[3].first << " " << NegDirVec[3].second << std::endl;
+
+
+			//	// return either
+			//return std::ceil(LocalPosRes) / 100;
 		}
 
+		// if you have two results that are returning negatives
+		// you need to do some sort of swap with floor / ceil
+		if (std::floor(LocalPosRes) == std::ceil(LocalNegRes))
+		{
+			std::cout << "We have a working limit result! 2\n";
+
+			std::cout << std::setprecision(std::numeric_limits<double>::digits10 + 1)
+				<< std::setw(7) << PosDirVec[3].first << " " << PosDirVec[3].second << std::endl;
+
+			std::cout << "Limit: " << std::floor(LocalPosRes) / 100 << "\n";
+
+			std::cout << std::setprecision(std::numeric_limits<double>::digits10 + 1)
+				<< std::setw(7) << NegDirVec[3].first << " " << NegDirVec[3].second << std::endl;
+
+
+			// return either
+			return std::floor(LocalPosRes) / 100;
+
+		}
+
+
+		std::cout << "Limit: DNE (does not exist): \n\n";
+
+		std::cout << "As x approaches " << m_a << " from the positive direction f(x) = ";
+		if (bIsPosDirPosInfinity)
+		{
+			std::cout << INFINITY << std::endl;
+
+			LimitFromPosDir = INFINITY;
+		}
+		else if (bIsPosDirNegInfinity)
+		{
+			std::cout << NEGINFINITY << std::endl;
+
+			LimitFromPosDir = NEGINFINITY;
+		}
+		else
+		{
+			//std::fesetround(FE_TONEAREST);
+			std::cout << std::setprecision(std::numeric_limits<double>::digits10 + 1)
+				<< std::setw(7) << PosDirVec[3].first << " " << std::nearbyint(PosDirVec[3].second) << std::endl;
+
+
+			LimitFromPosDir = std::nearbyint(PosDirVec[3].second);
+			LimitFromNegDir = std::nearbyint(NegDirVec[3].second);
+		}
+
+		std::cout << "As x approaches " << m_a << " from the negative direction f(x) = ";
+		if (bIsNegDirNegInfinity)
+		{
+			std::cout << NEGINFINITY << std::endl;
+
+			LimitFromNegDir = NEGINFINITY;
+		}
+		else if (bIsNegDirPosInfinity)
+		{
+			std::cout << INFINITY << std::endl;
+
+			LimitFromNegDir = INFINITY;
+		}
+		else
+		{
+			//std::fesetround(FE_TONEAREST);
+			std::cout << std::setprecision(std::numeric_limits<double>::digits10 + 1)
+				<< std::setw(7) << NegDirVec[3].first << " ";
+			std::cout << (std::nearbyint(NegDirVec[3].second)) << std::endl;
+
+			LimitFromPosDir = std::nearbyint(PosDirVec[3].second);
+			LimitFromNegDir = std::nearbyint(NegDirVec[3].second);
+
+		}
+
+
+		m_LimitFromPosDir = LimitFromPosDir;
+		m_LimitFromNegDir = LimitFromNegDir;
+
+		std::cout << std::endl;
+
+		// TODO: What do I return here, does it matter?
+		//return std::floor(LocalPosRes) / 100;
+		return InFunction.GetLastCalculatedRes();
+
+	}
+
+
+
+	// TODO: This function really needs cleaned up.
+	//inline double EvaluateRationalFuncLimit(const RationalFunction& InRationalFunc)
+	//template <typename Function>
+	// TODO: Maybe i need to add another function that chooses the correct function to call based on the type?
+	inline double EvaluateFuncLimit(Function& InFunction)
+	{
+		double Result{ 0 };
+
+		switch (InFunction.GetCurrentFunctionType())
+		{
+			case PolynomialFunctionType::RATIONAL:
+			{
+				PolynomialFunctionType NumeratorType = InFunction.GetNumeratorFunctionType();
+				PolynomialFunctionType DenominatorType = InFunction.GetDenominatorFunctionType();
+
+				if (NumeratorType == PolynomialFunctionType::LINEAR && DenominatorType == PolynomialFunctionType::LINEAR)
+				{
+					//RationalFunction<LinearFunction, LinearFunction> Func = InFunction;
+					//Result = EvaluateRationalFuncLimitNumDenomBothLinear(InFunction);
+				}
+
+				if (NumeratorType == PolynomialFunctionType::QUADRATIC && DenominatorType == PolynomialFunctionType::LINEAR)
+				{
+					//RationalFunction<QuadraticFunction, LinearFunction> Func = std::move(InFunction);
+					Result = EvaluateRationalFuncLimitQuadLinear(InFunction);
+				}
+
+				break;
+			}
+			case PolynomialFunctionType::LINEAR:
+			{
+
+
+				break;
+			}
+			case PolynomialFunctionType::QUADRATIC:
+			{
+
+
+				break;
+			}
+			case PolynomialFunctionType::CUBIC:
+			{
+
+
+				break;
+			}
+		}
+
+		// TODO: remove debug code
+		std::cout << "Res:\t " << Result << std::endl;
+
+		return Result;
 
 
 		//// TODO: For fraction functions that contain square roots. Conjugate multiplication. SET IT UP
@@ -956,9 +1028,9 @@ private:
 		////	NumeratorRes = FinalA + FinalB + FinalC;
 		////}
 
-		// TODO: remove debug code
-		std::cout << "Numerator:\t " << NumeratorRes << std::endl;
-		std::cout << "Denominator:\t " << DenominatorRes << std::endl;
+		//// TODO: remove debug code
+		//std::cout << "Numerator:\t " << NumeratorRes << std::endl;
+		//std::cout << "Denominator:\t " << DenominatorRes << std::endl;
 
 
 		//if (NumeratorRes == 0 && DenominatorRes == 0)
@@ -972,7 +1044,7 @@ private:
 		//}
 
 
-		return NumeratorRes / DenominatorRes;
+		//return NumeratorRes / DenominatorRes;
 	}
 
 	inline double EvaluateCubicFunctionLimit(const CubicFunction& InCubicFunc)
@@ -1569,6 +1641,7 @@ public:
 
 		std::cout << "Is NumeratorFuncType Quadratic?: ";
 		auto NumeratorFuncType = m_Function.GetNumeratorFunctionType();
+		
 		if (NumeratorFuncType == PolynomialFunctionType::QUADRATIC)
 		{
 			std::cout << "Move Success" << endl;

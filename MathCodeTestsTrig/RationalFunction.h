@@ -18,11 +18,11 @@ using std::vector;
 using std::pair;
 using std::make_unique;
 
-template< class T >
-std::unique_ptr<T> copy_unique(const std::unique_ptr<T>& source)
-{
-	return source ? std::make_unique<T>(*source) : nullptr;
-}
+//template< class T >
+//std::unique_ptr<T> copy_unique(const std::unique_ptr<T>& source)
+//{
+//	return source ? std::make_unique<T>(*source) : nullptr;
+//}
 
 template <typename NumFunc, typename DenomFunc>
 class RationalFunction : public PolynomialFunction
@@ -50,12 +50,12 @@ private:
 
 
 	std::vector<int> m_CurrentDiscontinousLocations;
-	static int m_AmountOfDiscontinunitiesFound;
+	int m_AmountOfDiscontinunitiesFound = 0;
 
 	// Pointer to a type and a point it is discontinous at
 	std::unique_ptr<std::pair<DiscontinunityType, int>> m_Discontinuity = nullptr;
 
-	void IncreaseDiscontinunitiesFound() const { m_AmountOfDiscontinunitiesFound++; }
+	void IncreaseDiscontinunitiesFound() { m_AmountOfDiscontinunitiesFound++; }
 
 	mutable double m_LastCalculatedRes = 0;
 
@@ -81,7 +81,7 @@ public:
 		m_DenominatorFuncType = data.m_DenominatorFuncType;
 		m_CurrentDiscontinousLocations = data.m_CurrentDiscontinousLocations;
 		// TODO: how do i move the amount of discontinuties found?
-		//m_AmountOfDiscontinunitiesFound = data.m_AmountOfDiscontinunitiesFound;
+		m_AmountOfDiscontinunitiesFound = data.m_AmountOfDiscontinunitiesFound;
 		m_LastCalculatedRes = data.m_LastCalculatedRes;
 	}
 
@@ -93,7 +93,7 @@ public:
 		m_NumeratorFuncType = data.m_NumeratorFuncType;
 		m_DenominatorFuncType = data.m_DenominatorFuncType;
 		m_CurrentDiscontinousLocations = data.m_CurrentDiscontinousLocations;
-		//m_AmountOfDiscontinunitiesFound = data.m_AmountOfDiscontinunitiesFound;
+		m_AmountOfDiscontinunitiesFound = data.m_AmountOfDiscontinunitiesFound;
 		m_LastCalculatedRes = data.m_LastCalculatedRes;
 
 		return *this;
@@ -228,28 +228,33 @@ public:
 		double NumeratorRes{ 0.0 };
 		double DenominatorRes{ 0.0 };
 
-		switch (GetNumeratorFunctionType())
-		{
-			case PolynomialFunctionType::QUADRATIC:
-			{
-				NumeratorRes = m_NumeratorQuadratic(x);
-				break;
-			}
-			case PolynomialFunctionType::LINEAR:
-			{
-				NumeratorRes = m_NumeratorLinear(x);
-				break;
-			}
-		}
+		NumeratorRes = m_NumeratorFunction(x);
+		DenominatorRes = m_DenominatorFunction(x);
 
-		switch (GetDenominatorFunctionType())
-		{
-			case PolynomialFunctionType::LINEAR:
-			{
-				DenominatorRes = m_DenominatorLinear(x);
-				break;
-			}
-		}
+		//switch (GetNumeratorFunctionType())
+		//{
+		//	case PolynomialFunctionType::QUADRATIC:
+		//	{
+		//		QuadraticFunction Numer = 
+
+		//		NumeratorRes = m_NumeratorQuadratic(x);
+		//		break;
+		//	}
+		//	case PolynomialFunctionType::LINEAR:
+		//	{
+		//		NumeratorRes = m_NumeratorLinear(x);
+		//		break;
+		//	}
+		//}
+
+		//switch (GetDenominatorFunctionType())
+		//{
+		//	case PolynomialFunctionType::LINEAR:
+		//	{
+		//		DenominatorRes = m_DenominatorLinear(x);
+		//		break;
+		//	}
+		//}
 
 
 

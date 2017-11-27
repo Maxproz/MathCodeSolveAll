@@ -51,7 +51,7 @@ public:
 	{
 
 		// ROOT FUNCTIONS ARE NOT POLYNOMIAL FUNCTIONS AHHHHHHHHHHH
-		m_PolyFunctionType = PolynomialFunctionType::ROOT;
+		//m_PolyFunctionType = PolynomialFunctionType::ROOT;
 
 		if (n == 0)
 			throw exception("Pretty sure this is invalid algebra");
