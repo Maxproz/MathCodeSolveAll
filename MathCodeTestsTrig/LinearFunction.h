@@ -19,6 +19,7 @@ using std::endl;
 class LinearFunction : public PolynomialFunction
 {
 private:
+
 	double m_a;
 	double m_b;
 
@@ -42,9 +43,9 @@ public:
 
 	LinearFunction(const LinearFunction&) = default;
 
-	LinearFunction(LinearFunction&&) = default;
+	//LinearFunction(LinearFunction&&) = default;
 
-	LinearFunction& operator =(const LinearFunction &) = default;
+	//LinearFunction& operator =(const LinearFunction &) = default;
 
 	explicit LinearFunction(double a, double b) : m_a(a), m_b(b)
 	{

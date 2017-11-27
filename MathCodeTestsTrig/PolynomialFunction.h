@@ -31,6 +31,9 @@ protected:
 	PolynomialFunctionType m_PolyFunctionType;
 
 public:
+	PolynomialFunction() = default;
+
+	PolynomialFunction(const PolynomialFunction&) = default;
 
 	PolynomialFunctionType GetCurrentFunctionType() const { return m_PolyFunctionType; }
 

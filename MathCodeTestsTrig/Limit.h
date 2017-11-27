@@ -95,8 +95,9 @@ private:
 	//// TempVariable
 	//bool m_bIsLinearFuncLimit = false;
 	//LinearFunction m_LinearFunction;
+	//template <typename Function>
 
-	//Function m_Function;
+	Function m_Function;
 
 
 	double m_a;
@@ -201,7 +202,7 @@ private:
 
 	// TODO: This function really needs cleaned up.
 	//inline double EvaluateRationalFuncLimit(const RationalFunction& InRationalFunc)
-	//template <typename Function>
+	template <typename Function>
 	inline double EvaluateFuncLimit(const Function& InFunction)
 	{
 		double NumeratorRes = 0;
@@ -1553,20 +1554,36 @@ public:
 		}
 	}
 
-	//template<typename Function>
-	explicit Limit(const Function& InFunction, const double& a)
-		: /*m_Function(InFunction),*/ m_a(a)
+
+
+
+	 explicit Limit(Function& InFunction, const double& a)
+		: /* m_Function(InFunction), */m_a(a)
 	{
-		//m_Function = std::make_unique(InFunction);
+		m_Function = std::move(InFunction);
 
 		m_L = EvaluateFuncLimit(InFunction);
 
 		// automatically run the limit on construction
 		//m_L = operator()(a);
 
+		std::cout << "Is NumeratorFuncType Quadratic?: ";
+		auto NumeratorFuncType = m_Function.GetNumeratorFunctionType();
+		if (NumeratorFuncType == PolynomialFunctionType::QUADRATIC)
+		{
+			std::cout << "Move Success" << endl;
+		}
+		else
+		{
+			cout << "Fail" << endl;
+		}
+
 		// TODO: remove debug code
 		DisplayLimitResult();
 	}
+
+	
+	 // TODO: Set your evaluate func limit function up so it works for all types of template instantiations
 
 	//explicit Limit(std::function<double(const double&)> InFunc, const double& a)
 	//	: m_Function(InFunc), m_a(a)

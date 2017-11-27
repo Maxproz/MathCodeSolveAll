@@ -73,10 +73,12 @@ int main()
 		LinearFunction TestLinear(5, 4);
 
 		RationalFunction<QuadraticFunction, LinearFunction> TestRational(TestQuad, TestLinear);
+		
 
-		Limit<RationalFunction<QuadraticFunction, LinearFunction>> TestLimit(TestRational, 3);
+		Limit<decltype(TestRational)> TestLimit(TestRational, 3);
 
-
+		//Limit<RationalFunction<QuadraticFunction, LinearFunction>> TestLimit;
+		
 
 
 	}

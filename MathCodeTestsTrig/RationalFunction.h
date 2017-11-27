@@ -18,11 +18,17 @@ using std::vector;
 using std::pair;
 using std::make_unique;
 
+template< class T >
+std::unique_ptr<T> copy_unique(const std::unique_ptr<T>& source)
+{
+	return source ? std::make_unique<T>(*source) : nullptr;
+}
 
-template<typename NumFunc, typename DenomFunc>
-class RationalFunction : PolynomialFunction
+template <typename NumFunc, typename DenomFunc>
+class RationalFunction : public PolynomialFunction
 {
 private:
+
 
 	NumFunc m_NumeratorFunction;
 	DenomFunc m_DenominatorFunction;
@@ -55,10 +61,45 @@ private:
 
 public:
 
-	//RationalFunction<NumFunc,DenomFunc>() = default;
+	////template<typename NumFunc, typename DenomFunc>
+	RationalFunction<NumFunc,DenomFunc>() = default;
 
-	////template <typename NumFunc, typename DenomFunc>
-	//RationalFunction(const RationalFunction<NumFunc, DenomFunc>&) = default;
+	////template<typename NumFunc, typename DenomFunc>
+	//RationalFunction& operator=(const RationalFunction<NumFunc, DenomFunc> &) = default;
+
+	//template <typename NumFunc, typename DenomFunc>
+	RationalFunction<NumFunc, DenomFunc>(const RationalFunction<NumFunc, DenomFunc>&) = default;
+	
+	//RationalFunction() : a_(new int(33)) {}
+
+	RationalFunction<NumFunc, DenomFunc>(RationalFunction<NumFunc, DenomFunc> &&data)
+		: m_Discontinuity(std::move(data.m_Discontinuity = nullptr;))
+	{
+		m_NumeratorFunction = data.m_NumeratorFunction;
+		m_DenominatorFunction = data.m_DenominatorFunction;
+		m_NumeratorFuncType = data.m_NumeratorFuncType;
+		m_DenominatorFuncType = data.m_DenominatorFuncType;
+		m_CurrentDiscontinousLocations = data.m_CurrentDiscontinousLocations;
+		// TODO: how do i move the amount of discontinuties found?
+		//m_AmountOfDiscontinunitiesFound = data.m_AmountOfDiscontinunitiesFound;
+		m_LastCalculatedRes = data.m_LastCalculatedRes;
+	}
+
+	RationalFunction<NumFunc, DenomFunc>& operator=(RationalFunction<NumFunc,DenomFunc> &&data)
+	{
+		m_Discontinuity = std::move(data.m_Discontinuity);
+		m_NumeratorFunction = data.m_NumeratorFunction;
+		m_DenominatorFunction = data.m_DenominatorFunction;
+		m_NumeratorFuncType = data.m_NumeratorFuncType;
+		m_DenominatorFuncType = data.m_DenominatorFuncType;
+		m_CurrentDiscontinousLocations = data.m_CurrentDiscontinousLocations;
+		//m_AmountOfDiscontinunitiesFound = data.m_AmountOfDiscontinunitiesFound;
+		m_LastCalculatedRes = data.m_LastCalculatedRes;
+
+		return *this;
+	}
+
+
 
 	////template<typename NumFunc, typename DenomFunc>
 	//RationalFunction(RationalFunction<NumFunc, DenomFunc>&&) = default;
@@ -248,6 +289,26 @@ public:
 
 };
 
+//template<>
+//class RationalFunction<QuadraticFunction, LinearFunction> : PolynomialFunction
+//{
+//private:
+//
+//
+//public:
+//
+//	explicit RationalFunction(const QuadraticFunction& Numerator, const LinearFunction& Denominator)
+//		: m_NumeratorFunction(Numerator), m_DenominatorFunction(Denominator)
+//	{
+//
+//		m_PolyFunctionType = PolynomialFunctionType::RATIONAL;
+//
+//		m_NumeratorFuncType = Numerator.GetCurrentFunctionType();
+//		m_DenominatorFuncType = Denominator.GetCurrentFunctionType();
+//
+//	}
+//
+//};
 
 
 #endif

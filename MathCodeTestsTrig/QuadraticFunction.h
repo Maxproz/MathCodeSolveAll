@@ -31,6 +31,7 @@ std::vector<double> GetZerosQuadraticFormula(const double& a, const double& b, c
 class QuadraticFunction : public PolynomialFunction
 {
 private:
+
 	double m_a;
 	double m_b;
 	double m_c;
@@ -59,7 +60,9 @@ public:
 
 	QuadraticFunction(const QuadraticFunction&) = default;
 
-	QuadraticFunction(QuadraticFunction&&) = default;
+	//QuadraticFunction(QuadraticFunction&&) = default;
+
+	//QuadraticFunction& operator =(const QuadraticFunction &) = default;
 
 	explicit QuadraticFunction(double a, double b, double c = 0) : m_a(a), m_b(b), m_c(c)
 	{
