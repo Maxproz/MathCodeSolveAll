@@ -112,13 +112,18 @@ int main()
 		//LinearFunctionTest.PrintLinearFunctionInfo();
 			
 
-		LinearFunction TestLinear(-3, 2);
-		ConstantFunction TestConst(0);
+		//LinearFunction TestLinear(-3, 2);
+		//ConstantFunction TestConst(0);
 
-		Derivative<LinearFunction, ConstantFunction> TestDerivative(TestLinear);
+		//Derivative<LinearFunction, ConstantFunction> TestDerivative(TestLinear);
 
-		TestConst = TestDerivative.GetDerivativeFunction();
-		TestConst.PrintConstantFunctionInfo();
+		//TestConst = TestDerivative.GetDerivativeFunction();
+		//TestConst.PrintConstantFunctionInfo();
+		
+		QuadraticFunction TestQuad(1, 0, 0);
+		auto Result = GetSlopeOfSecantLine(3, TestQuad);
+
+		//std::cout << Result << std::endl;
 
 	}
 	catch (const std::exception& ex)

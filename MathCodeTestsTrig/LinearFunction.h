@@ -8,12 +8,13 @@
 #include <utility>
 #include <exception>
 #include <iostream>
+#include <vector>
 
 using std::pair;
 using std::exception;
 using std::cout;
 using std::endl;
-
+using std::vector;
 
 // f(x)=ax+b
 class LinearFunction : public PolynomialFunction
@@ -33,7 +34,48 @@ private:
 
 	bool m_bIsBOnlyForm = false;
 
+	std::vector<double> m_AllRealZeros;
+
+	inline void FindAndStoreAllRealZeros()
+	{
+		// form y = ax + b
+
+		// set linear func == to 0 solve
+		double LocalA = m_a;
+		double LocalB = m_b;
+
+		//bool bIsANegative = m_a < 0;
+		bool bIsBNegative = m_b < 0.0;
+
+		double LeftHandSide = LocalA; // * x
+		
+		double RightHandSide{ 0.0 };
+
+
+		if (bIsBNegative)
+		{
+			RightHandSide = RightHandSide + (LocalB * (-1));
+		}
+		else
+		{
+			RightHandSide = RightHandSide + (LocalB * (-1));
+		}
+
+
+		double RealZero = RightHandSide / LocalA;
+
+		const bool bIsANumber = (!(std::isnan(RealZero)));
+		if (bIsANumber)
+		{
+			m_AllRealZeros.push_back(RealZero);
+		}
+		
+
+	}
+
 public:
+
+	inline std::vector<double> GetRealNumberZerosVec() const { return m_AllRealZeros; }
 
 	// if a > b etc.. TODO:
 
@@ -97,7 +139,12 @@ public:
 			m_LineBehavior = LineBehavior::Horizontal;
 		}
 
+
+		FindAndStoreAllRealZeros();
+
 	}
+
+
 
 	double operator()(double x) const { return ((m_a*x) + m_b); }
 

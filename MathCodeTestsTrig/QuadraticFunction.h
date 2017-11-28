@@ -42,7 +42,7 @@ private:
 	int m_AmountOfRealNumberZeros;
 	//AmountOfRealNumberSoltuions m_RealSolutionAmount;
 
-	vector<double> m_AllZeros;
+//	vector<double> m_AllZeros;
 
 	double m_SymmetryLine;
 
@@ -189,7 +189,7 @@ public:
 		return std::tuple<double, double, double>(m_a, m_b, m_c);
 	}
 
-	void SetAllZeroVec(std::vector<double> InVec) { m_AllZeros = InVec; }
+	//void SetAllZeroVec(std::vector<double> InVec) { m_AllZeros = InVec; }
 	void SetRealNumberZeroVec(std::vector<double> InVec) { m_RealNumberZeros = InVec; }
 	void SetLineOfSymmetry(double InNum) { m_SymmetryLine = InNum; }
 	void SetTheMaxMinValue(double InNum);
@@ -218,6 +218,8 @@ public:
 	}
 
 	std::vector<double> GetRealNumberZerosVec() const { return m_RealNumberZeros; }
+
+	//std::vector<double> GetAllZerosVec() const { return m_RealNumberZeros; }
 	inline int GetAmountOfRealZeros() const { return m_AmountOfRealNumberZeros; }
 
 };

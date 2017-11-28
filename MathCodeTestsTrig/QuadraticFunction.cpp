@@ -81,13 +81,13 @@ void QuadraticFunction::PrintParabolaOpensDirection() const
 
 void QuadraticFunction::PrintAllZeros() const
 {
-	std::cout << "Printing all zeros of the function\n";
+	//std::cout << "Printing all zeros of the function\n";
 
-	for (const auto& zero : m_AllZeros)
-	{
-		std::cout << zero << std::endl;
-	}
-	std::cout << "Done printing all zeros\n";
+	//for (const auto& zero : m_AllZeros)
+	//{
+	//	std::cout << zero << std::endl;
+	//}
+	//std::cout << "Done printing all zeros\n";
 
 }
 
@@ -158,7 +158,7 @@ std::vector<double> GetZerosQuadraticFormula(QuadraticFunction& QuadraticFunc)
 	}
 
 
-	QuadraticFunc.SetAllZeroVec(LocalVecOfZeros);
+	//QuadraticFunc.SetAllZeroVec(LocalVecOfZeros);
 	QuadraticFunc.SetRealNumberZeroVec(OutVecRealNumZeros);
 
 	// Line of symmetry is between the two zeros.

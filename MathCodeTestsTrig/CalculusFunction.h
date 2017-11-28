@@ -3,7 +3,7 @@
 
 
 #include <functional>
-
+#include <algorithm>    // std::find_if
 
 /* old includes before refactor */
 #include "Circle.h"
@@ -59,6 +59,205 @@ inline double GetSlopeOfSecantLineTwoPoints(const Point& FirstPoint, const Point
 	double Denominator = x - a;
 
 	double SlopeOfSecantLine = Numerator / Denominator;
+
+	return SlopeOfSecantLine;
+}
+
+//template <typename Func>
+//inline double GetSlopeOfSecantLine(const double& x, const double& a, const Func& F)
+//{
+//	// use formula return result
+//	double Numerator = F. - F(a);
+//	double Denominator = x - a;
+//
+//	double SlopeOfSecantLine = Numerator / Denominator;
+//
+//	return SlopeOfSecantLine;
+//}
+
+//bool IsOdd(int i) 
+//{
+//	return ((i % 2) == 1);
+//}
+
+
+// Assumes the zeros are not fractions
+inline LinearFunction FactorNumeratorRationalFunc(const QuadraticFunction& InNumerator, const LinearFunction& InDenominator)
+{
+	// assumes a simple factor with - QuadraticFunction m_a == 1;
+	auto NumABTemp = InNumerator.GetAB();
+	double ExceptionCheckA = std::get<0>(NumABTemp);
+	if (ExceptionCheckA != 1)
+	{
+		throw std::logic_error("Simple factor is not able to handle this quadratic");
+	}
+
+
+	auto QuadNumVec = InNumerator.GetRealNumberZerosVec();
+	auto LinearNumVec = InDenominator.GetRealNumberZerosVec();
+
+	cout << QuadNumVec.size() << endl;
+	cout << LinearNumVec.size() << endl;
+	
+	//for (int i = 0; i < QuadNumVec.size(); ++i)
+	//{
+	//	cout << QuadNumVec[i] << endl;
+	//}
+
+	// Have both zeros vectors 
+	// assign a variable to the denominator zero
+	// check to see if this variable is in the numerator
+	// if it is "erase" it from numerator and denominator
+	// and return a linear function that displays the factored form
+
+	//int i = 0;
+
+	if (LinearNumVec.size() >= 1)
+	{
+		double NumeratorZero = LinearNumVec.front();
+
+		auto TryFindZero = std::find(QuadNumVec.begin(), QuadNumVec.end(), NumeratorZero);
+		
+		if (TryFindZero != QuadNumVec.end())
+		{
+			std::cout << "DEBUG 1" << endl;
+			
+			// Found a zero
+			// "erase" it by reformatting a quadratic / a linear
+			double MatchingZero = *TryFindZero;
+			std::cout << "MatchingZero: " << *TryFindZero << endl;
+
+			QuadNumVec.erase(TryFindZero);
+			QuadNumVec.shrink_to_fit();
+			LinearNumVec.pop_back();
+
+			//std::sort(QuadNumVec.begin(), QuadNumVec.end(), std::greater<double>());
+		
+			//LinearNumVec.pop_back();
+
+			//for (int i = 0; i < QuadNumVec.size(); ++i)
+			//{
+			//	cout << QuadNumVec[i] << endl;
+			//}
+
+			//auto NumRemove = std::remove(QuadNumVec.begin(), QuadNumVec.end(), MatchingZero);
+			//auto DenomRemove = std::remove(LinearNumVec.begin(), LinearNumVec.end(), MatchingZero);
+		}
+		else
+		{
+			throw std::logic_error("Zero found in denominator not found in numerator");
+		}
+	}
+	else
+	{
+		throw std::logic_error("Assuming the wrong func form FactorNumeratorRationalFunc");
+	}
+
+
+	// here is where I would add checks for fractional numbers
+
+
+	// Set up the remaining linear function to be returned after factoring
+	double NewAVar{ 0.0 };
+	double NewBVar{ 0.0 };
+
+	// assumes a simple factor with - QuadraticFunction m_a == 1;
+	NewAVar = 1;
+
+	cout << QuadNumVec.size() << endl;
+	cout << LinearNumVec.size() << endl;
+
+	double OtherBZero = QuadNumVec.front();
+	// current form x = OtherBZero
+
+
+	cout << "LastZero: " << OtherBZero << endl;
+
+	double LHSBForm{ 0.0 };
+
+
+
+	if (OtherBZero < 0)
+	{
+		LHSBForm = LHSBForm + (OtherBZero * (-1));
+	}
+	else if (OtherBZero > 0)
+	{
+		LHSBForm = LHSBForm + (OtherBZero * (-1));
+	}
+	else
+	{
+		// == 0 ?? I will see the reaction to this later
+		throw std::logic_error("Undefined Logic Error");
+	}
+	
+	LinearFunction OutFunc(NewAVar, LHSBForm);
+
+	return OutFunc;
+
+}
+
+inline double GetSlopeOfSecantLine(const double& a, const QuadraticFunction& F)
+{
+	// use formula return result
+	
+	auto TupleABC = F.GetABC();
+	double QuadA = std::get<0>(TupleABC);
+	double QuadB = std::get<1>(TupleABC);
+	double QuadC = std::get<2>(TupleABC);
+
+	double FofA = F(a);
+	std::cout << "FofA = 9 == " << FofA << endl;
+
+	QuadC = QuadC - FofA;
+
+	QuadraticFunction Numerator = QuadraticFunction(QuadA, QuadB, QuadC);
+	//double InA = a*-1;
+	LinearFunction Denominator(1, a * (-1));
+
+	LinearFunction FactoredFunc = FactorNumeratorRationalFunc(Numerator, Denominator);
+
+	FactoredFunc.PrintLinearFunctionInfo();
+
+	// Take the limit of the factored function to find the slope of the secant line
+	Limit<LinearFunction> LocalLimit(FactoredFunc, a);
+	double SlopeOfSecantLine = LocalLimit.GetLimitResult();
+
+	// Next, find a point on the tangent line.
+
+	// Since the line is tangent to the graph of f(x)x=3,
+	// it passes through the point (3,f(3)).
+	// We have f(3)=9, so the tangent line passes through the point (3,9).
+
+	// TODO: Finish next steps
+
+	return SlopeOfSecantLine;
+}
+
+//  if h≠0 is chosen so that a+h is in the interval
+template <typename Func>
+inline double GetSlopeOfSecantLineTwoPointsWithIncrementH(const double& a, const double& h, const Func& F)
+{
+	//double a = FirstPoint.first;
+	//double FOfa = FirstPoint.second;
+
+	//double a = SecondPoint.first;
+	//double FOfx = SecondPoint.second;
+
+	//// use formula return result
+	//double Numerator = FOfx - FOfa;
+	//double Denominator = x - a;
+
+	//double SlopeOfSecantLine = Numerator / Denominator;
+
+	double SlopeOfSecantLine{ 0 };
+
+	double Numerator = (F(a + h)) - (F(a));
+	double Denominator = h;
+
+	SlopeOfSecantLine = Numerator / Denominator;
+	//std::cout << Numerator << std::endl;
+	//std::cout << Denominator << std::endl;
 
 	return SlopeOfSecantLine;
 }
