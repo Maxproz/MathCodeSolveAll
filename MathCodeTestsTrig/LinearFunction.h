@@ -109,7 +109,30 @@ public:
 	//	ax + by = c,
 	//where a, ba, b are both not zero, to denote the standard form of a line.
 
-	inline void PrintLinearFunctionInfo() const { cout << " f(x) = " << m_a << "x^2 + " << m_b << endl; }
+	inline void PrintLinearFunctionInfo() const 
+	{
+		cout << "f(x) = " << m_a << "x";
+		if (m_b == 0)
+		{
+			cout << endl;
+			return;
+		}
+		else
+		{
+			char PlusOrMinus;
+			if (m_b < 0)
+			{
+				PlusOrMinus = ' ';
+			}
+			else
+			{
+				PlusOrMinus = '+';
+			}
+
+			cout << PlusOrMinus << m_b << endl;
+		}
+
+	}
 
 	inline bool IsBOnlyForm() const { return m_bIsBOnlyForm; }
 

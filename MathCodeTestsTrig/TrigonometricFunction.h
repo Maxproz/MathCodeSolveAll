@@ -157,9 +157,21 @@ public:
 
 	}
 
-	double operator()(const double& x)
+	// try this out for a bit? until I better understand the inverse crap
+	double operator()(const double& x, const bool& bIsInverseFunction = false)
 	{
-		double First = (x + m_c) * m_b;
+		double X = x;
+
+		if (bIsInverseFunction == true)
+		{
+			X = std::pow(x, -1);
+		}
+		else
+		{
+
+		}
+
+		double First = (X + m_c) * m_b;
 		double InFunc = std::cos(First);
 		double StretchOrShrink = InFunc * m_a;
 		double VertShift = StretchOrShrink + m_d;
@@ -187,9 +199,21 @@ public:
 
 	}
 
-	double operator()(const double& x)
+	// try this out for a bit? until I better understand the inverse crap
+	double operator()(const double& x, const bool& bIsInverseFunction = false)
 	{
-		double First = (x + m_c) * m_b;
+		double X = x;
+
+		if (bIsInverseFunction == true)
+		{
+			X = std::pow(x, -1);
+		}
+		else
+		{
+
+		}
+
+		double First = (X + m_c) * m_b;
 		double InFunc = std::tan(First);
 		double StretchOrShrink = InFunc * m_a;
 		double VertShift = StretchOrShrink + m_d;

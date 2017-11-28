@@ -6,6 +6,8 @@
 #include "CalculusFunction.h"
 #include "ConstantFunction.h"
 #include "TrigonometricFunction.h"
+#include "Derivative.h"
+
 
 // TODO: Should I create a class for typedefs?
 typedef std::pair<double, double> Point;
@@ -96,9 +98,27 @@ int main()
 
 		//Limit<decltype(TestRational1)> TestLimit1(TestRational1, 2);
 
-		TrigometricFunction<MPSIN> SinFunctionTest(1, 1, 0, 0);
-		auto Result = SinFunctionTest(0.1, true);
-		std::cout << Result << std::endl;
+		//TrigometricFunction<MPSIN> SinFunctionTest(1, 1, 0, 0);
+		//auto Result = SinFunctionTest(0.1, true);
+		//std::cout << Result << std::endl;
+
+
+		//QuadraticFunction TestQuad(1, -2, 0);
+		//QuadraticFunction TestQuad(1, 0, 0);
+		//Derivative<QuadraticFunction, LinearFunction> TestDerivative(TestQuad);
+
+		//LinearFunction LinearFunctionTest(0, 0);
+		//LinearFunctionTest = TestDerivative.GetDerivativeFunction();
+		//LinearFunctionTest.PrintLinearFunctionInfo();
+			
+
+		LinearFunction TestLinear(-3, 2);
+		ConstantFunction TestConst(0);
+
+		Derivative<LinearFunction, ConstantFunction> TestDerivative(TestLinear);
+
+		TestConst = TestDerivative.GetDerivativeFunction();
+		TestConst.PrintConstantFunctionInfo();
 
 	}
 	catch (const std::exception& ex)

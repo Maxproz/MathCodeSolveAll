@@ -31,6 +31,12 @@ public:
 	{
 		return m_b;
 	}
+
+
+	inline void PrintConstantFunctionInfo() const
+	{
+		cout << "f(x) = " << m_b << endl;
+	}
 	
 };
 
