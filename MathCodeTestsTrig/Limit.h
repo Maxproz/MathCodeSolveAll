@@ -18,6 +18,7 @@
 #include "QuadraticFunction.h"
 #include "MiscMathEquations.h"
 #include "MathConstants.h" // for NEGINFINITY
+#include "ConstantFunction.h"
 
 using std::vector;
 using std::pair;
@@ -201,44 +202,7 @@ private:
 	}
 
 
-	inline double EvaluateRationalFuncLimitQuadLinear(RationalFunction<QuadraticFunction, LinearFunction>& InFunction)
-	{
-		double NumeratorRes = 0;
-		double DenominatorRes = 0;
 
-		QuadraticFunction Numerator = InFunction.GetNumeratorFunction();
-		LinearFunction Denominator = InFunction.GetDenominatorFunction();
-
-		DenominatorRes = Denominator(m_a);
-
-		if (DenominatorRes == 0)
-			throw std::domain_error("Denominator function cannot == 0");
-
-		NumeratorRes = Numerator(m_a);
-
-
-		std::vector<std::pair<double, double>> PosDirVec;
-		std::vector<std::pair<double, double>> NegDirVec;
-
-		RunFunctionFromPosAndNegDirections(PosDirVec, NegDirVec, std::move(InFunction)/*(Numerator, Denominator)*/, m_a);
-
-		std::cout << "Evaluating Limit: Please Wait...\n";
-
-		for (auto & num : PosDirVec)
-		{
-			std::cout << std::setprecision(std::numeric_limits<double>::digits10 + 1)
-				<< std::setw(7) << num.first << " " << num.second << std::endl;
-		}
-
-		std::cout << std::endl;
-
-		for (auto & num : NegDirVec)
-		{
-			std::cout << std::setprecision(std::numeric_limits<double>::digits10 + 1)
-				<< std::setw(7) << num.first << " " << num.second << std::endl;
-		}
-
-		return NumeratorRes / DenominatorRes;
 
 		//if ((NumeratorRes == 0 && DenominatorRes == 0) && m_bTryConjSolution == false)
 		//{
@@ -409,10 +373,9 @@ private:
 
 			//return NumeratorRes / DenominatorRes;
 		
-	}
 
-	
-	inline double EvaluateRationalFuncLimitNumDenomBothLinear(const RationalFunction<LinearFunction, LinearFunction>& InFunction)
+
+	inline double EvaluateFuncLimit(RationalFunction<LinearFunction, LinearFunction>& InFunction)
 	{
 
 		LinearFunction Numerator = InFunction.GetNumeratorFunction();
@@ -501,7 +464,7 @@ private:
 		}
 		if (NegDirVec[1].second > NegDirVec[0].second)
 		{
-			if (NegDirVec[2].second > (NegDirVec[1].second * 9))
+			if (NegDirVec[2].second >(NegDirVec[1].second * 9))
 			{
 				bIsNegDirPosInfinity = true;
 			}
@@ -635,62 +598,262 @@ private:
 		return InFunction.GetLastCalculatedRes();
 
 	}
-
-
-
-	// TODO: This function really needs cleaned up.
-	//inline double EvaluateRationalFuncLimit(const RationalFunction& InRationalFunc)
-	//template <typename Function>
-	// TODO: Maybe i need to add another function that chooses the correct function to call based on the type?
-	inline double EvaluateFuncLimit(Function& InFunction)
+	
+	inline double EvaluateFuncLimit(RationalFunction<QuadraticFunction, LinearFunction>& InFunction)
 	{
-		double Result{ 0 };
+		//double NumeratorRes{ 0 };
+		//double DenominatorRes{ 0 };
 
-		switch (InFunction.GetCurrentFunctionType())
+		//// Make sure the denominator is not equal to 0
+
+		//QuadraticFunction Numerator = InFunction.GetNumeratorFunction();
+		//LinearFunction Denominator = InFunction.GetDenominatorFunction();
+
+		//NumeratorRes = Numerator(m_a);
+		//DenominatorRes = Denominator(m_a);
+
+		//if (DenominatorRes == 0)
+		//	throw std::domain_error("Denominator function cannot == 0");
+
+		
+		std::vector<std::pair<double, double>> PosDirVec;
+		std::vector<std::pair<double, double>> NegDirVec;
+
+		RunFunctionFromPosAndNegDirections(PosDirVec, NegDirVec, std::move(InFunction)/*(Numerator, Denominator)*/, m_a);
+
+		std::cout << "Evaluating Limit: Please Wait...\n\n";
+
+		std::cout << "From Positive Direction\n";
+		for (auto & num : PosDirVec)
 		{
-			case PolynomialFunctionType::RATIONAL:
+			std::cout << std::setprecision(std::numeric_limits<double>::digits10 + 1)
+				<< std::setw(7) << num.first << " " << num.second << std::endl;
+		}
+
+		std::cout << std::endl;
+
+		std::cout << "From Negative Direction\n";
+		for (auto & num : NegDirVec)
+		{
+			std::cout << std::setprecision(std::numeric_limits<double>::digits10 + 1)
+				<< std::setw(7) << num.first << " " << num.second << std::endl;
+		} 
+		
+		std::cout << std::endl;
+
+		// Are these limits infinite?
+		bool bIsPosDirPosInfinity = false;
+		bool bIsPosDirNegInfinity = false;
+		bool bIsNegDirNegInfinity = false;
+		bool bIsNegDirPosInfinity = false;
+
+
+		// TODO: I need a better way to check for infinity here its not detecting a small increase to a limit at 1
+
+		if (PosDirVec[1].second > PosDirVec[0].second)
+		{
+			if (PosDirVec[2].second > (PosDirVec[1].second * 9))
 			{
-				PolynomialFunctionType NumeratorType = InFunction.GetNumeratorFunctionType();
-				PolynomialFunctionType DenominatorType = InFunction.GetDenominatorFunctionType();
-
-				if (NumeratorType == PolynomialFunctionType::LINEAR && DenominatorType == PolynomialFunctionType::LINEAR)
-				{
-					//RationalFunction<LinearFunction, LinearFunction> Func = InFunction;
-					//Result = EvaluateRationalFuncLimitNumDenomBothLinear(InFunction);
-				}
-
-				if (NumeratorType == PolynomialFunctionType::QUADRATIC && DenominatorType == PolynomialFunctionType::LINEAR)
-				{
-					//RationalFunction<QuadraticFunction, LinearFunction> Func = std::move(InFunction);
-					Result = EvaluateRationalFuncLimitQuadLinear(InFunction);
-				}
-
-				break;
-			}
-			case PolynomialFunctionType::LINEAR:
-			{
-
-
-				break;
-			}
-			case PolynomialFunctionType::QUADRATIC:
-			{
-
-
-				break;
-			}
-			case PolynomialFunctionType::CUBIC:
-			{
-
-
-				break;
+				bIsPosDirPosInfinity = true;
 			}
 		}
 
-		// TODO: remove debug code
-		std::cout << "Res:\t " << Result << std::endl;
+		if (NegDirVec[1].second < NegDirVec[0].second)
+		{
+			if (NegDirVec[2].second < (NegDirVec[1].second * 9))
+			{
+				bIsNegDirNegInfinity = true;
+			}
+		}
 
-		return Result;
+		if (PosDirVec[1].second < PosDirVec[0].second)
+		{
+			if (PosDirVec[2].second < (PosDirVec[1].second * 9))
+			{
+				bIsPosDirNegInfinity = true;
+			}
+		}
+		if (NegDirVec[1].second > NegDirVec[0].second)
+		{
+			if (NegDirVec[2].second >(NegDirVec[1].second * 9))
+			{
+				bIsNegDirPosInfinity = true;
+			}
+		}
+
+
+		double LimitFromPosDir = 0;
+		double LimitFromNegDir = 0;
+
+		double PositiveDirectionApproaches = PosDirVec[3].second;
+		double NegativeDirectionApporoaches = NegDirVec[3].second;
+
+
+		// Check to see if both directions go to infinity.
+		if (bIsPosDirPosInfinity)
+		{
+			if (bIsNegDirPosInfinity)
+			{
+				std::cout << "We have a working limit result! INFINITY: \n";
+				std::cout << "As x approaches " << m_a << " Limit of f(x) = ";
+				std::cout << INFINITY << std::endl;
+				return INFINITY;
+			}
+		}
+
+		// Check to see if both directions go to neg infinity
+		if (bIsPosDirNegInfinity)
+		{
+			if (bIsNegDirNegInfinity)
+			{
+				std::cout << "We have a working limit result! NEGINFINITY: \n";
+				std::cout << "As x approaches " << m_a << " Limit of f(x) = ";
+				std::cout << NEGINFINITY << std::endl;
+				return NEGINFINITY;
+			}
+		}
+		
+
+		// Do I not need this part?
+		//// Check to see if the limit from both sides is the same
+		//if (std::ceil(PositiveDirectionApproaches) == std::floor(NegativeDirectionApporoaches))
+		//{
+		//	// x approaches -2
+		//	// We are dealing with 2 positive numbers? 
+		//	// -1.999, -2.111
+		//	// ceil -1.9
+
+		//	std::cout << "We have a working limit result! Ceil pos dir, floor \n";
+
+
+
+		//	//std::cout << std::setprecision(std::numeric_limits<double>::digits10 + 1)
+		//	//	<< std::setw(7) << PosDirVec[3].first << " " << PosDirVec[3].second << std::endl;
+
+		//	//std::cout << "Limit: " << std::ceil(LocalPosRes) / 100 << "\n";
+
+		//	//std::cout << std::setprecision(std::numeric_limits<double>::digits10 + 1)
+		//	//	<< std::setw(7) << NegDirVec[3].first << " " << NegDirVec[3].second << std::endl;
+
+
+		//	//	// return either
+		//	//return std::ceil(LocalPosRes) / 100;
+		//}
+
+
+		if (std::floor(PositiveDirectionApproaches) == std::ceil(NegativeDirectionApporoaches))
+		{
+			// x approaches 2
+			// We are dealing with 2 positive numbers? 
+			// 2.111, 1.999
+			// floor: 2.111 == 2;
+			// ceil:  1.999 == 2;
+
+			std::cout << "We have a working limit result! 2\n";
+
+			std::cout << std::setprecision(std::numeric_limits<double>::digits10 + 1)
+				<< std::setw(7) << PosDirVec[3].first << " " << PosDirVec[3].second << std::endl;
+
+			std::cout << "Limit: " << std::floor(PosDirVec[3].second) /*/ 100*/ << "\n";
+
+			std::cout << std::setprecision(std::numeric_limits<double>::digits10 + 1)
+				<< std::setw(7) << NegDirVec[3].first << " " << NegDirVec[3].second << std::endl;
+
+
+			// return either
+			return std::floor(PosDirVec[3].second);// / 100;
+
+		}
+
+
+		std::cout << "Limit: DNE (does not exist): \n\n";
+
+		// DNE~ From the postive direction
+
+		std::cout << "As x approaches " << m_a << " from the positive direction f(x) = ";
+		if (bIsPosDirPosInfinity)
+		{
+			std::cout << INFINITY << std::endl;
+			LimitFromPosDir = INFINITY;
+		}
+		else if (bIsPosDirNegInfinity)
+		{
+			std::cout << NEGINFINITY << std::endl;
+			LimitFromPosDir = NEGINFINITY;
+		}
+		else
+		{
+			//std::fesetround(FE_TONEAREST);
+			std::cout << std::setprecision(std::numeric_limits<double>::digits10 + 1)
+				<< std::setw(7) << PosDirVec[3].first << " " << std::nearbyint(PosDirVec[3].second) << std::endl;
+
+
+			// http://en.cppreference.com/w/cpp/numeric/math/nearbyint
+			LimitFromPosDir = std::nearbyint(PosDirVec[3].second);
+			LimitFromNegDir = std::nearbyint(NegDirVec[3].second);
+		}
+
+		// DNE~ From the negative direction
+
+		std::cout << "As x approaches " << m_a << " from the negative direction f(x) = ";
+		if (bIsNegDirNegInfinity)
+		{
+			std::cout << NEGINFINITY << std::endl;
+			LimitFromNegDir = NEGINFINITY;
+		}
+		else if (bIsNegDirPosInfinity)
+		{
+			std::cout << INFINITY << std::endl;
+			LimitFromNegDir = INFINITY;
+		}
+		else
+		{
+			//std::fesetround(FE_TONEAREST);
+			std::cout << std::setprecision(std::numeric_limits<double>::digits10 + 1)
+				<< std::setw(7) << NegDirVec[3].first << " ";
+			std::cout << (std::nearbyint(NegDirVec[3].second)) << std::endl;
+
+
+			// http://en.cppreference.com/w/cpp/numeric/math/nearbyint
+			LimitFromPosDir = std::nearbyint(PosDirVec[3].second);
+			LimitFromNegDir = std::nearbyint(NegDirVec[3].second);
+
+		}
+
+		m_LimitFromPosDir = LimitFromPosDir;
+		m_LimitFromNegDir = LimitFromNegDir;
+
+		return NAN;
+
+		//return NumeratorRes / DenominatorRes;
+
+				
+				//}
+
+		//		break;
+		//	}
+		//	case PolynomialFunctionType::LINEAR:
+		//	{
+
+
+		//		break;
+		//	}
+		//	case PolynomialFunctionType::QUADRATIC:
+		//	{
+
+
+		//		break;
+		//	}
+		//	case PolynomialFunctionType::CUBIC:
+		//	{
+
+
+		//		break;
+		//	}
+		//}
+
+		//// TODO: remove debug code
+		//std::cout << "Res:\t " << Result << std::endl;
 
 
 		//// TODO: For fraction functions that contain square roots. Conjugate multiplication. SET IT UP
@@ -1045,6 +1208,220 @@ private:
 
 
 		//return NumeratorRes / DenominatorRes;
+	}
+
+	inline double EvaluateFuncLimit(RationalFunction<ConstantFunction, QuadraticFunction>& InFunction)
+	{
+
+		std::vector<std::pair<double, double>> PosDirVec;
+		std::vector<std::pair<double, double>> NegDirVec;
+
+		RunFunctionFromPosAndNegDirections(PosDirVec, NegDirVec, std::move(InFunction)/*(Numerator, Denominator)*/, m_a);
+
+		std::cout << "Evaluating Limit: Please Wait...\n\n";
+
+		std::cout << "From Positive Direction\n";
+		for (auto & num : PosDirVec)
+		{
+			std::cout << std::setprecision(std::numeric_limits<double>::digits10 + 1)
+				<< std::setw(7) << num.first << " " << num.second << std::endl;
+		}
+
+		std::cout << std::endl;
+
+		std::cout << "From Negative Direction\n";
+		for (auto & num : NegDirVec)
+		{
+			std::cout << std::setprecision(std::numeric_limits<double>::digits10 + 1)
+				<< std::setw(7) << num.first << " " << num.second << std::endl;
+		}
+
+		std::cout << std::endl;
+
+		// Are these limits infinite?
+		bool bIsPosDirPosInfinity = false;
+		bool bIsPosDirNegInfinity = false;
+		bool bIsNegDirNegInfinity = false;
+		bool bIsNegDirPosInfinity = false;
+
+
+		// TODO: I need a better way to check for infinity here its not detecting a small increase to a limit at 1
+
+		if (PosDirVec[1].second > PosDirVec[0].second)
+		{
+			if (PosDirVec[2].second > (PosDirVec[1].second * 9))
+			{
+				bIsPosDirPosInfinity = true;
+			}
+		}
+
+		if (NegDirVec[1].second < NegDirVec[0].second)
+		{
+			if (NegDirVec[2].second < (NegDirVec[1].second * 9))
+			{
+				bIsNegDirNegInfinity = true;
+			}
+		}
+
+		if (PosDirVec[1].second < PosDirVec[0].second)
+		{
+			if (PosDirVec[2].second < (PosDirVec[1].second * 9))
+			{
+				bIsPosDirNegInfinity = true;
+			}
+		}
+		if (NegDirVec[1].second > NegDirVec[0].second)
+		{
+			if (NegDirVec[2].second >(NegDirVec[1].second * 9))
+			{
+				bIsNegDirPosInfinity = true;
+			}
+		}
+
+
+		double LimitFromPosDir = 0;
+		double LimitFromNegDir = 0;
+
+		double PositiveDirectionApproaches = PosDirVec[3].second;
+		double NegativeDirectionApporoaches = NegDirVec[3].second;
+
+
+		// Check to see if both directions go to infinity.
+		if (bIsPosDirPosInfinity)
+		{
+			if (bIsNegDirPosInfinity)
+			{
+				std::cout << "We have a working limit result! INFINITY: \n";
+				std::cout << "As x approaches " << m_a << " Limit of f(x) = ";
+				std::cout << INFINITY << std::endl;
+				return INFINITY;
+			}
+		}
+
+		// Check to see if both directions go to neg infinity
+		if (bIsPosDirNegInfinity)
+		{
+			if (bIsNegDirNegInfinity)
+			{
+				std::cout << "We have a working limit result! NEGINFINITY: \n";
+				std::cout << "As x approaches " << m_a << " Limit of f(x) = ";
+				std::cout << NEGINFINITY << std::endl;
+				return NEGINFINITY;
+			}
+		}
+
+
+		// Do I not need this part?
+		//// Check to see if the limit from both sides is the same
+		//if (std::ceil(PositiveDirectionApproaches) == std::floor(NegativeDirectionApporoaches))
+		//{
+		//	// x approaches -2
+		//	// We are dealing with 2 positive numbers? 
+		//	// -1.999, -2.111
+		//	// ceil -1.9
+
+		//	std::cout << "We have a working limit result! Ceil pos dir, floor \n";
+
+
+
+		//	//std::cout << std::setprecision(std::numeric_limits<double>::digits10 + 1)
+		//	//	<< std::setw(7) << PosDirVec[3].first << " " << PosDirVec[3].second << std::endl;
+
+		//	//std::cout << "Limit: " << std::ceil(LocalPosRes) / 100 << "\n";
+
+		//	//std::cout << std::setprecision(std::numeric_limits<double>::digits10 + 1)
+		//	//	<< std::setw(7) << NegDirVec[3].first << " " << NegDirVec[3].second << std::endl;
+
+
+		//	//	// return either
+		//	//return std::ceil(LocalPosRes) / 100;
+		//}
+
+
+		if (std::floor(PositiveDirectionApproaches) == std::ceil(NegativeDirectionApporoaches))
+		{
+			// x approaches 2
+			// We are dealing with 2 positive numbers? 
+			// 2.111, 1.999
+			// floor: 2.111 == 2;
+			// ceil:  1.999 == 2;
+
+			std::cout << "We have a working limit result! 2\n";
+
+			std::cout << std::setprecision(std::numeric_limits<double>::digits10 + 1)
+				<< std::setw(7) << PosDirVec[3].first << " " << PosDirVec[3].second << std::endl;
+
+			std::cout << "Limit: " << std::floor(PosDirVec[3].second) /*/ 100*/ << "\n";
+
+			std::cout << std::setprecision(std::numeric_limits<double>::digits10 + 1)
+				<< std::setw(7) << NegDirVec[3].first << " " << NegDirVec[3].second << std::endl;
+
+
+			// return either
+			return std::floor(PosDirVec[3].second);// / 100;
+
+		}
+
+
+		std::cout << "Limit: DNE (does not exist): \n\n";
+
+		// DNE~ From the postive direction
+
+		std::cout << "As x approaches " << m_a << " from the positive direction f(x) = ";
+		if (bIsPosDirPosInfinity)
+		{
+			std::cout << INFINITY << std::endl;
+			LimitFromPosDir = INFINITY;
+		}
+		else if (bIsPosDirNegInfinity)
+		{
+			std::cout << NEGINFINITY << std::endl;
+			LimitFromPosDir = NEGINFINITY;
+		}
+		else
+		{
+			//std::fesetround(FE_TONEAREST);
+			std::cout << std::setprecision(std::numeric_limits<double>::digits10 + 1)
+				<< std::setw(7) << PosDirVec[3].first << " " << std::nearbyint(PosDirVec[3].second) << std::endl;
+
+
+			// http://en.cppreference.com/w/cpp/numeric/math/nearbyint
+			LimitFromPosDir = std::nearbyint(PosDirVec[3].second);
+			LimitFromNegDir = std::nearbyint(NegDirVec[3].second);
+		}
+
+		// DNE~ From the negative direction
+
+		std::cout << "As x approaches " << m_a << " from the negative direction f(x) = ";
+		if (bIsNegDirNegInfinity)
+		{
+			std::cout << NEGINFINITY << std::endl;
+			LimitFromNegDir = NEGINFINITY;
+		}
+		else if (bIsNegDirPosInfinity)
+		{
+			std::cout << INFINITY << std::endl;
+			LimitFromNegDir = INFINITY;
+		}
+		else
+		{
+			//std::fesetround(FE_TONEAREST);
+			std::cout << std::setprecision(std::numeric_limits<double>::digits10 + 1)
+				<< std::setw(7) << NegDirVec[3].first << " ";
+			std::cout << (std::nearbyint(NegDirVec[3].second)) << std::endl;
+
+
+			// http://en.cppreference.com/w/cpp/numeric/math/nearbyint
+			LimitFromPosDir = std::nearbyint(PosDirVec[3].second);
+			LimitFromNegDir = std::nearbyint(NegDirVec[3].second);
+
+		}
+
+		m_LimitFromPosDir = LimitFromPosDir;
+		m_LimitFromNegDir = LimitFromNegDir;
+
+		return NAN;
+
 	}
 
 	inline double EvaluateCubicFunctionLimit(const CubicFunction& InCubicFunc)
@@ -1634,22 +2011,33 @@ public:
 	{
 		m_Function = std::move(InFunction);
 
-		m_L = EvaluateFuncLimit(InFunction);
+		double TestIfNan = m_Function(m_a);
+
+		if (std::isnan(TestIfNan))
+		{
+			// If its not a number we got to evaluate from both sides
+			m_L = EvaluateFuncLimit(InFunction);
+		}
+		else
+		{
+			// If its a real number this is our limit
+			m_L = TestIfNan;
+		}
 
 		// automatically run the limit on construction
 		//m_L = operator()(a);
 
-		std::cout << "Is NumeratorFuncType Quadratic?: ";
-		auto NumeratorFuncType = m_Function.GetNumeratorFunctionType();
-		
-		if (NumeratorFuncType == PolynomialFunctionType::QUADRATIC)
-		{
-			std::cout << "Move Success" << endl;
-		}
-		else
-		{
-			cout << "Fail" << endl;
-		}
+		//std::cout << "Is NumeratorFuncType Quadratic?: ";
+		//auto NumeratorFuncType = m_Function.GetNumeratorFunctionType();
+		//
+		//if (NumeratorFuncType == PolynomialFunctionType::QUADRATIC)
+		//{
+		//	std::cout << "Move Success" << endl;
+		//}
+		//else
+		//{
+		//	cout << "Fail" << endl;
+		//}
 
 		// TODO: remove debug code
 		DisplayLimitResult();

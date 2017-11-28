@@ -62,239 +62,394 @@ tan(theta) = y/x
 
 // Trigonometric functions are continuous over their entire domains.
 
-class TrigonometricFunction : TranscendentalFunction
+class MPSIN
+{
+	
+};
+
+class MPCOS
+{
+
+};
+
+class MPTAN
+{
+
+};
+
+// TODO: Still got to add necessary checks/functionality for how to handle the input when a/b/c/d variables are not all filled out
+
+
+// NOTE: These functions currently expect the full form to be imputed into the function... all 5 variables + sin/cos/tan..
+template <typename T>
+class TrigometricFunction
+{
+public:
+	
+
+};
+
+template <>
+class TrigometricFunction<MPSIN>
 {
 private:
-	Period m_Period;
-
-	double m_PeriodB;
-
-	double m_HorizontalShifta;
-
-	double m_VerticleStretchA;
-
-	double m_VerticleShiftC;
-
-
-	bool m_SinFunctionInUse = false;
-	bool m_CosFunctionInUse = false;
-
-
-	std::vector<std::pair<double, double>> m_SinFunctionPoints
-	{
-		std::pair<double,double>(0,0),
-		std::pair<double,double>(M_PIOverTwo, 1),
-		std::pair<double,double>(M_PI, 0),
-		std::pair<double,double>(ThreeM_PIOverTwo, -1),
-		std::pair<double,double>(TwoM_PI, 0)
-	};
-
-	std::vector<std::pair<double, double>> m_CosFunctionKeyPoints
-	{
-		std::pair<double,double>(0,1),
-		std::pair<double,double>(M_PIOverTwo, 0),
-		std::pair<double,double>(M_PI, -1),
-		std::pair<double,double>(ThreeM_PIOverTwo, 0),
-		std::pair<double,double>(TwoM_PI, 1)
-	};
-
-	double FixAngleBetweenZeroAndTwoRad(const double& InAngle);
-
+	double m_a;
+	double m_b;
+	double m_c;
+	double m_d;
 
 public:
 
-	explicit TrigonometricFunction(const double& A, const double& B, const double& a, const double& C)
-		//	: m_VerticleStretchA(A), m_PeriodB(B), m_HorizontalShifta(a), m_VerticleShiftC(C)
+	explicit TrigometricFunction(const double& a, const double& b, const double& c, const double& d)
+		: m_a{ a }, m_b{ b }, m_c{ c }, m_d{ d }
 	{
-		// TODO: This is currently setup to automatically evaluate a sin function
-		// Add option for cos/tan/create empty etc..
 
-
-		// why when i used these two variables in the formula it didnt work???
-		m_PeriodB = TwoM_PI / std::abs(B);
-		m_VerticleStretchA = std::abs(A);
-
-
-		m_HorizontalShifta = a;
-		m_VerticleShiftC = C;
-
-		m_SinFunctionInUse = true;
-
-		//for (const auto& Point : m_SinFunctionPoints)
-		//{
-		//	std::cout << "x: " << Point.first << " f(x): " << Point.second << std::endl;
-		//}
-
-		for (int i = 0; i < m_SinFunctionPoints.size(); ++i)
-		{
-			// This didnt work the one below did?
-			//m_SinFunctionPoints[i].second = ((std::sin((m_SinFunctionPoints[i].first - m_HorizontalShifta)
-			//		* m_PeriodB) * m_VerticleStretchA) + m_VerticleShiftC);
-
-			m_SinFunctionPoints[i].second =
-				((std::sin((m_SinFunctionPoints[i].first - a) * B) * A) + C);
-		}
-
-		PrintCurrentSinFunctionKeyPoints();
 	}
 
-	double SinOfUnitCircleAngle(const UnitCircle& InUnitCircle, const double& InAngle);
-	double CosOfUnitCircleAngle(const UnitCircle& InUnitCircle, const double& InAngle);
-	double TanOfUnitCircleAngle(const UnitCircle& InUnitCircle, const double& InAngle);
+	//double operator()(const double& x)
+	//{
+	//	double First = (x + m_c) * m_b;
+	//	double InFunc = std::sin(First);
+	//	double StretchOrShrink = InFunc * m_a;
+	//	double VertShift = StretchOrShrink + m_d;
 
-	inline void PrintCurrentSinFunctionKeyPoints() const
+	//	return VertShift;
+	//}
+
+	// try this out for a bit? until I better understand the inverse crap
+	double operator()(const double& x, const bool& bIsInverseFunction = false)
 	{
-		for (const auto& Point : m_SinFunctionPoints)
-			std::cout << "x: " << Point.first << " f(x): " << Point.second << std::endl;
-	}
+		double X = x;
 
-	inline double EvaluateInverseSinComposition(const double& InSinNum)
-	{
-		UnitCircle TempUnitCircle;
-		auto Map = TempUnitCircle.GetRadianSinCosMap();
-
-		//std::cout << InSinNum << std::endl;
-
-		// Inverse sin domain [1, 1]
-		// Inverse sin range [-90,+90] in deg
-
-		//const double NegPIOverTwo = M_PIOverTwo * (-1);	
-
-		double MaxRange = ThreeM_PIOverTwo;
-
-		double OutResult(0);
-		double OutRange(0);
-
-		for (auto Num : Map)
+		if (bIsInverseFunction == true)
 		{
-			if (Num.second.second == InSinNum)
-			{
-				//std::cout << std::setprecision(std::numeric_limits<double>::digits10 + 1) 
-				//	<< Num.second.second << std::endl;
-
-				//std::cout << std::setprecision(std::numeric_limits<double>::digits10 + 1)
-				//	<< InSinNum << std::endl;
-
-				OutResult = Num.first;
-				break;
-			}
-		}
-		bool FirstRange = (OutResult >= ThreeM_PIOverTwo && OutResult <= 2 * M_PI);
-		bool SecondRange = (OutResult >= 0 && OutResult <= M_PIOverTwo);
-
-		bool InValidRange = (FirstRange || SecondRange);
-
-		if (InValidRange)
-		{
-
-			std::cout << OutResult << std::endl;
-			std::cout << " or \n";
-			std::cout << OutResult - (2 * M_PI) << std::endl; // (-pi/3)
-
-			return OutResult;
+			 X = std::pow(x, -1);
 		}
 		else
 		{
-			std::cout << OutResult << std::endl;
-
-			return OutResult;
+			
 		}
-	}
 
-	inline double EvaluateInverseCosComposition(const double& InCosNum)
-	{
-		UnitCircle TempUnitCircle;
-		auto Map = TempUnitCircle.GetRadianSinCosMap();
+		double First = (X + m_c) * m_b;
+		double InFunc = std::sin(First);
+		double StretchOrShrink = InFunc * m_a;
+		double VertShift = StretchOrShrink + m_d;
 
-		//std::cout << InSinNum << std::endl;
-
-		// Inverse cos domain [-1, 1]
-		// Inverse cos range [0,PI] in rad
-
-		double OutResult(0);
-		double OutRange(0);
-
-		for (auto Num : Map)
-		{
-			if (Num.second.first == InCosNum)
-			{
-				//std::cout << std::setprecision(std::numeric_limits<double>::digits10 + 1) 
-				//	<< Num.second.second << std::endl;
-
-				//std::cout << std::setprecision(std::numeric_limits<double>::digits10 + 1)
-				//	<< InSinNum << std::endl;
-
-				OutResult = Num.first;
-				break;
-			}
-		}
-		bool FirstRange = (OutResult <= M_PI && OutResult >= 0);
-		bool InValidRange = (FirstRange); // || SecondRange);
-
-		if (InValidRange)
-		{
-
-			std::cout << OutResult << std::endl;
-			std::cout << " or \n";
-			std::cout << OutResult - (2 * M_PI) << std::endl; // (-pi/3)
-
-			return OutResult;
-		}
-		else
-		{
-			std::cout << OutResult << std::endl;
-
-			return OutResult;
-		}
-	}
-
-	inline double EvaluateInverseTanComposition(const double& InTanNum)
-	{
-		UnitCircle TempUnitCircle;
-		auto Map = TempUnitCircle.GetRadianTanMap();
-
-
-		// Inverse tan domain R
-		// Inverse tan range [-pi/2,pi/2] in rad
-
-		double OutResult(0);
-		double OutRange(0);
-
-		for (auto Num : Map)
-		{
-			if (Num.second == InTanNum)
-			{
-				OutResult = Num.first;
-				break;
-			}
-		}
-		bool Valid = (OutResult <= ThreeM_PIOverTwo && OutResult >= M_PIOverTwo);
-		bool InValidRange = (Valid);
-
-		if (InValidRange)
-		{
-
-			std::cout << OutResult << std::endl;
-			std::cout << " or \n";
-			std::cout << OutResult - (2 * M_PI) << std::endl; // (-pi/3)
-
-			return OutResult;
-		}
-		else
-		{
-			std::cout << OutResult << std::endl;
-
-			return OutResult;
-		}
-	}
-
-	// TODO: How do i do this?
-	double operator()(const double x) const
-	{
-
+		return VertShift;
 	}
 
 };
+
+template <>
+class TrigometricFunction<MPCOS>
+{
+private:
+	double m_a;
+	double m_b;
+	double m_c;
+	double m_d;
+
+public:
+
+	explicit TrigometricFunction(const double& a, const double& b, const double& c, const double& d)
+		: m_a{ a }, m_b{ b }, m_c{ c }, m_d{ d }
+	{
+
+	}
+
+	double operator()(const double& x)
+	{
+		double First = (x + m_c) * m_b;
+		double InFunc = std::cos(First);
+		double StretchOrShrink = InFunc * m_a;
+		double VertShift = StretchOrShrink + m_d;
+
+		return VertShift;
+	}
+
+};
+
+
+template <>
+class TrigometricFunction<MPTAN>
+{
+private:
+	double m_a;
+	double m_b;
+	double m_c;
+	double m_d;
+
+public:
+
+	explicit TrigometricFunction(const double& a, const double& b, const double& c, const double& d)
+		: m_a{ a }, m_b{ b }, m_c{ c }, m_d{ d }
+	{
+
+	}
+
+	double operator()(const double& x)
+	{
+		double First = (x + m_c) * m_b;
+		double InFunc = std::tan(First);
+		double StretchOrShrink = InFunc * m_a;
+		double VertShift = StretchOrShrink + m_d;
+
+		return VertShift;
+	}
+
+};
+inline double FixAngleBetweenZeroAndTwoRad(const double & InAngle)
+{
+	double FixedAngle = InAngle;
+
+	while (FixedAngle > (2 * M_PI))
+	{
+		FixedAngle = FixedAngle - (2 * M_PI);
+	}
+	while (FixedAngle < 0)
+	{
+		FixedAngle = FixedAngle + (2 * M_PI);
+	}
+
+	return FixedAngle;
+}
+
+
+
+//
+//class TrigonometricFunction : TranscendentalFunction
+//{
+//private:
+//	Period m_Period;
+//
+//	double m_PeriodB;
+//
+//	double m_HorizontalShifta;
+//
+//	double m_VerticleStretchA;
+//
+//	double m_VerticleShiftC;
+//
+//
+//	//bool m_SinFunctionInUse = false;
+//	//bool m_CosFunctionInUse = false;
+//
+//
+//	//std::vector<std::pair<double, double>> m_SinFunctionPoints
+//	//{
+//	//	std::pair<double,double>(0,0),
+//	//	std::pair<double,double>(M_PIOverTwo, 1),
+//	//	std::pair<double,double>(M_PI, 0),
+//	//	std::pair<double,double>(ThreeM_PIOverTwo, -1),
+//	//	std::pair<double,double>(TwoM_PI, 0)
+//	//};
+//
+//	//std::vector<std::pair<double, double>> m_CosFunctionKeyPoints
+//	//{
+//	//	std::pair<double,double>(0,1),
+//	//	std::pair<double,double>(M_PIOverTwo, 0),
+//	//	std::pair<double,double>(M_PI, -1),
+//	//	std::pair<double,double>(ThreeM_PIOverTwo, 0),
+//	//	std::pair<double,double>(TwoM_PI, 1)
+//	//};
+//
+//	double FixAngleBetweenZeroAndTwoRad(const double& InAngle);
+//
+//
+//public:
+//
+//	explicit TrigonometricFunction(const double& A, const double& B, const double& a, const double& C)
+//		//	: m_VerticleStretchA(A), m_PeriodB(B), m_HorizontalShifta(a), m_VerticleShiftC(C)
+//	{
+//		// TODO: This is currently setup to automatically evaluate a sin function
+//		// Add option for cos/tan/create empty etc..
+//
+//
+//		// why when i used these two variables in the formula it didnt work???
+//		m_PeriodB = TwoM_PI / std::abs(B);
+//		m_VerticleStretchA = std::abs(A);
+//
+//
+//		m_HorizontalShifta = a;
+//		m_VerticleShiftC = C;
+//
+//		//m_SinFunctionInUse = true;
+//
+//		//for (const auto& Point : m_SinFunctionPoints)
+//		//{
+//		//	std::cout << "x: " << Point.first << " f(x): " << Point.second << std::endl;
+//		//}
+//
+//		//for (int i = 0; i < m_SinFunctionPoints.size(); ++i)
+//		//{
+//		//	// This didnt work the one below did?
+//		//	//m_SinFunctionPoints[i].second = ((std::sin((m_SinFunctionPoints[i].first - m_HorizontalShifta)
+//		//	//		* m_PeriodB) * m_VerticleStretchA) + m_VerticleShiftC);
+//
+//		//	m_SinFunctionPoints[i].second =
+//		//		((std::sin((m_SinFunctionPoints[i].first - a) * B) * A) + C);
+//		//}
+//
+//		//PrintCurrentSinFunctionKeyPoints();
+//	}
+//
+//	double SinOfUnitCircleAngle(const UnitCircle& InUnitCircle, const double& InAngle);
+//	double CosOfUnitCircleAngle(const UnitCircle& InUnitCircle, const double& InAngle);
+//	double TanOfUnitCircleAngle(const UnitCircle& InUnitCircle, const double& InAngle);
+//
+//	//inline void PrintCurrentSinFunctionKeyPoints() const
+//	//{
+//	//	for (const auto& Point : m_SinFunctionPoints)
+//	//		std::cout << "x: " << Point.first << " f(x): " << Point.second << std::endl;
+//	//}
+//
+//	inline double EvaluateInverseSinComposition(const double& InSinNum)
+//	{
+//		UnitCircle TempUnitCircle;
+//		auto Map = TempUnitCircle.GetRadianSinCosMap();
+//
+//		//std::cout << InSinNum << std::endl;
+//
+//		// Inverse sin domain [1, 1]
+//		// Inverse sin range [-90,+90] in deg
+//
+//		//const double NegPIOverTwo = M_PIOverTwo * (-1);	
+//
+//		double MaxRange = ThreeM_PIOverTwo;
+//
+//		double OutResult(0);
+//		double OutRange(0);
+//
+//		for (auto Num : Map)
+//		{
+//			if (Num.second.second == InSinNum)
+//			{
+//				//std::cout << std::setprecision(std::numeric_limits<double>::digits10 + 1) 
+//				//	<< Num.second.second << std::endl;
+//
+//				//std::cout << std::setprecision(std::numeric_limits<double>::digits10 + 1)
+//				//	<< InSinNum << std::endl;
+//
+//				OutResult = Num.first;
+//				break;
+//			}
+//		}
+//		bool FirstRange = (OutResult >= ThreeM_PIOverTwo && OutResult <= 2 * M_PI);
+//		bool SecondRange = (OutResult >= 0 && OutResult <= M_PIOverTwo);
+//
+//		bool InValidRange = (FirstRange || SecondRange);
+//
+//		if (InValidRange)
+//		{
+//
+//			std::cout << OutResult << std::endl;
+//			std::cout << " or \n";
+//			std::cout << OutResult - (2 * M_PI) << std::endl; // (-pi/3)
+//
+//			return OutResult;
+//		}
+//		else
+//		{
+//			std::cout << OutResult << std::endl;
+//
+//			return OutResult;
+//		}
+//	}
+//
+//	inline double EvaluateInverseCosComposition(const double& InCosNum)
+//	{
+//		UnitCircle TempUnitCircle;
+//		auto Map = TempUnitCircle.GetRadianSinCosMap();
+//
+//		//std::cout << InSinNum << std::endl;
+//
+//		// Inverse cos domain [-1, 1]
+//		// Inverse cos range [0,PI] in rad
+//
+//		double OutResult(0);
+//		double OutRange(0);
+//
+//		for (auto Num : Map)
+//		{
+//			if (Num.second.first == InCosNum)
+//			{
+//				//std::cout << std::setprecision(std::numeric_limits<double>::digits10 + 1) 
+//				//	<< Num.second.second << std::endl;
+//
+//				//std::cout << std::setprecision(std::numeric_limits<double>::digits10 + 1)
+//				//	<< InSinNum << std::endl;
+//
+//				OutResult = Num.first;
+//				break;
+//			}
+//		}
+//		bool FirstRange = (OutResult <= M_PI && OutResult >= 0);
+//		bool InValidRange = (FirstRange); // || SecondRange);
+//
+//		if (InValidRange)
+//		{
+//
+//			std::cout << OutResult << std::endl;
+//			std::cout << " or \n";
+//			std::cout << OutResult - (2 * M_PI) << std::endl; // (-pi/3)
+//
+//			return OutResult;
+//		}
+//		else
+//		{
+//			std::cout << OutResult << std::endl;
+//
+//			return OutResult;
+//		}
+//	}
+//
+//	inline double EvaluateInverseTanComposition(const double& InTanNum)
+//	{
+//		UnitCircle TempUnitCircle;
+//		auto Map = TempUnitCircle.GetRadianTanMap();
+//
+//
+//		// Inverse tan domain R
+//		// Inverse tan range [-pi/2,pi/2] in rad
+//
+//		double OutResult(0);
+//		double OutRange(0);
+//
+//		for (auto Num : Map)
+//		{
+//			if (Num.second == InTanNum)
+//			{
+//				OutResult = Num.first;
+//				break;
+//			}
+//		}
+//		bool Valid = (OutResult <= ThreeM_PIOverTwo && OutResult >= M_PIOverTwo);
+//		bool InValidRange = (Valid);
+//
+//		if (InValidRange)
+//		{
+//
+//			std::cout << OutResult << std::endl;
+//			std::cout << " or \n";
+//			std::cout << OutResult - (2 * M_PI) << std::endl; // (-pi/3)
+//
+//			return OutResult;
+//		}
+//		else
+//		{
+//			std::cout << OutResult << std::endl;
+//
+//			return OutResult;
+//		}
+//	}
+//
+//	// TODO: How do i do this?
+//	double operator()(const double x) const
+//	{
+//
+//	}
+//
+//};
 
 inline double EvaluateCommonAngleSin(const double& InAngle)
 {
@@ -458,3 +613,4 @@ inline double FindInverseHyperbolicCsc(const double& x)
 
 
 #endif
+

@@ -12,6 +12,7 @@ enum class PolynomialFunctionType
 	RATIONAL,
 	CUBIC,
 	QUADRATIC,
+	CONSTANT,
 	//ROOT, // not polynomial
 };
 

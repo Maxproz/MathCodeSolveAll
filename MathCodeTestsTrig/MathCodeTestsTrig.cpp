@@ -4,7 +4,8 @@
 #include "stdafx.h"
 
 #include "CalculusFunction.h"
-
+#include "ConstantFunction.h"
+#include "TrigonometricFunction.h"
 
 // TODO: Should I create a class for typedefs?
 typedef std::pair<double, double> Point;
@@ -69,17 +70,35 @@ int main()
 		//ProveLinearFunctionLimitEpsilonDelta(TestLimit);
 
 
-		QuadraticFunction TestQuad(2, -3, 1);
-		LinearFunction TestLinear(5, 4);
+		//QuadraticFunction TestQuad(2, -3, 1);
+		//LinearFunction TestLinear(5, 4);
 
-		RationalFunction<QuadraticFunction, LinearFunction> TestRational(TestQuad, TestLinear);
-		
+		//RationalFunction<QuadraticFunction, LinearFunction> TestRational(TestQuad, TestLinear);
+		//
 
-		Limit<decltype(TestRational)> TestLimit(TestRational, 3);
+		//Limit<decltype(TestRational)> TestLimit(TestRational, 3);
 
 		//Limit<RationalFunction<QuadraticFunction, LinearFunction>> TestLimit;
 		
 
+		//QuadraticFunction TestQuad1(1, 0, -4);
+		//LinearFunction TestLinear1(1, -2);
+
+		//RationalFunction<QuadraticFunction, LinearFunction> TestRational1(TestQuad1, TestLinear1);
+
+		//Limit<decltype(TestRational1)> TestLimit1(TestRational1, 2);
+
+		//ConstantFunction ConstFunc1(1);
+		//QuadraticFunction TestQuad1("(x-2)^2 + 0");
+
+
+		//RationalFunction<ConstantFunction, QuadraticFunction> TestRational1(ConstFunc1, TestQuad1);
+
+		//Limit<decltype(TestRational1)> TestLimit1(TestRational1, 2);
+
+		TrigometricFunction<MPSIN> SinFunctionTest(1, 1, 0, 0);
+		auto Result = SinFunctionTest(0.1, true);
+		std::cout << Result << std::endl;
 
 	}
 	catch (const std::exception& ex)
