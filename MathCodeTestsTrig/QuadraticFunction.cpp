@@ -1,5 +1,8 @@
 #include "QuadraticFunction.h"
 
+#include "MiscMathEquations.h"
+
+
 void QuadraticFunction::AutomaticSetRealZeroVariables()
 {
 	const double FourAC = 4 * m_a * m_c;
@@ -124,6 +127,58 @@ void QuadraticFunction::PrintBasicFunctionInfo() const
 
 	std::cout << "End of data output\n";
 }
+
+void QuadraticFunction::PrintFunction() const
+{
+	cout << "f(x) = " << m_a << "x^2";
+
+	if (m_b == 0)
+	{
+		// do nothing
+	}
+	else
+	{
+		// Handle b
+		bool bIsBPos = IsPositive<double>(m_b);
+		char BVarPlusOrMinus(' ');
+
+		if (bIsBPos)
+		{
+			BVarPlusOrMinus = '+';
+		}
+		else
+		{
+			BVarPlusOrMinus = ' ';
+		}
+
+		cout << BVarPlusOrMinus << m_b;
+	}
+
+	if (m_c == 0)
+	{
+		// do nothing new line return
+		cout << endl;
+		return;
+	}
+	else
+	{
+		// Handle c
+		bool bIsCPos = IsPositive<double>(m_c);
+		char CVarPlusOrMinus(' ');
+
+		if (bIsCPos)
+		{
+			CVarPlusOrMinus = '+';
+		}
+		else
+		{
+			CVarPlusOrMinus = ' ';
+		}
+
+		cout << CVarPlusOrMinus << m_c;
+	}
+}
+
 
 std::vector<double> GetZerosQuadraticFormula(QuadraticFunction& QuadraticFunc)
 {

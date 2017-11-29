@@ -202,6 +202,8 @@ public:
 	void PrintNumberOfRealNumberSoltions() const;
 
 	void PrintBasicFunctionInfo() const;
+	void PrintFunction() const;
+
 
 	inline bool IsABForm() const { return m_bJustABForm; }
 	inline bool IsACForm() const { return m_bJustACForm; }

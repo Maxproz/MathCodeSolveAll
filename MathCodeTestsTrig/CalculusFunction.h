@@ -21,7 +21,7 @@
 #include "MiscMathEquations.h"
 #include "Limit.h"
 
-typedef pair<double, double> Point;
+//typedef pair<double, double> Point;
 
 
 // TODO: Move the important constants into one header
@@ -81,6 +81,52 @@ inline double GetSlopeOfSecantLineTwoPoints(const Point& FirstPoint, const Point
 //}
 
 
+
+LinearFunction FactorNumeratorRationalFunc(const QuadraticFunction& InNumerator, const LinearFunction& InDenominator);
+
+inline double GetSlopeOfSecantLine(const double& a, const QuadraticFunction& F)
+{
+	// use formula return result
+
+	auto TupleABC = F.GetABC();
+	double QuadA = std::get<0>(TupleABC);
+	double QuadB = std::get<1>(TupleABC);
+	double QuadC = std::get<2>(TupleABC);
+
+	double FofA = F(a);
+	std::cout << "FofA = 9 == " << FofA << endl;
+
+	QuadC = QuadC - FofA;
+
+	QuadraticFunction Numerator = QuadraticFunction(QuadA, QuadB, QuadC);
+	//double InA = a*-1;
+	LinearFunction Denominator(1, a * (-1));
+
+	LinearFunction FactoredFunc = FactorNumeratorRationalFunc(Numerator, Denominator);
+
+	FactoredFunc.PrintLinearFunctionInfo();
+
+	// Take the limit of the factored function to find the slope of the secant line
+	Limit<LinearFunction> LocalLimit(FactoredFunc, a);
+	double SlopeOfSecantLine = LocalLimit.GetLimitResult();
+
+	//// Next, find a point on the tangent line.
+
+	//// Since the line is tangent to the graph of f(x)x=3,
+	//// it passes through the point (3,f(3)).
+	//// We have f(3)=9, so the tangent line passes through the point (3,9).
+	//
+	//// tangent line at x = a
+	//LinearFunction TangetLineAtXIsEqualToA(1, 0);
+	//ConvertFromPointSlopeFromToLinearForm(Point(a, FofA), SlopeOfSecantLine, TangetLineAtXIsEqualToA);
+
+
+
+	// TODO: Finish next steps
+
+	return SlopeOfSecantLine;
+}
+
 // Assumes the zeros are not fractions
 inline LinearFunction FactorNumeratorRationalFunc(const QuadraticFunction& InNumerator, const LinearFunction& InDenominator)
 {
@@ -120,7 +166,7 @@ inline LinearFunction FactorNumeratorRationalFunc(const QuadraticFunction& InNum
 		
 		if (TryFindZero != QuadNumVec.end())
 		{
-			std::cout << "DEBUG 1" << endl;
+			//std::cout << "DEBUG 1" << endl;
 			
 			// Found a zero
 			// "erase" it by reformatting a quadratic / a linear
@@ -173,34 +219,37 @@ inline LinearFunction FactorNumeratorRationalFunc(const QuadraticFunction& InNum
 
 	cout << "LastZero: " << OtherBZero << endl;
 
-	double LHSBForm{ 0.0 };
+	//double LHSBForm{ 0.0 };
 
+	// Flip the sign so the function we return is in the correct form.
+	FlipSign<double>(OtherBZero);
 
-
-	if (OtherBZero < 0)
-	{
-		LHSBForm = LHSBForm + (OtherBZero * (-1));
-	}
-	else if (OtherBZero > 0)
-	{
-		LHSBForm = LHSBForm + (OtherBZero * (-1));
-	}
-	else
-	{
-		// == 0 ?? I will see the reaction to this later
-		throw std::logic_error("Undefined Logic Error");
-	}
+	//if (OtherBZero < 0)
+	//{
+	//	LHSBForm = LHSBForm + (OtherBZero * (-1));
+	//}
+	//else if (OtherBZero > 0)
+	//{
+	//	LHSBForm = LHSBForm + (OtherBZero * (-1));
+	//}
+	//else
+	//{
+	//	// == 0 ?? I will see the reaction to this later
+	//	throw std::logic_error("Undefined Logic Error");
+	//}
 	
-	LinearFunction OutFunc(NewAVar, LHSBForm);
+	LinearFunction OutFunc(NewAVar, OtherBZero);
 
 	return OutFunc;
 
 }
 
-inline double GetSlopeOfSecantLine(const double& a, const QuadraticFunction& F)
+
+
+inline void FindEquationOfTangentLineToAFunction(const double& a, const QuadraticFunction& F)
 {
 	// use formula return result
-	
+
 	auto TupleABC = F.GetABC();
 	double QuadA = std::get<0>(TupleABC);
 	double QuadB = std::get<1>(TupleABC);
@@ -229,9 +278,19 @@ inline double GetSlopeOfSecantLine(const double& a, const QuadraticFunction& F)
 	// it passes through the point (3,f(3)).
 	// We have f(3)=9, so the tangent line passes through the point (3,9).
 
-	// TODO: Finish next steps
+	// tangent line at x = a
+	LinearFunction TangentLineAtXIsEqualToA(1, 0);
+	ConvertFromPointSlopeFromToLinearForm(Point(a, FofA), SlopeOfSecantLine, TangentLineAtXIsEqualToA);
 
-	return SlopeOfSecantLine;
+	std::cout << "Original Function: " << endl;
+	F.PrintFunction();
+	cout << endl;
+	cout << "Equation of line tangent to origional function at x == " << a << endl;
+	TangentLineAtXIsEqualToA.PrintLinearFunctionInfo();
+
+	return;
+
+	//return SlopeOfSecantLine;
 }
 
 //  if h≠0 is chosen so that a+h is in the interval

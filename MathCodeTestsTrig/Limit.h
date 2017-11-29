@@ -42,6 +42,32 @@ inline void RunFunctionFromPosAndNegDirections(
 	const double& m_a)
 {
 
+	// neg direction
+	std::pair<double, double> NegPairFirst;
+	NegPairFirst.first = m_a - 0.1;
+	NegPairFirst.second = m_Function(m_a - 0.1);
+
+	std::pair<double, double> NegPairSecond;
+	NegPairSecond.first = m_a - 0.01;
+	NegPairSecond.second = m_Function(m_a - 0.01);
+
+	std::pair<double, double> NegPairThird;
+	NegPairThird.first = m_a - 0.001;
+	NegPairThird.second = m_Function(m_a - 0.001);
+
+	std::pair<double, double> NegPairFourth;
+	NegPairFourth.first = m_a - 0.0001;
+	NegPairFourth.second = m_Function(m_a - 0.0001);
+
+	NegDirVec.push_back(NegPairFourth);
+	NegDirVec.push_back(NegPairThird);
+	NegDirVec.push_back(NegPairSecond);
+	NegDirVec.push_back(NegPairFirst);
+	
+
+
+
+	// pos direction
 	std::pair<double, double> PosPairFirst;
 	PosPairFirst.first = m_a + 0.1;
 	PosPairFirst.second = m_Function(m_a + 0.1);
@@ -64,27 +90,13 @@ inline void RunFunctionFromPosAndNegDirections(
 	PosDirVec.push_back(PosPairFourth);
 
 
-	// neg direction
-	std::pair<double, double> NegPairFirst;
-	NegPairFirst.first = m_a - 0.1;
-	NegPairFirst.second = m_Function(m_a - 0.1);
 
-	std::pair<double, double> NegPairSecond;
-	NegPairSecond.first = m_a - 0.01;
-	NegPairSecond.second = m_Function(m_a - 0.01);
 
-	std::pair<double, double> NegPairThird;
-	NegPairThird.first = m_a - 0.001;
-	NegPairThird.second = m_Function(m_a - 0.001);
 
-	std::pair<double, double> NegPairFourth;
-	NegPairFourth.first = m_a - 0.0001;
-	NegPairFourth.second = m_Function(m_a - 0.0001);
 
-	NegDirVec.push_back(NegPairFirst);
-	NegDirVec.push_back(NegPairSecond);
-	NegDirVec.push_back(NegPairThird);
-	NegDirVec.push_back(NegPairFourth);
+
+
+
 
 }
 

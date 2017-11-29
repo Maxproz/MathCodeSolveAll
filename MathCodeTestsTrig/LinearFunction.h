@@ -4,6 +4,8 @@
 #define LINEARFUNCTION_H
 
 #include "PolynomialFunction.h"
+#include "MiscMathEquations.h"
+#include "MathConstants.h"
 
 #include <utility>
 #include <exception>
@@ -36,6 +38,7 @@ private:
 
 	std::vector<double> m_AllRealZeros;
 
+	// TODO: Validate this function
 	inline void FindAndStoreAllRealZeros()
 	{
 		// form y = ax + b
@@ -186,7 +189,21 @@ public:
 
 };
 
+inline void ConvertFromPointSlopeFromToLinearForm(const Point& InPoint, const double& InSlope, LinearFunction& OutTangentLine)
+{
+	const double Localx = InPoint.first * (-1);
+	const double Localy = InPoint.second * (-1);
 
+	// Convert this form into a working LinearFunction result you can return.
+	// Y - y = InSlope(X - x)
+
+	double FarRHS = (InSlope * (Localx));
+	double ChangedSideY = Localy;
+	FlipSign(ChangedSideY);
+	FarRHS = FarRHS + ChangedSideY;
+
+	OutTangentLine = LinearFunction(InSlope, FarRHS);
+}
 
 
 #endif

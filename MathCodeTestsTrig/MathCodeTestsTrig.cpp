@@ -120,10 +120,28 @@ int main()
 		//TestConst = TestDerivative.GetDerivativeFunction();
 		//TestConst.PrintConstantFunctionInfo();
 		
-		QuadraticFunction TestQuad(1, 0, 0);
-		auto Result = GetSlopeOfSecantLine(3, TestQuad);
+		//QuadraticFunction TestQuad(1, 0, 0);
+		//FindEquationOfTangentLineToAFunction(3, TestQuad);
 
 		//std::cout << Result << std::endl;
+
+		//QuadraticFunction TestQuad(1, 0, 0);
+		//Derivative<QuadraticFunction, LinearFunction> DerivativeTest(TestQuad);
+		//auto DerivativeResult = DerivativeTest.EstimateDerivative(3);
+		
+		//QuadraticFunction TestQuad(3, -4, 1);
+		//Derivative<QuadraticFunction, LinearFunction> DerivativeTest(TestQuad);
+		//auto DerivativeResult = DerivativeTest.EstimateDerivative(2);
+
+		//std::cout << "DerivativeResult: = " << DerivativeResult << endl;
+
+
+		QuadraticFunction TestQuad(1, 3, 2);
+		Derivative<QuadraticFunction, LinearFunction> DerivativeTest(TestQuad);
+		auto DerivativeResult = DerivativeTest.EstimateDerivative(1);
+
+		std::cout << "DerivativeResult: = " << DerivativeResult << endl;
+
 
 	}
 	catch (const std::exception& ex)

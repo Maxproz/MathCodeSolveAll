@@ -18,8 +18,6 @@ private:
 	OutFunction m_OutFunction;
 
 
-
-
 	// Evaluate a quadratic function derivative get a linear function
 	inline LinearFunction EvaluateFunctionDerivative(QuadraticFunction& InFunction)
 	{
@@ -80,6 +78,40 @@ public:
 	//	return Numerator / Denominator;
 
 	//}
+
+
+	// public function that can be called, assumes that everything went ok in the constructors with assigning the m_OutFunction template
+	inline double EstimateDerivative(const int& x)
+	{
+		std::vector<std::pair<double, double>> PosDirVec;
+		std::vector<std::pair<double, double>> NegDirVec;
+
+		RunFunctionFromPosAndNegDirections(PosDirVec, NegDirVec, std::move(m_OutFunction)/*(Numerator, Denominator)*/, x);
+
+		std::cout << "Evaluating Limit: Please Wait...\n\n";
+
+		std::cout << "From Positive Direction\n";
+		for (auto & num : PosDirVec)
+		{
+			std::cout << std::setprecision(std::numeric_limits<double>::digits10 + 1)
+				<< std::setw(7) << num.first << " " << num.second << std::endl;
+		}
+
+		std::cout << std::endl;
+
+		std::cout << "From Negative Direction\n";
+		for (auto & num : NegDirVec)
+		{
+			std::cout << std::setprecision(std::numeric_limits<double>::digits10 + 1)
+				<< std::setw(7) << num.first << " " << num.second << std::endl;
+		}
+
+		std::cout << std::endl;
+
+		Limit<OutFunction> LocalLimit(m_OutFunction, x);
+		return LocalLimit.GetLimitResult();
+
+	}
 
 };
 

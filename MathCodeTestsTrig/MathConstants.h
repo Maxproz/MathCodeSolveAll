@@ -4,6 +4,10 @@
 #ifndef MathConstants_H
 #define MathConstants_H
 
+#include <utility>
+
+using std::pair;
+
 
 //namespace MathConstants
 //{
@@ -20,6 +24,7 @@
 const double Eulere = 2.718282;
 const double my_gravityfeet(32);  // f/s^2
 
+typedef pair<double, double> Point;
 
 
 #endif

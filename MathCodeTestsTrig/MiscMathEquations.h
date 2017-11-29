@@ -32,12 +32,37 @@ void PrintDecimalAsFraction(double input);
 
 std::pair<double, double> OutputDecimalAsFract(const double& input);
 
-
-// Maybe I will have a use for these later
+// Maybe I will have a use for this later
 template<typename T>
 double evaluate_at(double x, const T& Function)
 {
 	return Function(x);
 }
 
+// Maybe I will have a use for this later
 //typedef double (RationalFunction::* memfunptr)(const double&);
+
+template <typename T>
+inline bool IsPositive(const T& Num)
+{
+	if (Num > 0)
+	{
+		return true;
+	}
+	else if (Num < 0)
+	{
+		return false;
+	}
+	else
+	{
+		// Num == 0
+		throw std::logic_error("error in IsPositive Function");
+	}
+}
+
+template <typename T>
+inline void FlipSign(T& Num)
+{
+	Num = Num * (-1);
+
+}
