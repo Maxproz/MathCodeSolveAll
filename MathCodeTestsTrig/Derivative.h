@@ -275,6 +275,9 @@ inline void /*OutFunc*/ ApplyDerivativeDifferenceRule(F& FirstFunction, G& Secon
 	Derivative<G, GPrime> SecondDerivative(SecondFunction);
 	GPrime SecondDerivativeFunction = SecondDerivative.GetDerivativeFunction();
 
+	// TODO: How do I return a function here?
+	// The problem is that I have no idea how to analyze what templates I put in without adding a ton of specific code.
+
 	FirstDerivativeFunction.PrintFunction();
 	cout << " - ";
 	SecondDerivativeFunction.PrintFunction();
@@ -294,6 +297,9 @@ template <typename F, typename FPrime,
 
 	Derivative<G, GPrime> SecondDerivative(SecondFunction);
 	GPrime SecondDerivativeFunction = SecondDerivative.GetDerivativeFunction();
+
+	// TODO: How do I return a function here?
+	// The problem is that I have no idea how to analyze what templates I put in without adding a ton of specific code.
 
 	FirstDerivativeFunction.PrintFunction();
 	cout << " + ";
