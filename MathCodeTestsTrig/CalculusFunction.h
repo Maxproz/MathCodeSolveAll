@@ -20,6 +20,7 @@
 #include "PiecewiseFunction.h"
 #include "MiscMathEquations.h"
 #include "Limit.h"
+#include "Derivative.h"
 
 //typedef pair<double, double> Point;
 
@@ -38,6 +39,95 @@ void PrintPointSlopeForm(const double& Slope, const Point& InPoint);
 double GetSlope(const Point& FirstPoint, const Point& SecondPoint);
 
 void PrintSlopeInterceptForm(const Point& Point, const double& Slope);
+
+
+// Find the rate of change of profit when 10,000 games are produced.
+/*
+The profit P(x) earned by producing xx gaming systems is R(x)−C(x), 
+where R(x) is the revenue obtained from the sale of x games. 
+Since the company can sell x games at p=−0.01x+400 per game,
+
+R(x) = x*(−0.01x+400)
+
+
+@Input 1: Quadratic Reveune Function
+@input 2: Linear Cost Function
+
+@Output: Bool for weather you should increase production based on profit calculations with derivative
+*/
+
+inline bool ShouldProductionBeIncreasedUsingRateOfChange(const QuadraticFunction& Revenue, const LinearFunction& Cost, const int& AmountProduced)
+{
+	// Calculate a new Profit Quadratic Function P(x) = R(x) - C(x) Inside
+	// Take the derivative of that new function for 10000 games produced
+
+	double NewB{ 0 };
+	double NewC{ 0 };
+
+	// A stays the same when subtracting a linear from a quadratic (what this function is specific for)
+	double NewA = std::get<0>(Revenue.GetABC());
+	NewB = std::get<1>(Revenue.GetABC()) - (Cost.GetA());
+	NewC = std::get<2>(Revenue.GetABC()) - (Cost.GetB());
+
+	QuadraticFunction Profit(NewA, NewB, NewC);
+	double ProfitOfAmountProduced = Profit(AmountProduced);
+
+	Derivative<QuadraticFunction, LinearFunction> DerivativeOfProfit(Profit);
+	double RateOfChangeOfAmountProduced = DerivativeOfProfit.EstimateDerivative(AmountProduced);
+
+
+	// Make an if else for the sentence below
+	// Since the rate of change of profit P′(10,000) > 0 AND P(10,000) > 0, the company should increase production.
+	// TODO: When should decrease production?
+	
+	if (ProfitOfAmountProduced > 0 && RateOfChangeOfAmountProduced > 0)
+	{
+		// increase production
+		return true;
+	}
+	else
+	{
+		// decrease production
+		// NOTE: cant help but think i am missing more cases here
+		// what about Profit > 0, Rate of change < 0 ?
+		// I will probably end up learning later once i learn more about statistics.
+		return false;
+	}
+}
+
+inline bool ShouldProductionBeIncreasedUsingRateOfChange(const QuadraticFunction& Profit, const double& PriceOfItem)
+{
+
+	double ProfitOfAmountProduced = Profit(PriceOfItem);
+
+	QuadraticFunction LocalProfitFunc = Profit;
+
+	Derivative<QuadraticFunction, LinearFunction> DerivativeOfProfit(LocalProfitFunc);
+	double RateOfChangeOfAmountProduced = DerivativeOfProfit.EstimateDerivative(PriceOfItem);
+
+
+	// Make an if else for the sentence below
+	// Since the rate of change of profit P′(10,000) > 0 AND P(10,000) > 0, the company should increase production.
+	// TODO: When should decrease production?
+
+	if (ProfitOfAmountProduced > 0 && RateOfChangeOfAmountProduced > 0)
+	{
+		// increase production
+		return true;
+	}
+	else
+	{
+		// decrease production
+		// NOTE: cant help but think i am missing more cases here
+		// what about Profit > 0, Rate of change < 0 ?
+		// I will probably end up learning later once i learn more about statistics.
+		return false;
+	}
+}
+
+
+
+
 
 
 

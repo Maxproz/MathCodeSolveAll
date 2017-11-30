@@ -55,6 +55,25 @@ private:
 		return OutFunc;
 	}
 
+	inline TrigometricFunction<MPCOS> EvaluateFunctionDerivative(TrigometricFunction<MPSIN>& InFunction)
+	{
+		// TODO: which variables do I grab for these transfers? most online examples only show generic function
+		auto AllVars =  InFunction.GetABCD();
+		double a = std::get<0>(AllVars);
+		double b = std::get<1>(AllVars);
+		double c = std::get<2>(AllVars);
+		double d = std::get<3>(AllVars);
+		
+		a = a * b;
+		b = b;
+		c = c;
+		d = 0;
+
+		TrigometricFunction<MPCOS> OutFunc(a,b,c,d);
+
+		return OutFunc;
+	}
+
 
 public:
 
@@ -82,6 +101,41 @@ public:
 
 	// public function that can be called, assumes that everything went ok in the constructors with assigning the m_OutFunction template
 	inline double EstimateDerivative(const int& x)
+	{
+		std::vector<std::pair<double, double>> PosDirVec;
+		std::vector<std::pair<double, double>> NegDirVec;
+
+		RunFunctionFromPosAndNegDirections(PosDirVec, NegDirVec, std::move(m_OutFunction)/*(Numerator, Denominator)*/, x);
+
+		std::cout << "Evaluating Limit: Please Wait...\n\n";
+
+		std::cout << "From Positive Direction\n";
+		for (auto & num : PosDirVec)
+		{
+			std::cout << std::setprecision(std::numeric_limits<double>::digits10 + 1)
+				<< std::setw(7) << num.first << " " << num.second << std::endl;
+		}
+
+		std::cout << std::endl;
+
+		std::cout << "From Negative Direction\n";
+		for (auto & num : NegDirVec)
+		{
+			std::cout << std::setprecision(std::numeric_limits<double>::digits10 + 1)
+				<< std::setw(7) << num.first << " " << num.second << std::endl;
+		}
+
+		std::cout << std::endl;
+
+		Limit<OutFunction> LocalLimit(m_OutFunction, x);
+		return LocalLimit.GetLimitResult();
+
+	}
+
+	// Overloaded because I needed a double to check exact prices with decimals during rate of change production tests 
+	// see CalculusFunction header -(ShouldProductionBeIncreasedUsingRateOfChange(const QuadraticFunction& Profit, const double& PriceOfItem)
+	// public function that can be called, assumes that everything went ok in the constructors with assigning the m_OutFunction template
+	inline double EstimateDerivative(const double& x)
 	{
 		std::vector<std::pair<double, double>> PosDirVec;
 		std::vector<std::pair<double, double>> NegDirVec;

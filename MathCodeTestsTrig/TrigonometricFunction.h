@@ -9,10 +9,11 @@
 
 #include <vector>
 #include <utility>
+#include <tuple>
 
 using std::vector;
 using std::pair;
-
+using std::tuple;
 
 // Formally, a function f is periodic if there exists a number p such that f(x + p) = f(x) 
 // for all x. The smallest possible value of p is the period.
@@ -100,10 +101,18 @@ private:
 
 public:
 
+
+	TrigometricFunction() = default;
+
 	explicit TrigometricFunction(const double& a, const double& b, const double& c, const double& d)
 		: m_a{ a }, m_b{ b }, m_c{ c }, m_d{ d }
 	{
 
+	}
+
+	inline tuple<double, double, double, double> GetABCD() const
+	{
+		return tuple<double, double, double, double>(m_a, m_b, m_c, m_d);
 	}
 
 	//double operator()(const double& x)
@@ -151,10 +160,17 @@ private:
 
 public:
 
+	TrigometricFunction() = default;
+
 	explicit TrigometricFunction(const double& a, const double& b, const double& c, const double& d)
 		: m_a{ a }, m_b{ b }, m_c{ c }, m_d{ d }
 	{
 
+	}
+
+	inline tuple<double, double, double, double> GetABCD() const
+	{
+		return tuple<double, double, double, double>(m_a, m_b, m_c, m_d);
 	}
 
 	// try this out for a bit? until I better understand the inverse crap
@@ -193,10 +209,17 @@ private:
 
 public:
 
+	TrigometricFunction() = default;
+
 	explicit TrigometricFunction(const double& a, const double& b, const double& c, const double& d)
 		: m_a{ a }, m_b{ b }, m_c{ c }, m_d{ d }
 	{
 
+	}
+
+	inline tuple<double, double, double, double> GetABCD() const
+	{
+		return tuple<double, double, double, double>(m_a, m_b, m_c, m_d);
 	}
 
 	// try this out for a bit? until I better understand the inverse crap

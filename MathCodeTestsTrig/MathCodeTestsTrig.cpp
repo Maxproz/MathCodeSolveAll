@@ -10,7 +10,7 @@
 
 
 // TODO: Should I create a class for typedefs?
-typedef std::pair<double, double> Point;
+//typedef std::pair<double, double> Point;
 
 
 int main()
@@ -136,11 +136,63 @@ int main()
 		//std::cout << "DerivativeResult: = " << DerivativeResult << endl;
 
 
-		QuadraticFunction TestQuad(1, 3, 2);
-		Derivative<QuadraticFunction, LinearFunction> DerivativeTest(TestQuad);
-		auto DerivativeResult = DerivativeTest.EstimateDerivative(1);
+		//QuadraticFunction TestQuad(1, 3, 2);
+		//Derivative<QuadraticFunction, LinearFunction> DerivativeTest(TestQuad);
+		//auto DerivativeResult = DerivativeTest.EstimateDerivative(1);
 
-		std::cout << "DerivativeResult: = " << DerivativeResult << endl;
+		//std::cout << "DerivativeResult: = " << DerivativeResult << endl;
+
+		//TrigometricFunction<MPSIN> TestTrig(1, 1, 0, 0);
+		//Derivative<decltype(TestTrig), TrigometricFunction<MPCOS>> TrigDerivTest(TestTrig);
+
+		////TrigometricFunction<MPCOS> OutDeriv = TrigDerivTest.GetDerivativeFunction();
+		//TrigDerivTest.EstimateDerivative(0);
+
+		//TrigometricFunction<MPSIN> TestTrig(1, 1, 0, 0);
+		//Derivative<decltype(TestTrig), TrigometricFunction<MPCOS>> TrigDerivTest(TestTrig);
+
+		////TrigometricFunction<MPCOS> OutDeriv = TrigDerivTest.GetDerivativeFunction();
+		//TrigDerivTest.EstimateDerivative(0);
+		
+		//QuadraticFunction TestQuad(-16, 0, 64);
+
+		//Derivative<QuadraticFunction, LinearFunction> TestDeriv(TestQuad);
+		//TestDeriv.EstimateDerivative(1);
+
+		//// Revenue = PriceFunction * x
+		//QuadraticFunction Revenue(-0.01, 400, 0);
+		//LinearFunction Cost(100,10000);
+
+		//int* AmountProduced = new int(10000);
+		//bool ShouldIncreaseProduction = ShouldProductionBeIncreasedUsingRateOfChange(Revenue, Cost, *AmountProduced);
+
+		//if (ShouldIncreaseProduction)
+		//{
+		//	cout << "Increase Production" << endl;
+		//}
+		//else
+		//{
+		//	cout << "Decrease Production" << endl;
+		//}
+
+		//delete AmountProduced;
+
+		// Revenue = PriceFunction * x
+
+
+		QuadraticFunction Profit(-20, 150,-10);
+		std::unique_ptr<double> PriceOfItem = std::make_unique<double>(3.25);
+
+		bool ShouldIncreaseProduction = ShouldProductionBeIncreasedUsingRateOfChange(Profit, *PriceOfItem.get());
+
+		if (ShouldIncreaseProduction)
+		{
+			cout << "Increase Production" << endl;
+		}
+		else
+		{
+			cout << "Decrease Production" << endl;
+		}
 
 
 	}
