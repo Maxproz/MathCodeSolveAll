@@ -159,12 +159,12 @@ public:
 	//	ax + by = c,
 	//where a, ba, b are both not zero, to denote the standard form of a line.
 
-	inline void PrintLinearFunctionInfo() const 
+	inline void PrintFunction() const 
 	{
 		cout << "f(x) = " << m_a << "x";
 		if (m_b == 0)
 		{
-			cout << endl;
+			//cout << endl;
 			return;
 		}
 		else
@@ -179,7 +179,7 @@ public:
 				PlusOrMinus = '+';
 			}
 
-			cout << PlusOrMinus << m_b << endl;
+			cout << PlusOrMinus << m_b;
 		}
 
 	}

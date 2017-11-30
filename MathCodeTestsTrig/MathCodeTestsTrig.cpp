@@ -195,11 +195,37 @@ int main()
 		//}
 
 
-		RootFunction<2> RootFuncTest(1, 0, 0);
-		Derivative <RootFunction<2>, RootFunction<-2>> RootDeriv(RootFuncTest);
-		RootFunction<-2> OutFunc = RootDeriv.GetDerivativeFunction();
-		OutFunc.PrintFunction();
+		//RootFunction<2> RootFuncTest(1, 0, 0);
+		//Derivative <RootFunction<2>, RootFunction<-2>> RootDeriv(RootFuncTest);
+		//RootFunction<-2> OutFunc = RootDeriv.GetDerivativeFunction();
+		//OutFunc.PrintFunction();
+			
+		//QuadraticFunction TestQuadratic(2, -3, 1);
+		//ConstantFunction TestConstFunc =
+		//	GetSecondDerivativeFunction<QuadraticFunction, LinearFunction, ConstantFunction>(TestQuadratic);
 
+		//TestConstFunc.PrintConstantFunctionInfo();
+
+		//PowerFunction<4> TestPowerFunc(3, 4, 5, 6);
+		//Derivative<PowerFunction<4>, PowerFunction<3>> TestPowerDerivative(TestPowerFunc);
+		//
+		//auto DerivativeFunc = TestPowerDerivative.GetDerivativeFunction();
+		//DerivativeFunc.PrintFunction();
+			
+		//PowerFunction<7> TestPowerFunc(1, 1, 0, 0);
+		//Derivative<PowerFunction<7>, PowerFunction<6>> TestPowerDerivative(TestPowerFunc);
+
+		//auto DerivativeFunc = TestPowerDerivative.GetDerivativeFunction();
+		//DerivativeFunc.PrintFunction();
+		
+		PowerFunction<3> TestPowerThreeFunc(2, 1, 0, 0);
+		PowerFunction<2> TestQuad(6, 1, 0, 0);
+
+		ApplyDerivativeDifferenceRule<PowerFunction<3>, PowerFunction<2>, PowerFunction<2>, PowerFunction<1>>(
+			TestPowerThreeFunc,
+			TestQuad);
+
+		cout << endl;
 
 
 

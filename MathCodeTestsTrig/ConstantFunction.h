@@ -6,6 +6,11 @@
 
 #include "PolynomialFunction.h"
 
+#include <iostream>
+
+using std::cout;
+using std::endl;
+
 
 class ConstantFunction : public PolynomialFunction
 {
@@ -37,6 +42,8 @@ public:
 	{
 		cout << "f(x) = " << m_b << endl;
 	}
+
+	inline double GetB() const { return m_b; }
 	
 };
 

@@ -9,6 +9,8 @@
 #include "LinearFunction.h"
 #include "QuadraticFunction.h"
 #include "ConstantFunction.h"
+#include "PowerFunction.h"
+
 
 // NOTES:
 // Let f(x) be a function and "a" be in its domain. If f(x) is differentiable at a, then f is continuous at a.
@@ -17,6 +19,13 @@
 // a function may fail to be differentiable at a point in more complicated ways as well.
 
 // TODO: Go into more in-depth reserach and understanding so you can make better use of continuity, and differentiability.
+// TODO: Add functionality for taking the derivative of a cubic function x^3
+// TODO: Add functionality to handle the power rule/power functions above cubic
+// TODO: Add functionality for the product rule
+// TODO: Add functionality for The Quotient Rule
+// TODO: Figure out how I will handle derivatives for like secx = secxtanx
+// TODO: Setup a function for the constant multiple rule 
+// TODO: my solution for the sum and muiltiple rule seems garbage at the moment doesn't it? not sure to tired.
 
 
 template <typename InFunction, typename OutFunction>
@@ -26,6 +35,12 @@ private:
 	InFunction m_InFunction;
 	OutFunction m_OutFunction;
 
+
+	// Evaluate a quadratic function derivative get a linear function
+	inline double EvaluateFunctionDerivative(ConstantFunction& InFunction)
+	{
+		return 0;
+	}
 
 	// Evaluate a quadratic function derivative get a linear function
 	inline LinearFunction EvaluateFunctionDerivative(QuadraticFunction& InFunction)
@@ -60,6 +75,52 @@ private:
 		b = 0;
 
 		ConstantFunction OutFunc(a);
+
+		return OutFunc;
+	}
+
+	template <int Exponent>
+	inline PowerFunction<Exponent - 1> EvaluateFunctionDerivative(PowerFunction<Exponent>& InFunction)
+	{
+		auto GetAllInputVariables = InFunction.GetNAKDC();
+		double n, a, k, d, c;
+		n = std::get<0>(GetAllInputVariables);
+		a = std::get<1>(GetAllInputVariables);
+		k = std::get<2>(GetAllInputVariables);
+		d = std::get<3>(GetAllInputVariables);
+		c = std::get<4>(GetAllInputVariables);
+
+		// take out the constant a
+		double OutSideAConstant = a;
+
+		// Now we have to take the derivative of InsideFuncDerivative: u =  k(x-d) 
+
+		double FirstFuncA = k;
+		double FirstFuncB = k * d;
+		LinearFunction InsideFunc(FirstFuncA, FirstFuncB);
+		Derivative<LinearFunction, ConstantFunction> InsideFuncDerivative(InsideFunc);
+		ConstantFunction InsideDerivativeFunc = InsideFuncDerivative.GetDerivativeFunction();
+
+		// And the derivative of OutsideFuncDerivative  f = 1u^n 
+		
+		double SecondFuncA = 1 * Exponent;
+		double SecondFuncNewExponent = Exponent - 1;
+		// SecondFuncA * u * InsideDerivativeFunc.m_b();
+
+		PowerFunction<Exponent - 1> OutsideDerivativeFunc(SecondFuncA, 1, 0, 0);
+
+		// after that I should have
+
+		// OutSideAConstant * OutsideDerivativeFunc * InsideDerivativeFunc
+		// Substitude u for k(x-d)
+		OutsideDerivativeFunc = PowerFunction<Exponent - 1>(SecondFuncA, k, d, 0);
+		// evaluate and simplify
+		double NewK = std::pow(std::get<2>(OutsideDerivativeFunc.GetNAKDC()), Exponent - 1);
+		double NewAK = NewK * SecondFuncA;
+		double NewAKInsideConst = NewAK * InsideDerivativeFunc.GetB();
+		double FullNewFuncConst = NewAKInsideConst * OutSideAConstant;
+
+		PowerFunction<Exponent - 1> OutFunc(FullNewFuncConst, 1, d, 0);
 
 		return OutFunc;
 	}
@@ -201,6 +262,81 @@ public:
 
 };
 
+// Let f(x)and g(x) be differentiable functions and k be a constant. Then each of the following equations holds.
+template <typename F, typename FPrime, 
+			typename G, typename GPrime/*,
+				typename OutFunc*/>
+inline void /*OutFunc*/ ApplyDerivativeDifferenceRule(F& FirstFunction, G& SecondFunction)
+{
+	// for j(x)=f(x)+g(x),j′(x)=f′(x)+g′(x).
+	Derivative<F, FPrime> FirstDerivative(FirstFunction);
+	FPrime FirstDerivativeFunction = FirstDerivative.GetDerivativeFunction();
+
+	Derivative<G, GPrime> SecondDerivative(SecondFunction);
+	GPrime SecondDerivativeFunction = SecondDerivative.GetDerivativeFunction();
+
+	FirstDerivativeFunction.PrintFunction();
+	cout << " - ";
+	SecondDerivativeFunction.PrintFunction();
+
+	return;
+
+}
+
+template <typename F, typename FPrime,
+	typename G, typename GPrime/*,
+							   typename OutFunc*/>
+	inline void /*OutFunc*/ ApplyDerivativeSumRule(F& FirstFunction, G& SecondFunction)
+{
+	// for j(x)=f(x)+g(x),j′(x)=f′(x)+g′(x).
+	Derivative<F, FPrime> FirstDerivative(FirstFunction);
+	FPrime FirstDerivativeFunction = FirstDerivative.GetDerivativeFunction();
+
+	Derivative<G, GPrime> SecondDerivative(SecondFunction);
+	GPrime SecondDerivativeFunction = SecondDerivative.GetDerivativeFunction();
+
+	FirstDerivativeFunction.PrintFunction();
+	cout << " + ";
+	SecondDerivativeFunction.PrintFunction();
+
+	return;
+
+}
+
+
+
+template <typename FirstFuncForm, typename SecondFuncForm, typename ThirdFuncForm>
+inline ThirdFuncForm GetSecondDerivativeFunction(FirstFuncForm& InFunction)
+{
+	Derivative<FirstFuncForm, SecondFuncForm> FirstDerivative(InFunction);
+	SecondFuncForm FirstDerivativeFunction = FirstDerivative.GetDerivativeFunction();
+
+	Derivative<SecondFuncForm, ThirdFuncForm> SecondDerivative(FirstDerivativeFunction);
+	ThirdFuncForm SecondDerivativeFunction = SecondDerivative.GetDerivativeFunction();
+
+	return SecondDerivativeFunction;
+}
+
+//template <typename InFunc, typename SecondDerivativeFunc>
+//inline SecondDerivativeFunc GetSecondDerivativeFunction(InFunc& InFunction)
+//{
+//	// TODO: Fill out later
+//	throw std::exception("Shouldn't call this template");
+//
+//	SecondDerivativeFunc OutFunc;
+//	return OutFunc;
+//}
+//
+//template <>
+//inline ConstantFunction GetSecondDerivativeFunction<QuadraticFunction, ConstantFunction>(QuadraticFunction& InFunction)
+//{
+//	Derivative<QuadraticFunction, LinearFunction> FirstDerivative(InFunction);
+//	LinearFunction FirstDerivativeFunction = FirstDerivative.GetDerivativeFunction();
+//	Derivative<LinearFunction, ConstantFunction> SecondDerivative(FirstDerivativeFunction);
+//	ConstantFunction SecondDerivativeFunction = SecondDerivative.GetDerivativeFunction();
+//
+//	return SecondDerivativeFunction;
+//}
 
 
 #endif

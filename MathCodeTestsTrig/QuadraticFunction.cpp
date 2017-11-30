@@ -157,7 +157,7 @@ void QuadraticFunction::PrintFunction() const
 	if (m_c == 0)
 	{
 		// do nothing new line return
-		cout << endl;
+		//cout << endl;
 		return;
 	}
 	else

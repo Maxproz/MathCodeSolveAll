@@ -194,7 +194,7 @@ inline double GetSlopeOfSecantLine(const double& a, const QuadraticFunction& F)
 
 	LinearFunction FactoredFunc = FactorNumeratorRationalFunc(Numerator, Denominator);
 
-	FactoredFunc.PrintLinearFunctionInfo();
+	FactoredFunc.PrintFunction();
 
 	// Take the limit of the factored function to find the slope of the secant line
 	Limit<LinearFunction> LocalLimit(FactoredFunc, a);
@@ -356,7 +356,7 @@ inline void FindEquationOfTangentLineToAFunction(const double& a, const Quadrati
 
 	LinearFunction FactoredFunc = FactorNumeratorRationalFunc(Numerator, Denominator);
 
-	FactoredFunc.PrintLinearFunctionInfo();
+	FactoredFunc.PrintFunction();
 
 	// Take the limit of the factored function to find the slope of the secant line
 	Limit<LinearFunction> LocalLimit(FactoredFunc, a);
@@ -376,7 +376,7 @@ inline void FindEquationOfTangentLineToAFunction(const double& a, const Quadrati
 	F.PrintFunction();
 	cout << endl;
 	cout << "Equation of line tangent to origional function at x == " << a << endl;
-	TangentLineAtXIsEqualToA.PrintLinearFunctionInfo();
+	TangentLineAtXIsEqualToA.PrintFunction();
 
 	return;
 
