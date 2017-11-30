@@ -180,19 +180,27 @@ int main()
 		// Revenue = PriceFunction * x
 
 
-		QuadraticFunction Profit(-20, 150,-10);
-		std::unique_ptr<double> PriceOfItem = std::make_unique<double>(3.25);
+		//QuadraticFunction Profit(-20, 150,-10);
+		//std::unique_ptr<double> PriceOfItem = std::make_unique<double>(3.25);
 
-		bool ShouldIncreaseProduction = ShouldProductionBeIncreasedUsingRateOfChange(Profit, *PriceOfItem.get());
+		//bool ShouldIncreaseProduction = ShouldProductionBeIncreasedUsingRateOfChange(Profit, *PriceOfItem.get());
 
-		if (ShouldIncreaseProduction)
-		{
-			cout << "Increase Production" << endl;
-		}
-		else
-		{
-			cout << "Decrease Production" << endl;
-		}
+		//if (ShouldIncreaseProduction)
+		//{
+		//	cout << "Increase Production" << endl;
+		//}
+		//else
+		//{
+		//	cout << "Decrease Production" << endl;
+		//}
+
+
+		RootFunction<2> RootFuncTest(1, 0, 0);
+		Derivative <RootFunction<2>, RootFunction<-2>> RootDeriv(RootFuncTest);
+		RootFunction<-2> OutFunc = RootDeriv.GetDerivativeFunction();
+		OutFunc.PrintFunction();
+
+
 
 
 	}

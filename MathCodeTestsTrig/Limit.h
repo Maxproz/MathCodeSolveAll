@@ -128,7 +128,7 @@ private:
 
 	//double SimpifyComplexFraction(const ComplexFraction& InComplexFract);
 
-	double EvaluateRootFuncLimit(const RootFunction& InRootFunc);
+	//double EvaluateRootFuncLimit(const RootFunction& InRootFunc);
 
 	//inline RationalFunction SolveByConjugateMultiplication(const RootFunction& Numerator, const LinearFunction& Denominator)
 	//{
@@ -3107,6 +3107,11 @@ public:
 		else
 		{
 			// If its a real number this is our limit
+			// TODO: Mark the function as continuous here using a variable that all functions have
+			// because if a function is differentiable it must be continuous.
+			// bool InFunction.bIsContinuous = true;
+
+
 			m_L = TestIfNan;
 		}
 

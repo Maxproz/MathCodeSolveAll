@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 
 #ifndef DERIVATIVE_H
@@ -9,6 +9,15 @@
 #include "LinearFunction.h"
 #include "QuadraticFunction.h"
 #include "ConstantFunction.h"
+
+// NOTES:
+// Let f(x) be a function and "a" be in its domain. If f(x) is differentiable at a, then f is continuous at a.
+// We conclude that in order to be differentiable at a point, a function must be “smooth” at that point.
+// We saw in f(x) = cuberoot(x). A function fails to be differentiable at a point where there is a vertical tangent line.
+// a function may fail to be differentiable at a point in more complicated ways as well.
+
+// TODO: Go into more in-depth reserach and understanding so you can make better use of continuity, and differentiability.
+
 
 template <typename InFunction, typename OutFunction>
 class Derivative
@@ -70,6 +79,29 @@ private:
 		d = 0;
 
 		TrigometricFunction<MPCOS> OutFunc(a,b,c,d);
+
+		return OutFunc;
+	}
+
+	inline RootFunction<-2> EvaluateFunctionDerivative(RootFunction<2>& InFunction)
+	{
+		// TODO: which variables do I grab for these transfers? most online examples only show generic function
+		auto AllVars = InFunction.GetNABC();
+		double N = std::get<0>(AllVars);
+		double a = std::get<1>(AllVars);
+		double b = std::get<2>(AllVars);
+		double c = std::get<3>(AllVars);
+		
+		const double RootExponent = 1.0 / N;
+		
+		a = a * RootExponent;
+		b = b;
+		c = 0;
+
+		//double ExponentAfterSubtraction = RootExponent - 1.0;
+		// dont need i guess but I could convert to fraction and add the -2 that way.
+
+		RootFunction<-2> OutFunc(a,b,c);
 
 		return OutFunc;
 	}
