@@ -58,7 +58,8 @@ private:
 
 	QuadraticFunction m_DerivativeFunction = QuadraticFunction(1, 0, 0);
 	
-
+	// Try this way to collect zeros maybe? see how it goes.
+	std::vector<LinearFunction> m_HorizontalTangentLines;
 	
 public:
 
@@ -93,6 +94,8 @@ public:
 
 		//CubicFunction CopyHelp(m_a, m_b, m_c, m_d);
 		AutoSetDerivativeFunction(*this);
+		// Here I will Use the Derivative function to automatically set the zeros 
+		// by adding the LinearFunctions to the m_HorizontalTangentLines variable I made.
 
 	}
 	
