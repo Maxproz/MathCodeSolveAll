@@ -292,6 +292,14 @@ public:
 	//QuadraticFunction GetDenominatorQuadratic() const { return m_DenominatorQuadratic; }
 	//RootFunction GetDenominatorRoot() const { return m_DenominatorRoot; } // Rational FUNCTIONS CANNOT HAVE ROOT FUNCTIONS AHHHHHHHHHHH
 
+
+	inline void PrintFunction() const
+	{
+		m_NumeratorFunction.PrintFunction();
+		cout << " / ";
+		m_DenominatorFunction.PrintFunction();
+	}
+
 };
 
 //template<>

@@ -8,6 +8,7 @@
 #include "MathConstants.h"
 #include "QuarticFunction.h"
 #include "CubicFunction.h"
+#include "QuadraticFunction.h"
 
 #include <utility>
 #include <exception>
@@ -20,10 +21,14 @@ using std::cout;
 using std::endl;
 using std::vector;
 
+
 // f(x)=ax+b
 class LinearFunction : public PolynomialFunction
 {
 private:
+
+	friend class ConstantFunction;
+
 
 	double m_a;
 	double m_b;
@@ -149,6 +154,43 @@ public:
 
 	// multiplication
 	QuarticFunction operator*(CubicFunction const& rhs) const;
+	QuadraticFunction operator*(LinearFunction const& rhs) const;
+	
+	//template <typename T>
+	inline LinearFunction operator-(const LinearFunction& rhs) const
+	{
+		double OutA(0);
+		double OutB(0);
+
+		OutA = m_a - rhs.m_a;
+		OutB = m_b - rhs.m_b;
+
+		//if (m_a == 0)
+		//{
+		//	return ConstantFunction(OutB);
+		//}
+		//else
+		//{
+		return LinearFunction(OutA, OutB);
+		//}
+	}
+
+
+	// Use this operator as squared
+	inline QuadraticFunction GetSquaredFunction() const
+	{
+		// return (ax + b)(ax + b)
+		double First = m_a * m_a;
+		
+		double Outside = m_a * m_b;
+		double Inside = m_b * m_a;
+		double QuadraticB = Outside + Inside;
+
+		double Last = m_b * m_b;
+
+		return QuadraticFunction(First, QuadraticB, Last);
+	}
+
 	/*QuarticFunction& operator*=(CubicFunction const& rhs);*/
 
 	double operator()(double x) const { return ((m_a*x) + m_b); }
@@ -163,7 +205,10 @@ public:
 
 	inline void PrintFunction() const 
 	{
-		cout << "f(x) = " << m_a << "x";
+		//cout << "f(x) = " << m_a << "x";
+		if (m_a != 0)
+			cout << m_a << "x";
+
 		if (m_b == 0)
 		{
 			//cout << endl;

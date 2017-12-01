@@ -36,6 +36,8 @@ class QuadraticFunction : public PolynomialFunction
 {
 private:
 
+	friend class ConstantFunction;
+
 	double m_a;
 	double m_b;
 	double m_c;
@@ -182,6 +184,7 @@ public:
 
 	// multiplication
 	QuarticFunction operator*(QuadraticFunction const& rhs) const;
+	QuadraticFunction operator-(QuadraticFunction const& rhs) const;
 	/*QuarticFunction& operator*=(CubicFunction const& rhs);*/
 
 	double operator()(const double x) const

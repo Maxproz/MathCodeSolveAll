@@ -53,6 +53,19 @@ QuarticFunction QuadraticFunction::operator*(QuadraticFunction const & rhs) cons
 	return QuarticFunction(QuarticA, QuarticB, QuarticC, QuarticD, QuarticE);
 }
 
+QuadraticFunction QuadraticFunction::operator-(QuadraticFunction const & rhs) const
+{
+	double OutA(0);
+	double OutB(0);
+	double OutC(0);
+
+	OutA = m_a - rhs.m_a;
+	OutB = m_b - rhs.m_b;
+	OutC = m_c - rhs.m_c;
+
+	return QuadraticFunction(OutA, OutB, OutC);
+}
+
 void QuadraticFunction::SetTheMaxMinValue(double InNum)
 {
 	if (m_a < 0)
@@ -155,7 +168,8 @@ void QuadraticFunction::PrintBasicFunctionInfo() const
 
 void QuadraticFunction::PrintFunction() const
 {
-	cout << "f(x) = " << m_a << "x^2";
+	//cout << "f(x) = " << m_a << "x^2";
+	cout << m_a << "x^2";
 
 	if (m_b == 0)
 	{
@@ -176,7 +190,7 @@ void QuadraticFunction::PrintFunction() const
 			BVarPlusOrMinus = ' ';
 		}
 
-		cout << BVarPlusOrMinus << m_b;
+		cout << BVarPlusOrMinus << m_b << "x";
 	}
 
 	if (m_c == 0)

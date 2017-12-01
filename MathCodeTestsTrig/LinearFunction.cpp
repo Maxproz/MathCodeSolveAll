@@ -74,3 +74,21 @@ QuarticFunction LinearFunction::operator*(CubicFunction const & rhs) const
 		OutQuarticE);
 
 }
+
+QuadraticFunction LinearFunction::operator*(LinearFunction const & rhs) const
+{
+	double OutQuadA(0);
+	double OutQuadB(0);
+	double OutQuadC(0);
+
+	OutQuadA = m_a * rhs.m_a;
+	
+	double Outside = m_a * rhs.m_b;
+	double Inside = m_b * rhs.m_a;
+
+	OutQuadB = Outside + Inside;
+
+	OutQuadC = m_b * rhs.m_b;
+
+	return QuadraticFunction(OutQuadA, OutQuadB, OutQuadC);
+}

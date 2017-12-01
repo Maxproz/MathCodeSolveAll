@@ -12,6 +12,8 @@
 // TODO: Should I create a class for typedefs? (they are inside MathConstants for now)
 // TODO: Create the 5th/6th/7th degree polynomial classses
 // TODO: Create the base functionality for the quotient rule for derivatives
+// TODO: Setup power functions to take the derivative of a negative number exponent,
+// base functionality is maybe there? Needs confirmed.
 
 
 int main()
@@ -246,15 +248,44 @@ int main()
 
 		//cout << endl;
 
-		QuadraticFunction InputFunction1(1, 0, 2);
-		CubicFunction InputFunction2(3, 0, -5, 0);
+		//QuadraticFunction InputFunction1(1, 0, 2);
+		//CubicFunction InputFunction2(3, 0, -5, 0);
 
-		QuarticFunction TestFunc = ApplyDerivativeProductRule(InputFunction1, InputFunction2);
+		//QuarticFunction TestFunc = ApplyDerivativeProductRule(InputFunction1, InputFunction2);
 
-		TestFunc.PrintFunction();
+		//TestFunc.PrintFunction();
+		//cout << endl;
+		
+
+		//QuadraticFunction TestNumer(5, 0, 0);
+		//LinearFunction TestDenom(4, 3);
+
+		//RationalFunction<QuadraticFunction, QuadraticFunction> TestRatRes =	ApplyDerivativeQuotientRule(TestNumer, TestDenom);
+		//TestRatRes.PrintFunction();
+		//cout << endl;
+
+		//LinearFunction TestNumer(3, 1);
+		//LinearFunction TestDenom(4, -3);
+
+		//RationalFunction<LinearFunction, QuadraticFunction> TestRatRes = ApplyDerivativeQuotientRule(TestNumer, TestDenom);
+		//TestRatRes.PrintFunction();
+		//cout << endl;
+
+		//PowerFunction<-7> TestPowerFunc(1, 1, 0, 0);
+		//Derivative<PowerFunction<-7>, PowerFunction<-8>> Deriv(TestPowerFunc);
+
+		//auto DerivativeFunc = Deriv.GetDerivativeFunction();
+
+		//DerivativeFunc.PrintFunction();
+		//cout << endl;
+
+		PowerFunction<-2> TestPowerFunc(6, 1, 0, 0);
+		Derivative<PowerFunction<-2>, PowerFunction<-3>> Deriv(TestPowerFunc);
+
+		auto DerivativeFunc = Deriv.GetDerivativeFunction();
+
+		DerivativeFunc.PrintFunction();
 		cout << endl;
-
-
 
 	}
 	catch (const std::exception& ex)

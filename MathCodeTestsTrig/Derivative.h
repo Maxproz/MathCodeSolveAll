@@ -171,9 +171,6 @@ private:
 
 		PowerFunction<Exponent - 1> OutFunc(FullNewFuncConst, 1, d, 0);
 
-
-
-
 		return OutFunc;
 	}
 
@@ -381,6 +378,43 @@ inline QuarticFunction ApplyDerivativeProductRule(QuadraticFunction& FirstFuncti
 	return OutFunction;
 
 }
+
+inline RationalFunction<QuadraticFunction, QuadraticFunction>
+ApplyDerivativeQuotientRule(QuadraticFunction& Numerator, LinearFunction& Denominator)
+{
+	Derivative<QuadraticFunction, LinearFunction> FirstDerivative(Numerator);
+	LinearFunction FirstDerivativeFunction = FirstDerivative.GetDerivativeFunction();
+	QuadraticFunction NewNumeratorFirstPart = FirstDerivativeFunction * Denominator;
+
+	Derivative<LinearFunction, ConstantFunction> SecondDerivative(Denominator);
+	ConstantFunction SecondDerivativeFunction = SecondDerivative.GetDerivativeFunction();
+	QuadraticFunction NewNumeratorSecondPart = SecondDerivativeFunction * Numerator;
+
+
+	QuadraticFunction FullNewNumerator = (NewNumeratorFirstPart - NewNumeratorSecondPart);
+	QuadraticFunction FullNewDenominator = (Denominator.GetSquaredFunction());
+
+	return RationalFunction<QuadraticFunction, QuadraticFunction>(FullNewNumerator, FullNewDenominator);
+}
+
+inline RationalFunction<LinearFunction, QuadraticFunction>
+ApplyDerivativeQuotientRule(LinearFunction& Numerator, LinearFunction& Denominator)
+{
+	Derivative<LinearFunction, ConstantFunction> FirstDerivative(Numerator);
+	ConstantFunction FirstDerivativeFunction = FirstDerivative.GetDerivativeFunction();
+	LinearFunction NewNumeratorFirstPart = FirstDerivativeFunction * Denominator;
+
+	Derivative<LinearFunction, ConstantFunction> SecondDerivative(Denominator);
+	ConstantFunction SecondDerivativeFunction = SecondDerivative.GetDerivativeFunction();
+	LinearFunction NewNumeratorSecondPart = SecondDerivativeFunction * Numerator;
+
+
+	LinearFunction FullNewNumerator = (NewNumeratorFirstPart - NewNumeratorSecondPart);
+	QuadraticFunction FullNewDenominator = (Denominator.GetSquaredFunction());
+
+	return RationalFunction<LinearFunction, QuadraticFunction>(FullNewNumerator, FullNewDenominator);
+}
+
 
 inline void ApplyDerivativePowerRules(const double& a, const double& n, double& OutA, double& OutN)
 {
