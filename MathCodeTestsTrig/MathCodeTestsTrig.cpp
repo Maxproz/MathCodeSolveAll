@@ -9,8 +9,9 @@
 #include "Derivative.h"
 
 
-// TODO: Should I create a class for typedefs?
-//typedef std::pair<double, double> Point;
+// TODO: Should I create a class for typedefs? (they are inside MathConstants for now)
+// TODO: Create the 5th/6th/7th degree polynomial classses
+// TODO: Create the base functionality for the quotient rule for derivatives
 
 
 int main()
@@ -217,14 +218,40 @@ int main()
 
 		//auto DerivativeFunc = TestPowerDerivative.GetDerivativeFunction();
 		//DerivativeFunc.PrintFunction();
-		
-		PowerFunction<3> TestPowerThreeFunc(2, 1, 0, 0);
-		PowerFunction<2> TestQuad(6, 1, 0, 0);
+		//
+		//PowerFunction<0> TestFunc1(0, 0, 0, 7);
+		//PowerFunction<5> TestFunc2(2, 1, 0, 0);
 
-		ApplyDerivativeDifferenceRule<PowerFunction<3>, PowerFunction<2>, PowerFunction<2>, PowerFunction<1>>(
-			TestPowerThreeFunc,
-			TestQuad);
+		////Derivative<PowerFunction<5>, PowerFunction<4>> FirstDeriv(TestFunc2);
+		////Derivative<PowerFunction<0>, PowerFunction<0>> SecondDeriv(TestFunc1);
+		////
+		////auto First = FirstDeriv.GetDerivativeFunction();
+		////auto Second = SecondDeriv.GetDerivativeFunction();
 
+		////First.PrintFunction();
+		////Second.PrintFunction();
+
+
+		//auto GetRes1 = std::get<4>(TestFunc1.GetNAKDC());
+		//GetRes1 = ApplyDerivativeConstantRule(GetRes1);
+		//
+		//auto a = std::get<1>(TestFunc2.GetNAKDC());
+		//auto n = std::get<0>(TestFunc2.GetNAKDC());
+
+		//double newa;
+		//double newn;
+		//ApplyDerivativePowerRules(a, n, newa, newn);
+
+		//std::cout << newa << "x^" << newn << "+" << GetRes1;
+
+		//cout << endl;
+
+		QuadraticFunction InputFunction1(1, 0, 2);
+		CubicFunction InputFunction2(3, 0, -5, 0);
+
+		QuarticFunction TestFunc = ApplyDerivativeProductRule(InputFunction1, InputFunction2);
+
+		TestFunc.PrintFunction();
 		cout << endl;
 
 

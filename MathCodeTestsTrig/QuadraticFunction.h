@@ -5,12 +5,16 @@
 #define QUADRATICFUNCTION_H
 
 #include "PolynomialFunction.h"
+#include "QuarticFunction.h"
+
+
 
 #include <vector>
 #include <cctype> // isdigit()
 #include <tuple>
 #include <sstream> // istringstream
 #include <iostream>
+
 
 using std::vector;
 using std::isdigit;
@@ -174,6 +178,11 @@ public:
 		}
 
 	}
+
+
+	// multiplication
+	QuarticFunction operator*(QuadraticFunction const& rhs) const;
+	/*QuarticFunction& operator*=(CubicFunction const& rhs);*/
 
 	double operator()(const double x) const
 	{

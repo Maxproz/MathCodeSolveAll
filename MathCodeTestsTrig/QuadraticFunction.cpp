@@ -28,6 +28,31 @@ void QuadraticFunction::AutomaticSetRealZeroVariables()
 	}
 }
 
+QuarticFunction QuadraticFunction::operator*(QuadraticFunction const & rhs) const
+{
+	double QuarticA(0);
+	double QuarticB(0);
+	double QuarticC(0);
+	double QuarticD(0);
+	double QuarticE(0);
+
+	if (IsACForm() && rhs.IsACForm())
+	{
+		QuarticA = m_a * rhs.m_a;
+		QuarticC = m_a * rhs.m_c;
+
+		QuarticC = QuarticC + (m_c * rhs.m_a);
+		QuarticE = m_c * rhs.m_c;
+
+	}
+	else
+	{
+		throw std::logic_error("You need to finish your quadratic function multiplication operator for returning quartics");
+	}
+
+	return QuarticFunction(QuarticA, QuarticB, QuarticC, QuarticD, QuarticE);
+}
+
 void QuadraticFunction::SetTheMaxMinValue(double InNum)
 {
 	if (m_a < 0)

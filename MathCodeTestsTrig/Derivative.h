@@ -10,7 +10,7 @@
 #include "QuadraticFunction.h"
 #include "ConstantFunction.h"
 #include "PowerFunction.h"
-
+#include "QuarticFunction.h"
 
 // NOTES:
 // Let f(x) be a function and "a" be in its domain. If f(x) is differentiable at a, then f is continuous at a.
@@ -79,9 +79,58 @@ private:
 		return OutFunc;
 	}
 
+	inline QuadraticFunction EvaluateFunctionDerivative(CubicFunction& InFunction)
+	{
+		// When getting derivative here the c variable doesnt matter
+		auto Vars = InFunction.GetABCD();
+		double a = std::get<0>(Vars);
+		double b = std::get<1>(Vars);
+		double c = std::get<2>(Vars);
+		double d = std::get<3>(Vars);
+
+		double OutA(0);
+		double OutAN(0);
+		ApplyDerivativePowerRules(a, 3, OutA, OutAN);
+
+		double OutB(0);
+		double OutBN(0);
+		ApplyDerivativePowerRules(b, 2, OutB, OutBN);
+
+		double OutC(0);
+		double OutCN(0);
+		ApplyDerivativePowerRules(c, 1, OutC, OutCN);
+
+		// taking the derivative of a cubic function makes the d constant equal zero
+		d = 0;
+
+		QuadraticFunction OutFunc(OutA, OutB, OutC);
+
+		return OutFunc;
+	}
+
+	//template <int HighestExponent, int NumberOfTerms>
+	//inline PowerFunction EvaluateFunctionDerivative(PowerFunction<HighestExponent>& InFunction)
+	//{
+	//	// When getting derivative here the c variable doesnt matter
+	//	auto a = InFunction.GetA();
+	//	auto b = InFunction.GetB();
+
+	//	// a loses x variable
+	//	a = a;
+
+	//	// b is dropped from derivative function
+	//	b = 0;
+
+	//	ConstantFunction OutFunc(a);
+
+	//	return OutFunc;
+	//}
+
+	// To evaluate a power function with form // y = a[k(x – d)]^n + c
 	template <int Exponent>
 	inline PowerFunction<Exponent - 1> EvaluateFunctionDerivative(PowerFunction<Exponent>& InFunction)
 	{
+
 		auto GetAllInputVariables = InFunction.GetNAKDC();
 		double n, a, k, d, c;
 		n = std::get<0>(GetAllInputVariables);
@@ -121,6 +170,9 @@ private:
 		double FullNewFuncConst = NewAKInsideConst * OutSideAConstant;
 
 		PowerFunction<Exponent - 1> OutFunc(FullNewFuncConst, 1, d, 0);
+
+
+
 
 		return OutFunc;
 	}
@@ -262,6 +314,8 @@ public:
 
 };
 
+// These Two sum and difference rule functions below are garbage and cant really return anything....
+
 // Let f(x)and g(x) be differentiable functions and k be a constant. Then each of the following equations holds.
 template <typename F, typename FPrime, 
 			typename G, typename GPrime/*,
@@ -309,6 +363,37 @@ template <typename F, typename FPrime,
 
 }
 
+// Maxpro: Good function but really specific functionality.
+// Maxpro: The operator overloading really worked exactly as intended, it was very nice.
+inline QuarticFunction ApplyDerivativeProductRule(QuadraticFunction& FirstFunction, CubicFunction& SecondFunction)
+{
+	Derivative<QuadraticFunction, LinearFunction> FirstDerivative(FirstFunction);
+	LinearFunction FirstDerivativeFunction = FirstDerivative.GetDerivativeFunction();
+	QuarticFunction FirstPart = FirstDerivativeFunction * SecondFunction;
+
+
+	Derivative<CubicFunction, QuadraticFunction> SecondDerivative(SecondFunction);
+	QuadraticFunction SecondDerivativeFunction = SecondDerivative.GetDerivativeFunction();
+	QuarticFunction SecondPart = SecondDerivativeFunction * FirstFunction;
+
+
+	QuarticFunction OutFunction = (FirstPart + SecondPart);
+	return OutFunction;
+
+}
+
+inline void ApplyDerivativePowerRules(const double& a, const double& n, double& OutA, double& OutN)
+{
+	OutA = a * n;
+	OutN = n - 1;
+
+	return;
+}
+
+inline double ApplyDerivativeConstantRule(const double& a)
+{
+	return 0;
+}
 
 
 template <typename FirstFuncForm, typename SecondFuncForm, typename ThirdFuncForm>
@@ -322,6 +407,8 @@ inline ThirdFuncForm GetSecondDerivativeFunction(FirstFuncForm& InFunction)
 
 	return SecondDerivativeFunction;
 }
+
+
 
 //template <typename InFunc, typename SecondDerivativeFunc>
 //inline SecondDerivativeFunc GetSecondDerivativeFunction(InFunc& InFunction)

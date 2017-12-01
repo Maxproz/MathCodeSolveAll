@@ -6,6 +6,8 @@
 #include "PolynomialFunction.h"
 #include "MiscMathEquations.h"
 #include "MathConstants.h"
+#include "QuarticFunction.h"
+#include "CubicFunction.h"
 
 #include <utility>
 #include <exception>
@@ -72,8 +74,6 @@ private:
 		{
 			m_AllRealZeros.push_back(RealZero);
 		}
-		
-
 	}
 
 public:
@@ -147,7 +147,9 @@ public:
 
 	}
 
-
+	// multiplication
+	QuarticFunction operator*(CubicFunction const& rhs) const;
+	/*QuarticFunction& operator*=(CubicFunction const& rhs);*/
 
 	double operator()(double x) const { return ((m_a*x) + m_b); }
 
