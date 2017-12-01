@@ -6,6 +6,8 @@
 
 #include "PolynomialFunction.h"
 #include "FunctionEnums.h"
+#include "QuadraticFunction.h"
+//#include "Derivative.h"
 
 #include <utility>
 #include <cmath>
@@ -30,6 +32,9 @@ using std::pow;
 // the curve is generally rising with positive slope from bottom left to top right.
 
 
+class CubicFunction;
+
+void AutoSetDerivativeFunction(CubicFunction& InFunc);
 
 class CubicFunction : public PolynomialFunction
 {
@@ -51,9 +56,17 @@ private:
 		return tuple<double, double, double>(m_a, m_c, m_d);
 	}
 
+	QuadraticFunction m_DerivativeFunction = QuadraticFunction(1, 0, 0);
+	
+
+	
 public:
 
 	CubicFunction() = default;
+	//CubicFunction(const CubicFunction&) = default;
+	//CubicFunction(CubicFunction &&data) = default;
+	//CubicFunction& operator=(CubicFunction&&data) = default;
+	////QuadraticFunction(QuadraticFunction&&) = default;
 
 	explicit CubicFunction(const double& a, const double& b, const double& c, const double& d)
 		: m_a(a), m_b(b), m_c(c), m_d(d)
@@ -77,8 +90,12 @@ public:
 			m_bIsInACDForm = true;
 		}
 
-	}
 
+		//CubicFunction CopyHelp(m_a, m_b, m_c, m_d);
+		AutoSetDerivativeFunction(*this);
+
+	}
+	
 	inline pair<double, double> GetAAndDCubicFuncForm() const { return m_JustAAndDCubic; }
 
 	inline tuple<double, double, double, double> GetABCD() const
@@ -86,7 +103,8 @@ public:
 		return tuple<double, double, double, double>(m_a, m_b, m_c, m_d);
 	}
 
-
+	inline void SetDerivativeFunction(const QuadraticFunction& InFunc) { m_DerivativeFunction = InFunc; }
+	inline QuadraticFunction GetDerivativeFunction() const { return m_DerivativeFunction; }
 
 	bool GetIsFuncInAAndDForm() const { return m_bIsInAAndDForm; }
 	bool GetIsFuncInACDForm() const { return m_bIsInACDForm; }
@@ -107,8 +125,9 @@ public:
 		return TermOne + TermTwo + TermThree + TermFour;
 	}
 
-
+	void PrintFunction() const;
 };
+
 
 
 

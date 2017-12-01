@@ -11,6 +11,8 @@
 #include "ConstantFunction.h"
 #include "PowerFunction.h"
 #include "QuarticFunction.h"
+#include "RationalFunction.h"
+#include "CubicFunction.h"
 
 // NOTES:
 // Let f(x) be a function and "a" be in its domain. If f(x) is differentiable at a, then f is continuous at a.
@@ -103,9 +105,7 @@ private:
 		// taking the derivative of a cubic function makes the d constant equal zero
 		d = 0;
 
-		QuadraticFunction OutFunc(OutA, OutB, OutC);
-
-		return OutFunc;
+		return QuadraticFunction(OutA, OutB, OutC);
 	}
 
 	//template <int HighestExponent, int NumberOfTerms>
@@ -219,9 +219,19 @@ private:
 
 public:
 
+	explicit Derivative() = default;
+
 	explicit Derivative(InFunction& InFunc)
 	{
 		m_InFunction = std::move(InFunc);
+
+		m_OutFunction = EvaluateFunctionDerivative(InFunc);
+	}
+
+	explicit Derivative(const InFunction& InFunc)
+		: m_InFunction(InFunc)
+	{
+		// m_InFunction = std::move(InFunc);
 
 		m_OutFunction = EvaluateFunctionDerivative(InFunc);
 	}
@@ -362,72 +372,18 @@ template <typename F, typename FPrime,
 
 // Maxpro: Good function but really specific functionality.
 // Maxpro: The operator overloading really worked exactly as intended, it was very nice.
-inline QuarticFunction ApplyDerivativeProductRule(QuadraticFunction& FirstFunction, CubicFunction& SecondFunction)
-{
-	Derivative<QuadraticFunction, LinearFunction> FirstDerivative(FirstFunction);
-	LinearFunction FirstDerivativeFunction = FirstDerivative.GetDerivativeFunction();
-	QuarticFunction FirstPart = FirstDerivativeFunction * SecondFunction;
+QuarticFunction ApplyDerivativeProductRule(QuadraticFunction& FirstFunction, CubicFunction& SecondFunction);
+
+RationalFunction<QuadraticFunction, QuadraticFunction>
+ApplyDerivativeQuotientRule(QuadraticFunction& Numerator, LinearFunction& Denominator);
+
+RationalFunction<LinearFunction, QuadraticFunction>
+ApplyDerivativeQuotientRule(LinearFunction& Numerator, LinearFunction& Denominator);
 
 
-	Derivative<CubicFunction, QuadraticFunction> SecondDerivative(SecondFunction);
-	QuadraticFunction SecondDerivativeFunction = SecondDerivative.GetDerivativeFunction();
-	QuarticFunction SecondPart = SecondDerivativeFunction * FirstFunction;
+void ApplyDerivativePowerRules(const double& a, const double& n, double& OutA, double& OutN);
 
-
-	QuarticFunction OutFunction = (FirstPart + SecondPart);
-	return OutFunction;
-
-}
-
-inline RationalFunction<QuadraticFunction, QuadraticFunction>
-ApplyDerivativeQuotientRule(QuadraticFunction& Numerator, LinearFunction& Denominator)
-{
-	Derivative<QuadraticFunction, LinearFunction> FirstDerivative(Numerator);
-	LinearFunction FirstDerivativeFunction = FirstDerivative.GetDerivativeFunction();
-	QuadraticFunction NewNumeratorFirstPart = FirstDerivativeFunction * Denominator;
-
-	Derivative<LinearFunction, ConstantFunction> SecondDerivative(Denominator);
-	ConstantFunction SecondDerivativeFunction = SecondDerivative.GetDerivativeFunction();
-	QuadraticFunction NewNumeratorSecondPart = SecondDerivativeFunction * Numerator;
-
-
-	QuadraticFunction FullNewNumerator = (NewNumeratorFirstPart - NewNumeratorSecondPart);
-	QuadraticFunction FullNewDenominator = (Denominator.GetSquaredFunction());
-
-	return RationalFunction<QuadraticFunction, QuadraticFunction>(FullNewNumerator, FullNewDenominator);
-}
-
-inline RationalFunction<LinearFunction, QuadraticFunction>
-ApplyDerivativeQuotientRule(LinearFunction& Numerator, LinearFunction& Denominator)
-{
-	Derivative<LinearFunction, ConstantFunction> FirstDerivative(Numerator);
-	ConstantFunction FirstDerivativeFunction = FirstDerivative.GetDerivativeFunction();
-	LinearFunction NewNumeratorFirstPart = FirstDerivativeFunction * Denominator;
-
-	Derivative<LinearFunction, ConstantFunction> SecondDerivative(Denominator);
-	ConstantFunction SecondDerivativeFunction = SecondDerivative.GetDerivativeFunction();
-	LinearFunction NewNumeratorSecondPart = SecondDerivativeFunction * Numerator;
-
-
-	LinearFunction FullNewNumerator = (NewNumeratorFirstPart - NewNumeratorSecondPart);
-	QuadraticFunction FullNewDenominator = (Denominator.GetSquaredFunction());
-
-	return RationalFunction<LinearFunction, QuadraticFunction>(FullNewNumerator, FullNewDenominator);
-}
-
-
-inline void ApplyDerivativePowerRules(const double& a, const double& n, double& OutA, double& OutN)
-{
-	OutA = a * n;
-	OutN = n - 1;
-
-	return;
-}
-
-inline double ApplyDerivativeConstantRule(const double& a)
-{
-	return 0;
-}
+double ApplyDerivativeConstantRule(const double& a);
 
 
 template <typename FirstFuncForm, typename SecondFuncForm, typename ThirdFuncForm>

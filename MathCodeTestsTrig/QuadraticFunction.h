@@ -6,7 +6,7 @@
 
 #include "PolynomialFunction.h"
 #include "QuarticFunction.h"
-
+//#include "Derivative.h"
 
 
 #include <vector>
@@ -17,7 +17,7 @@
 
 
 using std::vector;
-using std::isdigit;
+//using std::isdigit;
 using std::tuple;
 using std::istringstream;
 using std::cout;
@@ -59,6 +59,8 @@ private:
 
 	bool m_bJustABForm = false;
 	bool m_bJustACForm = false;
+
+
 
 public:
 
@@ -110,6 +112,7 @@ public:
 
 		GetZerosQuadraticFormula(*this);
 
+		
 	}
 
 	// assumes user has put in Vertex Form example y = a*(x - h)^2 + k

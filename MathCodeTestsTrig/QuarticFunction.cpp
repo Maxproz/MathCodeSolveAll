@@ -1,7 +1,9 @@
 #include "QuarticFunction.h"
+#include "MiscMathEquations.h"
+
 
 #include <iostream>
-#include "MiscMathEquations.h"
+
 
 using std::cout;
 using std::endl;

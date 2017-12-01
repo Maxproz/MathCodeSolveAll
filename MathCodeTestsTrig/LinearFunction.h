@@ -157,6 +157,7 @@ public:
 	QuadraticFunction operator*(LinearFunction const& rhs) const;
 	
 	//template <typename T>
+
 	inline LinearFunction operator-(const LinearFunction& rhs) const
 	{
 		double OutA(0);
@@ -171,8 +172,9 @@ public:
 		//}
 		//else
 		//{
-		return LinearFunction(OutA, OutB);
+	
 		//}
+		return LinearFunction(OutA, OutB);
 	}
 
 
@@ -184,6 +186,7 @@ public:
 		
 		double Outside = m_a * m_b;
 		double Inside = m_b * m_a;
+
 		double QuadraticB = Outside + Inside;
 
 		double Last = m_b * m_b;

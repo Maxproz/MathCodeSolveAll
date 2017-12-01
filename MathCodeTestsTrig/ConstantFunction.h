@@ -5,6 +5,8 @@
 
 
 #include "PolynomialFunction.h"
+#include "LinearFunction.h"
+#include "QuadraticFunction.h"
 
 #include <iostream>
 

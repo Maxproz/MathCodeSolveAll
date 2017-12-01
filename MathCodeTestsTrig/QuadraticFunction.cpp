@@ -183,7 +183,7 @@ void QuadraticFunction::PrintFunction() const
 
 		if (bIsBPos)
 		{
-			BVarPlusOrMinus = '+';
+			BVarPlusOrMinus = ' + ';
 		}
 		else
 		{
@@ -203,15 +203,15 @@ void QuadraticFunction::PrintFunction() const
 	{
 		// Handle c
 		bool bIsCPos = IsPositive<double>(m_c);
-		char CVarPlusOrMinus(' ');
+		std::string CVarPlusOrMinus(" ");
 
 		if (bIsCPos)
 		{
-			CVarPlusOrMinus = '+';
+			CVarPlusOrMinus = " + ";
 		}
 		else
 		{
-			CVarPlusOrMinus = ' ';
+			CVarPlusOrMinus = " ";
 		}
 
 		cout << CVarPlusOrMinus << m_c;

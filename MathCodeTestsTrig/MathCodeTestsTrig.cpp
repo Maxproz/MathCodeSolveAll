@@ -279,13 +279,22 @@ int main()
 		//DerivativeFunc.PrintFunction();
 		//cout << endl;
 
-		PowerFunction<-2> TestPowerFunc(6, 1, 0, 0);
-		Derivative<PowerFunction<-2>, PowerFunction<-3>> Deriv(TestPowerFunc);
+		//PowerFunction<-2> TestPowerFunc(6, 1, 0, 0);
+		//Derivative<PowerFunction<-2>, PowerFunction<-3>> Deriv(TestPowerFunc);
 
-		auto DerivativeFunc = Deriv.GetDerivativeFunction();
+		//auto DerivativeFunc = Deriv.GetDerivativeFunction();
 
-		DerivativeFunc.PrintFunction();
+		//DerivativeFunc.PrintFunction();
+		//cout << endl;
+
+		CubicFunction TestCubic(1, -7, 8, 1);
+		QuadraticFunction DerivFunc = TestCubic.GetDerivativeFunction();
+		DerivFunc.PrintFunction();
 		cout << endl;
+
+		// TODO: Why doesnt the other real number zero not show up? // x = 2/3 ?
+		DerivFunc.PrintBasicFunctionInfo();
+
 
 	}
 	catch (const std::exception& ex)
