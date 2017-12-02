@@ -17,6 +17,7 @@
 // base functionality is maybe there? Needs confirmed.
 // TODO: I removed the std::unique_ptr from the rational function class to simplify copy/moving.
 // Need to remember that I have that variable doing nothing in some limit functions etc...
+// TODO: Create a function that uses the abs(velocity) = speed function to better understand it
 
 
 int main()
@@ -330,8 +331,19 @@ int main()
 		//FindParticleMovementAtTimeT(PositionQuad, TimeT);
 
 		
-		EstimatePopulationSizeAfterTDays(3000, 100, 3);
+		//EstimatePopulationSizeAfterTDays(3000, 100, 3);
+
+		//LinearFunction PriceFunction(-0.03, 9);
+		//const int StartInterval = 0;
+		//const int EndInterval = 300;
+		//const int Items = 101;
+		//EstimateTheRevenueObtainedFromSellingXItems(StartInterval, EndInterval, Items, PriceFunction);
+
+		QuadraticFunction ProfitFunction(-0.03, 8, -50);
+		UseMarginalProfitToEstimateSaleOfXthItem(101, ProfitFunction);
 		cout << endl;
+
+
 
 	}
 	catch (const std::exception& ex)

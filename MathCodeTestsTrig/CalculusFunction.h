@@ -37,6 +37,8 @@
 /* 1. (algebraic functions can only have powers that are rational numbers.)
 */
 
+// TODO: Sort/organize this stuff better than it is now later on
+
 
 void PrintPointSlopeForm(const double& Slope, const Point& InPoint);
 
@@ -371,13 +373,71 @@ inline bool ShouldProductionBeIncreasedUsingRateOfChange(const QuadraticFunction
 }
 
 
+// Changes in Cost and Revenue
+// The marginal cost is the derivative of the cost function. = C′(x).
+// The marginal revenue is the derivative of the revenue function. =  R′(x).
+// The marginal profit is the derivative of the profit function, which is based on the cost function and the revenue function.
+// MP(x) =  R′(x)−C′(x).
+
+// Since x represents objects, a reasonable and small value for h is 1.
+// Thus, by substituting h=1, we get the approximation  MC(x) = C′(x) ≈ C(x + 1) − C(x)
+// They all work similary.
+
+// Example Function for Applying Marginal Revenue
+
+// NOTE: 
+/* ALL OF THESE (MARGINAL COST/PROFIT/REVENUE)
+  APPROXIMATE COST OF PRODUCING ONE MORE ITEM AHHHHHHHHHHH!!!!!!!!!!!!!!!!!!!!!!!!!!!!! remember it
+*/
+
+// Function assumes that x is IntervalStart <= x <= IntervalEnd
+// Assumes IntervalStart is >= 0
+inline void  EstimateTheRevenueObtainedFromSellingXItems(const unsigned int& IntervalStart,
+															const unsigned int& IntervalEnd,
+															const unsigned int& X,
+															const LinearFunction& PriceForXItemsFunction)
+{
+
+	if (X < IntervalStart || X > IntervalEnd)
+		throw std::exception("x has to be between(inclusive) IntervalStart and IntervalEnd");
+
+	// for now assume that IntervalStart was assigned 0
+
+	// In this case, the revenue in dollars obtained by selling x barbeque dinners is given by
+	LinearFunction XBarbequeDinners(1, 0);
+
+	// for: IntervalStart <= x <= IntervalEnd
+	QuadraticFunction RevenueFunction = (XBarbequeDinners * PriceForXItemsFunction);
+
+	// Use the marginal revenue function to estimate the revenue obtained from selling the X'st barbeque dinner.
+	// Compare this to the actual revenue obtained from the sale of this dinner.
+	LinearFunction MarginalReveune = RevenueFunction.GetDerivativeFunction();
+	double ItemInputMinusOne = X - 1;
+	double MarginalRevenueFromXthItem = MarginalReveune(ItemInputMinusOne);
+	
+	double ActualRevenueFromXthItem = RevenueFunction(X);
+	double ActualRevenueFromXthItemMinusOne = RevenueFunction(ItemInputMinusOne);
+	double ActualRevenue = ActualRevenueFromXthItem - ActualRevenueFromXthItemMinusOne;
+
+	cout << "Marginal Revenue for item " << X << " = " << MarginalRevenueFromXthItem << "$" << endl;
+	cout << "Actual Revenue for item " << X << " = " << ActualRevenue << "$" <<  endl;
+}
+
+inline void UseMarginalProfitToEstimateSaleOfXthItem(const unsigned int& X,
+														const QuadraticFunction& ProfitFunction)
+{
+	LinearFunction MarginalProfitFunction = ProfitFunction.GetDerivativeFunction();
+	double ItemInputMinusOne = X - 1;
+
+	double MarginalProfitFromXthItem = MarginalProfitFunction(ItemInputMinusOne);
+
+	cout << "Marginal profit for the sale of item " << X << " = " << MarginalProfitFromXthItem << "$" << endl;
+
+}
 
 
 
 
-
-// Start of calculus chapter 
-// TODO: Sort/organize this stuff later
 
 // Slope of a secant line formula
 // through Points (a,f(a)) and (x,f(x))
