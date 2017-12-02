@@ -289,11 +289,11 @@ int main()
 
 		CubicFunction TestCubic(1, -7, 8, 1);
 		QuadraticFunction DerivFunc = TestCubic.GetDerivativeFunction();
-		DerivFunc.PrintFunction();
-		cout << endl;
+		//DerivFunc.PrintFunction();
+		//cout << endl;
 
-		// TODO: Why doesnt the other real number zero not show up? // x = 2/3 ?
-		DerivFunc.PrintBasicFunctionInfo();
+		TestCubic.PrintHorizontalTangetLineXValues();
+		cout << endl;
 
 
 	}

@@ -9,6 +9,8 @@
 #include "QuadraticFunction.h"
 //#include "Derivative.h"
 
+//#include "LinearFunction.h"
+
 #include <utility>
 #include <cmath>
 #include <tuple>
@@ -30,6 +32,15 @@ using std::pow;
 // TODO: Fifthly, we know that if the coefficient of x^3 is negative, then the cubic, notwithstanding any local extrema, 
 // is falling with a negative slope from top left to bottom right. If the coefficient of x^3 is positive, 
 // the curve is generally rising with positive slope from bottom left to top right.
+
+// TODO: https://math.stackexchange.com/questions/516662/find-the-equations-of-the-tangent-lines-that-are-parallel-to-the-line-y-4x
+// Find the equations of the tangent line(s) to (*this) cubic
+// that are parallel to the (given linearfunction)
+// Set the Derivative of the cubic equal to the derivative of the given linear function this
+// makes it so that the tangent line to that point will be parallel to your line now solve for x.
+// Plug the x values into the function to get the corresponding y values
+// Now that you have cordinate pairs, use those pairs in the point slope form with the linear function
+// derivative found above to solve for the functions.
 
 
 class CubicFunction;
@@ -58,9 +69,15 @@ private:
 
 	QuadraticFunction m_DerivativeFunction = QuadraticFunction(1, 0, 0);
 	
-	// Try this way to collect zeros maybe? see how it goes.
-	std::vector<LinearFunction> m_HorizontalTangentLines;
+	// The function has horizontal tanget lines at these x values
+	std::vector<double> m_HorizontalTangentLines;
 	
+	inline void AutoSetHorizontalTangetLines()
+	{
+		auto DerivZerosVec = m_DerivativeFunction.GetAllZerosVec();
+		m_HorizontalTangentLines = DerivZerosVec;
+	}
+
 public:
 
 	CubicFunction() = default;
@@ -95,7 +112,7 @@ public:
 		//CubicFunction CopyHelp(m_a, m_b, m_c, m_d);
 		AutoSetDerivativeFunction(*this);
 		// Here I will Use the Derivative function to automatically set the zeros 
-		// by adding the LinearFunctions to the m_HorizontalTangentLines variable I made.
+		AutoSetHorizontalTangetLines();
 
 	}
 	
@@ -129,6 +146,7 @@ public:
 	}
 
 	void PrintFunction() const;
+	void PrintHorizontalTangetLineXValues() const;
 };
 
 

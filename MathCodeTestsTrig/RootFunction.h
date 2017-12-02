@@ -27,6 +27,15 @@ inline bool isEven(int n) // add to helper function?
 		return false;
 }
 
+
+/*
+You also learned that radical equations are equations with variables under square roots. 
+Radical equations can be solved by isolating the square root and squaring both sides.
+Sometimes radical equations will produce extraneous solutions, which are not really solutions,
+so it is important to always check your answers to radical equations.
+
+*/
+
 ////template <typename Root>
 //class RootFunction : public PolynomialFunction
 //{

@@ -41,6 +41,33 @@ double GetSlope(const Point& FirstPoint, const Point& SecondPoint);
 void PrintSlopeInterceptForm(const Point& Point, const double& Slope);
 
 
+
+// More Rate Of Change reserach below.
+// The new value of a changed quantity equals the original value plus the rate of change times the interval of change: 
+// f(x + h) = f(x) + (f'(x)*h)
+// if f(3) = 2 and f'(3) = 5
+// Estimate f(3.2)
+// 1. Find h:  3.2 - 3 = 0.2         h = 0.2
+// 2. Evaluate: f(3.2) = f(3 + 0.2) = f(3) + (f'(3) * 0.2)
+// 3. Substitute: = 2 + (5 * 0.2) = 2 + (1) = 3
+// 4. Give Estimation: f(3.2) = 3
+
+
+// Motion along a Line
+/*
+Let s(t) be a function giving the position of an object at time t.
+The velocity of the object at time t is given by v(t) = s′(t)
+The speed of the object at time t is given by | v(t) |
+The acceleration of the object at t is given by a(t) = v′(t)= s''(t)
+
+The formula for instantaneous velocity is the limit as t approaches zero of the change in d over the change in t.
+// The formula for average velocity is (the change in x) / (the change in t) or (x2-x1) / (t2-t1).
+
+*/
+
+
+
+
 // Find the rate of change of profit when 10,000 games are produced.
 /*
 The profit P(x) earned by producing xx gaming systems is R(x)−C(x), 
@@ -229,7 +256,7 @@ inline LinearFunction FactorNumeratorRationalFunc(const QuadraticFunction& InNum
 	}
 
 
-	auto QuadNumVec = InNumerator.GetRealNumberZerosVec();
+	auto QuadNumVec = InNumerator.GetAllZerosVec();
 	auto LinearNumVec = InDenominator.GetRealNumberZerosVec();
 
 	cout << QuadNumVec.size() << endl;

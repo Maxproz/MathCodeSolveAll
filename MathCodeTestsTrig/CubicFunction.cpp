@@ -30,3 +30,15 @@ void CubicFunction::PrintFunction() const
 	cout << " + " << m_d;
 
 }
+
+void CubicFunction::PrintHorizontalTangetLineXValues() const
+{
+	std::cout << "Printing all HorizontalTangentLine x values of the function\n";
+
+	for (const auto& zero : m_HorizontalTangentLines)
+	{
+		std::cout << "x = " << zero << std::endl;
+	}
+	std::cout << "Done printing the HorizontalTangentLine x values";
+
+}

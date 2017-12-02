@@ -3,7 +3,7 @@
 #include "MiscMathEquations.h"
 
 
-void QuadraticFunction::AutomaticSetRealZeroVariables()
+void QuadraticFunction::AutoSetHowManyRealZeroVariables()
 {
 	const double FourAC = 4 * m_a * m_c;
 	const double BSquaredMinusFourAC = std::sqrt(std::pow(m_b, 2) - FourAC);
@@ -122,28 +122,28 @@ void QuadraticFunction::PrintParabolaOpensDirection() const
 
 void QuadraticFunction::PrintAllZeros() const
 {
-	//std::cout << "Printing all zeros of the function\n";
+	std::cout << "Printing all zeros of the function\n";
 
-	//for (const auto& zero : m_AllZeros)
-	//{
-	//	std::cout << zero << std::endl;
-	//}
-	//std::cout << "Done printing all zeros\n";
-
-}
-
-void QuadraticFunction::PrintAllRealNumberZeros() const
-{
-	std::cout << "Printing all real number zeros of the function\n";
-
-	for (const auto& zero : m_RealNumberZeros)
+	for (const auto& zero : m_AllZeros)
 	{
 		std::cout << zero << std::endl;
 	}
-	std::cout << "Done printing all real number zeros\n";
-
+	std::cout << "Done printing all zeros\n";
 
 }
+
+//void QuadraticFunction::PrintAllRealNumberZeros() const
+//{
+//	std::cout << "Printing all real number zeros of the function\n";
+//
+//	for (const auto& zero : m_RealNumberZeros)
+//	{
+//		std::cout << zero << std::endl;
+//	}
+//	std::cout << "Done printing all real number zeros\n";
+//
+//
+//}
 
 void QuadraticFunction::PrintNumberOfRealNumberSoltions() const
 {
@@ -160,7 +160,7 @@ void QuadraticFunction::PrintBasicFunctionInfo() const
 	PrintAllZeros();
 	std::cout << std::endl;
 	PrintNumberOfRealNumberSoltions();
-	PrintAllRealNumberZeros();
+	//PrintAllRealNumberZeros();
 	std::cout << std::endl;
 
 	std::cout << "End of data output\n";
@@ -219,7 +219,7 @@ void QuadraticFunction::PrintFunction() const
 }
 
 
-std::vector<double> GetZerosQuadraticFormula(QuadraticFunction& QuadraticFunc)
+void SetZerosQuadraticFormula(QuadraticFunction& QuadraticFunc)
 {
 	std::tuple<double, double, double> ABC = QuadraticFunc.GetABC();
 
@@ -229,31 +229,36 @@ std::vector<double> GetZerosQuadraticFormula(QuadraticFunction& QuadraticFunc)
 
 
 	std::vector<double> LocalVecOfZeros = GetZerosQuadraticFormula(a, b, c);
-	std::vector<double> OutVecRealNumZeros;
+	
+	// Shouldnt need to check for extranneous solutions 
+
+	//std::vector<double> OutVecRealNumZeros;
 
 	//std::cout << LocalVecOfZeros.size();
 
-	for (int i = 0; i < LocalVecOfZeros.size(); ++i)
-	{
-		double TermOne, TermTwo, TermThree;
+	//for (int i = 0; i < LocalVecOfZeros.size(); ++i)
+	//{
+	//	double TermOne, TermTwo, TermThree;
 
-		TermOne = (std::pow(LocalVecOfZeros[i], 2)) * a;
-		TermTwo = LocalVecOfZeros[i] * b;
-		TermThree = c;
+	//	TermOne = (std::pow(LocalVecOfZeros[i], 2)) * a;
+	//	TermTwo = LocalVecOfZeros[i] * b;
+	//	TermThree = c;
 
-		double ZeroTest = TermOne + TermTwo + TermThree;
+	//	double ZeroTest = TermOne + TermTwo + TermThree;
 
-		//std::cout << ZeroTest << std::endl;
+	//	//std::cout << TermOne << std::endl;
+	//	//std::cout << TermTwo << std::endl;
+	//	//std::cout << TermThree << std::endl;
 
-		if (is_close_to_zero(ZeroTest))
-		{
-			OutVecRealNumZeros.push_back(LocalVecOfZeros[i]);
-		}
-	}
+	//	if (is_close_to_zero(ZeroTest))
+	//	{
+	//		OutVecRealNumZeros.push_back(LocalVecOfZeros[i]);
+	//	}
+	//}
 
 
-	//QuadraticFunc.SetAllZeroVec(LocalVecOfZeros);
-	QuadraticFunc.SetRealNumberZeroVec(OutVecRealNumZeros);
+	QuadraticFunc.SetAllZeroVec(LocalVecOfZeros);
+	//QuadraticFunc.SetRealNumberZeroVec(OutVecRealNumZeros);
 
 	// Line of symmetry is between the two zeros.
 	QuadraticFunc.SetLineOfSymmetry(LocalVecOfZeros[1] / LocalVecOfZeros[0]);
@@ -261,7 +266,7 @@ std::vector<double> GetZerosQuadraticFormula(QuadraticFunction& QuadraticFunc)
 
 
 	// dont really need to return it but whatever...
-	return OutVecRealNumZeros;
+	//return OutVecRealNumZeros;
 
 }
 

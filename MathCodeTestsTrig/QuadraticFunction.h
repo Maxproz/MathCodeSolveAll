@@ -26,7 +26,7 @@ using std::endl;
 
 class QuadraticFunction;
 
-std::vector<double> GetZerosQuadraticFormula(QuadraticFunction& QuadraticFunc);
+void SetZerosQuadraticFormula(QuadraticFunction& QuadraticFunc);
 
 std::vector<double> GetZerosQuadraticFormula(const double& a, const double& b, const double& c);
 
@@ -44,23 +44,25 @@ private:
 
 	ParabolaOpen m_ParabolaOpens;
 
-	vector<double> m_RealNumberZeros;
+	//vector<double> m_RealNumberZeros;
 	int m_AmountOfRealNumberZeros;
 	//AmountOfRealNumberSoltuions m_RealSolutionAmount;
 
-//	vector<double> m_AllZeros;
+	vector<double> m_AllZeros;
 
 	double m_SymmetryLine;
 
 	double m_MaxValueAtXIsEqualTo;
 	double m_MinValueAtXIsEqualTo;
 
-	void AutomaticSetRealZeroVariables();
+	void AutoSetHowManyRealZeroVariables();
 
 	bool m_bJustABForm = false;
 	bool m_bJustACForm = false;
 
 
+	void PrintFunctionEndBehavior() const;
+	void PrintParabolaOpensDirection() const;
 
 public:
 
@@ -79,8 +81,7 @@ public:
 		if (a == 0)
 			throw std::exception("a cannot == 0 for quadratic func initalization");
 
-		AutomaticSetRealZeroVariables();
-
+		
 		// Qudratic degree is 2
 		m_Degree = 2;
 
@@ -110,7 +111,9 @@ public:
 			m_bJustACForm = true;
 		}
 
-		GetZerosQuadraticFormula(*this);
+		AutoSetHowManyRealZeroVariables();
+
+		SetZerosQuadraticFormula(*this);
 
 		
 	}
@@ -182,6 +185,12 @@ public:
 			}
 		}
 
+		// make a helper function to handle all the misc constuctor stuff that is used in the main constuctor above
+
+		AutoSetHowManyRealZeroVariables();
+
+		SetZerosQuadraticFormula(*this);
+
 	}
 
 
@@ -204,16 +213,14 @@ public:
 		return std::tuple<double, double, double>(m_a, m_b, m_c);
 	}
 
-	//void SetAllZeroVec(std::vector<double> InVec) { m_AllZeros = InVec; }
-	void SetRealNumberZeroVec(std::vector<double> InVec) { m_RealNumberZeros = InVec; }
+	void SetAllZeroVec(std::vector<double> InVec) { m_AllZeros = InVec; }
+	//void SetRealNumberZeroVec(std::vector<double> InVec) { m_RealNumberZeros = InVec; }
 	void SetLineOfSymmetry(double InNum) { m_SymmetryLine = InNum; }
 	void SetTheMaxMinValue(double InNum);
 
 
-	void PrintFunctionEndBehavior() const;
-	void PrintParabolaOpensDirection() const;
 	void PrintAllZeros() const;
-	void PrintAllRealNumberZeros() const;
+	//void PrintAllRealNumberZeros() const;
 	void PrintNumberOfRealNumberSoltions() const;
 
 	void PrintBasicFunctionInfo() const;
@@ -234,10 +241,11 @@ public:
 		return std::tuple<double, double>(m_a, m_c);
 	}
 
-	std::vector<double> GetRealNumberZerosVec() const { return m_RealNumberZeros; }
+	//std::vector<double> GetRealNumberZerosVec() const { return m_RealNumberZeros; }
+	//inline int GetAmountOfRealZeros() const { return m_AmountOfRealNumberZeros; }
 
-	//std::vector<double> GetAllZerosVec() const { return m_RealNumberZeros; }
-	inline int GetAmountOfRealZeros() const { return m_AmountOfRealNumberZeros; }
+	std::vector<double> GetAllZerosVec() const { return m_AllZeros; }
+	
 
 };
 
