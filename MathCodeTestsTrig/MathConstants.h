@@ -1,8 +1,8 @@
 #pragma once
 
 
-#ifndef MathConstants_H
-#define MathConstants_H
+#ifndef MATHCONSTANTS_H
+#define MATHCONSTANTS_H
 
 #include <utility>
 

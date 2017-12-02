@@ -1,11 +1,13 @@
 ﻿#pragma once
 
-
 #ifndef QUADRATICFUNCTION_H
 #define QUADRATICFUNCTION_H
 
+
 #include "PolynomialFunction.h"
-#include "QuarticFunction.h"
+#include "LinearFunction.h"
+
+
 //#include "Derivative.h"
 
 
@@ -24,12 +26,15 @@ using std::cout;
 using std::endl;
 
 
+class QuarticFunction;
+class LinearFunction;
 class QuadraticFunction;
 
 void SetZerosQuadraticFormula(QuadraticFunction& QuadraticFunc);
 
 std::vector<double> GetZerosQuadraticFormula(const double& a, const double& b, const double& c);
 
+void AutoSetDerivativeFunction(QuadraticFunction& InFunc);
 
 // quadratic function has the form f(x)=ax^2+bx+c,where a≠0
 class QuadraticFunction : public PolynomialFunction
@@ -64,11 +69,16 @@ private:
 	void PrintFunctionEndBehavior() const;
 	void PrintParabolaOpensDirection() const;
 
+
+	LinearFunction m_DerivativeFunction;// = LinearFunction(1, 0);
+
+	
+
 public:
 
-	QuadraticFunction() = default;
+	 QuadraticFunction() = default;
 
-	QuadraticFunction(const QuadraticFunction&) = default;
+	 QuadraticFunction(const QuadraticFunction&) = default;
 
 	//QuadraticFunction(QuadraticFunction&&) = default;
 
@@ -115,6 +125,7 @@ public:
 
 		SetZerosQuadraticFormula(*this);
 
+		AutoSetDerivativeFunction(*this);
 		
 	}
 
@@ -191,6 +202,8 @@ public:
 
 		SetZerosQuadraticFormula(*this);
 
+		AutoSetDerivativeFunction(*this);
+
 	}
 
 
@@ -246,6 +259,9 @@ public:
 
 	std::vector<double> GetAllZerosVec() const { return m_AllZeros; }
 	
+
+	LinearFunction GetDerivativeFunction() const;
+	void SetDerivativeFunction(LinearFunction& InFunc); 
 
 };
 

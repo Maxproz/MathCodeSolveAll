@@ -6,9 +6,8 @@
 #include "PolynomialFunction.h"
 #include "MiscMathEquations.h"
 #include "MathConstants.h"
-#include "QuarticFunction.h"
-#include "CubicFunction.h"
-#include "QuadraticFunction.h"
+
+
 
 #include <utility>
 #include <exception>
@@ -20,6 +19,11 @@ using std::exception;
 using std::cout;
 using std::endl;
 using std::vector;
+
+
+class QuarticFunction;
+class QuadraticFunction;
+class CubicFunction;
 
 
 // f(x)=ax+b
@@ -43,7 +47,9 @@ private:
 
 	bool m_bIsBOnlyForm = false;
 
-	std::vector<double> m_AllRealZeros;
+	//std::vector<double> m_AllRealZeros;
+	std::vector<double> m_AllZeros;
+
 
 	// TODO: Validate this function
 	inline void FindAndStoreAllRealZeros()
@@ -74,16 +80,19 @@ private:
 
 		double RealZero = RightHandSide / LocalA;
 
+		// TODO: will this give me issues later?
 		const bool bIsANumber = (!(std::isnan(RealZero)));
 		if (bIsANumber)
 		{
-			m_AllRealZeros.push_back(RealZero);
+			//m_AllRealZeros.push_back(RealZero);
+			m_AllZeros.push_back(RealZero);
 		}
 	}
 
 public:
 
-	inline std::vector<double> GetRealNumberZerosVec() const { return m_AllRealZeros; }
+	//inline std::vector<double> GetRealNumberZerosVec() const { return m_AllRealZeros; }
+	inline std::vector<double> GetAllZerosVec() const { return m_AllZeros; }
 
 	// if a > b etc.. TODO:
 
@@ -179,20 +188,7 @@ public:
 
 
 	// Use this operator as squared
-	inline QuadraticFunction GetSquaredFunction() const
-	{
-		// return (ax + b)(ax + b)
-		double First = m_a * m_a;
-		
-		double Outside = m_a * m_b;
-		double Inside = m_b * m_a;
-
-		double QuadraticB = Outside + Inside;
-
-		double Last = m_b * m_b;
-
-		return QuadraticFunction(First, QuadraticB, Last);
-	}
+	QuadraticFunction GetSquaredFunction() const;
 
 	/*QuarticFunction& operator*=(CubicFunction const& rhs);*/
 
@@ -236,7 +232,7 @@ public:
 
 	inline bool IsBOnlyForm() const { return m_bIsBOnlyForm; }
 
-
+	void PrintAllZeros() const;
 };
 
 inline void ConvertFromPointSlopeFromToLinearForm(const Point& InPoint, const double& InSlope, LinearFunction& OutTangentLine)

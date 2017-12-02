@@ -1,5 +1,11 @@
 #pragma once
 
+#ifndef QUARTICFUNCTION_H
+#define QUARTICFUNCTION_H
+
+
+
+
 // In algebra, a quartic function is a function of the form
 // f(x) = ax^4+bx^3+cx^2+dx+e
 
@@ -69,3 +75,6 @@ public:
 
 };
 
+
+
+#endif

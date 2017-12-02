@@ -4,10 +4,12 @@
 
 #include <cmath>
 #include <iostream>
+#include <filesystem>
+
 
 using std::endl;
 using std::cout;
-
+//namespace fs = std::experimental::filesystem;
 
 double PercentageOfAValue(const double& Percent, const double& InVal)
 {
@@ -130,4 +132,11 @@ void PrintDecimalAsFraction(double input)
 	}*/
 
 	std::cout << numerator << "/" << denominator << std::endl;
+}
+
+// example format path "C:/Users/Maxpro/Downloads"
+void PrintAllFilesInDirectory(const std::string& path)
+{
+	for (auto & p : std::experimental::filesystem::directory_iterator(path))
+		std::cout << p << std::endl;
 }

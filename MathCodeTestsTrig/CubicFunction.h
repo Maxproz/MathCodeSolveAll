@@ -7,13 +7,13 @@
 #include "PolynomialFunction.h"
 #include "FunctionEnums.h"
 #include "QuadraticFunction.h"
-//#include "Derivative.h"
 
-//#include "LinearFunction.h"
+
 
 #include <utility>
 #include <cmath>
 #include <tuple>
+#include <vector>
 
 using std::pair;
 using std::tuple;
@@ -67,16 +67,18 @@ private:
 		return tuple<double, double, double>(m_a, m_c, m_d);
 	}
 
-	QuadraticFunction m_DerivativeFunction = QuadraticFunction(1, 0, 0);
+	QuadraticFunction m_DerivativeFunction;// = QuadraticFunction(1, 0, 0);
 	
 	// The function has horizontal tanget lines at these x values
 	std::vector<double> m_HorizontalTangentLines;
 	
 	inline void AutoSetHorizontalTangetLines()
 	{
-		auto DerivZerosVec = m_DerivativeFunction.GetAllZerosVec();
-		m_HorizontalTangentLines = DerivZerosVec;
+		std::vector<double> DerivZerosVec = m_DerivativeFunction.GetAllZerosVec();
+		m_HorizontalTangentLines = (DerivZerosVec);
 	}
+
+	
 
 public:
 
@@ -123,8 +125,9 @@ public:
 		return tuple<double, double, double, double>(m_a, m_b, m_c, m_d);
 	}
 
-	inline void SetDerivativeFunction(const QuadraticFunction& InFunc) { m_DerivativeFunction = InFunc; }
+	
 	inline QuadraticFunction GetDerivativeFunction() const { return m_DerivativeFunction; }
+	inline void SetDerivativeFunction(QuadraticFunction& InFunc) { m_DerivativeFunction = InFunc; }
 
 	bool GetIsFuncInAAndDForm() const { return m_bIsInAAndDForm; }
 	bool GetIsFuncInACDForm() const { return m_bIsInACDForm; }

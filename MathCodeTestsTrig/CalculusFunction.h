@@ -1,5 +1,8 @@
 ﻿#pragma once
 
+#ifndef CALCULUSFUNCTION_H
+#define CALCULUSFUNCTION_H
+
 
 
 #include <functional>
@@ -21,6 +24,7 @@
 #include "MiscMathEquations.h"
 #include "Limit.h"
 #include "Derivative.h"
+
 
 //typedef pair<double, double> Point;
 
@@ -61,12 +65,160 @@ The speed of the object at time t is given by | v(t) |
 The acceleration of the object at t is given by a(t) = v′(t)= s''(t)
 
 The formula for instantaneous velocity is the limit as t approaches zero of the change in d over the change in t.
-// The formula for average velocity is (the change in x) / (the change in t) or (x2-x1) / (t2-t1).
+The formula for average velocity is (the change in x) / (the change in t) or (x2-x1) / (t2-t1).
 
 */
 
+// Motion along a line concering particles 
+// Interpreting the Relationship between v(t) and a(t)
+
+// An object which moves in the negative direction has a negative velocity.
+// Example v(1) = -1; and a(1) = 6;
+// Because v(1) < 0, the particle is moving from right to left.
+// Because v(1) < 0 and a(1) > 0,  velocity and acceleration are acting in opposite directions.
+// In other words, the particle is being accelerated in the direction opposite the direction in which it is traveling,
+// causing | v(t) |to decrease. The particle is slowing down.
+
+// Function where input is a position function that is a cubic and assumes time input t >= 0
+inline void DisplayParticlePositionAndVelocityMovingAlongAxis(const CubicFunction& PositionFunction)
+{
+	// a find v(t)
+	auto VelocityFunction = PositionFunction.GetDerivativeFunction();
+	VelocityFunction.PrintFunction();
+	cout << endl;
+
+	// at what time is the object at rest
+	// when velocity function = 0
+	cout << "Object is at rest at times: ";
+
+	VelocityFunction.PrintAllZeros();
+
+	// Quadratic functions have 2 real zeros.
+	// get the zeros put them in order test the intervals
+	// v(t) < 0 = moving right to left 
+	// v(t) > 0 = moving left to right
+	auto RestTimes = VelocityFunction.GetAllZerosVec();
+	//for (int i = 0; i<2; i++)
+	//	std::cout << RestTimes[i] << ' ';
+	//std::cout << '\n';
+
+	auto RestTimesBegin = RestTimes.begin();
+	auto RestTimesEnd = RestTimes.end();
+
+	// sort them into a increasing interval from left to right
+	// http://www.cplusplus.com/reference/functional/less/
+	std::sort(RestTimesBegin, RestTimesEnd, std::less<double>());
+	//for (const auto& zero : RestTimes)
+	//{
+	//	cout << zero << " ";
+	//}
+	//cout << endl;
+
+	// Now we know the first interval is RestTimes[0] to RestTimes[1] so get the middle value between them
+	double TestRestTimeTestInterval = (RestTimes[0] + RestTimes[1]) / 2.0;
+	bool bVelocityLessThanZeroInInterval = ((VelocityFunction(TestRestTimeTestInterval)) < 0);
+
+	// We now know which direction its going on the other sides of the interval by using the opposite sign of the center area
+	// We know our starting interval was [0, FirstZero) U (SecondZero, PosInfinity) for this specific function
+	// since t >= 0 and we had two zeros 
+	if (bVelocityLessThanZeroInInterval)
+	{
+		// moving from right to left in interval
+		cout << "On = [" << 0 << ", " << RestTimes[0] << ") U " << "(" << RestTimes[1] << ", " << INFINITY << ")";
+		cout << " The particle is moving from left to right" << endl;
+
+		cout << "On (" << RestTimes[0] << ", " << RestTimes[1] << ")";
+		cout << " The particle is moving from right to left";
+
+	}
+	else
+	{
+		// (Velocity greater than zero in center means outsides are right to left inside left to right)
+		cout << "On = [" << 0 << ", " << RestTimes[0] << ") U " << "(" << RestTimes[1] << ", " << INFINITY << ")";
+		cout << " The particle is moving from right to left" << endl;
+
+		cout << "On (" << RestTimes[0] << ", " << RestTimes[1] << ")";
+		cout << " The particle is moving from left to right";
+	}
+
+	cout << endl;
+
+	// Pretend Graph
+	double PositionAtTimeZero = PositionFunction(0);
+	double PositionAtTimeTwo = PositionFunction(2);
+	double PositionAtTimeFour = PositionFunction(4);
+	double PositionAtTimeSix = PositionFunction(6);
 
 
+	cout << "At time " << 0 << " the particle is at position " << PositionAtTimeZero << endl;
+	cout << "At time " << 2 << " the particle is at position " << PositionAtTimeTwo << endl;
+	cout << "At time " << 4 << " the particle is at position " << PositionAtTimeFour << endl;
+	cout << "At time " << 6 << " the particle is at position " << PositionAtTimeSix << endl;
+}
+
+// again assuming a start time of t = 0
+inline void FindParticleMovementAtTimeT(const QuadraticFunction& PositionFunction, const int& TimeT)
+{
+	const int StartTimeTEqualToZero = 0;
+
+	// a find v(t)
+	auto VelocityFunction = PositionFunction.GetDerivativeFunction();
+	VelocityFunction.PrintFunction();
+	cout << endl;
+
+	// at what time is the object at rest
+	// when velocity function = 0
+	cout << "Object is at rest at times: ";
+
+	VelocityFunction.PrintAllZeros();
+
+
+	double RestTime = VelocityFunction.GetAllZerosVec()[0];
+
+	// TODO: Cant shake the feeling I am missing something here about comparing my RestTime to my TimeT and how TimeT might
+	// be less than my RestTime messing up my interval? Wish I had another function to test.
+
+	bool bIsDecreasingAtTimeT = ((VelocityFunction(TimeT)) < 0);
+
+	// We now know which direction its going on the other sides of the interval by using the opposite sign of the center area
+	// We know our starting interval was [0, FirstZero) U (SecondZero, PosInfinity) for this specific function
+	// since t >= 0 and we had two zeros 
+	if (bIsDecreasingAtTimeT)
+	{
+		cout << "The function is decreasing at time t = " << TimeT << endl;
+
+		cout << "On = (" << StartTimeTEqualToZero << ", " << RestTime << ")";
+		cout << " The particle is moving from left to right" << endl;
+
+		cout << "On (" << RestTime << ", " << INFINITY << ")";
+		cout << " The particle is moving from right to left";
+
+	}
+	else
+	{
+		cout << "The function is increasing at time t = " << TimeT << endl;
+
+		cout << "On = (" << StartTimeTEqualToZero << ", " << RestTime << ")";
+		cout << " The particle is moving from right to left" << endl;
+
+		cout << "On (" << RestTime << ", " << INFINITY << ")";
+		cout << " The particle is moving from left to right";
+	}
+
+	cout << endl;
+
+	// Pretend Graph
+	double PositionAtTimeZero = PositionFunction(0);
+	double PositionAtTimeTwo = PositionFunction(2);
+	double PositionAtTimeFour = PositionFunction(4);
+	double PositionAtTimeSix = PositionFunction(6);
+
+
+	cout << "At time " << 0 << " the particle is at position " << PositionAtTimeZero << endl;
+	cout << "At time " << 2 << " the particle is at position " << PositionAtTimeTwo << endl;
+	cout << "At time " << 4 << " the particle is at position " << PositionAtTimeFour << endl;
+	cout << "At time " << 6 << " the particle is at position " << PositionAtTimeSix << endl;
+}
 
 // Find the rate of change of profit when 10,000 games are produced.
 /*
@@ -257,7 +409,7 @@ inline LinearFunction FactorNumeratorRationalFunc(const QuadraticFunction& InNum
 
 
 	auto QuadNumVec = InNumerator.GetAllZerosVec();
-	auto LinearNumVec = InDenominator.GetRealNumberZerosVec();
+	auto LinearNumVec = InDenominator.GetAllZerosVec(); // Maxpro: swaped vec to allzero from real 12/1/2017 
 
 	cout << QuadNumVec.size() << endl;
 	cout << LinearNumVec.size() << endl;
@@ -671,3 +823,7 @@ inline bool ApplyIntermediateValueTherom(const CubicFunction& InCubicFunc, const
 //
 //
 //}
+
+
+
+#endif

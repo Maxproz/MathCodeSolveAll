@@ -1,6 +1,8 @@
 #include "CubicFunction.h"
 #include "Derivative.h"
 
+
+
 #include <iostream>
 
 using std::cout;
@@ -8,11 +10,11 @@ using std::endl;
 
 void AutoSetDerivativeFunction(CubicFunction& InFunc)
 {
-	auto Vars = InFunc.GetABCD();
-	auto a = std::get<0>(Vars);
-	auto b = std::get<1>(Vars);
-	auto c = std::get<2>(Vars);
-	auto d = std::get<3>(Vars);
+	//auto Vars = InFunc.GetABCD();
+	//auto a = std::get<0>(Vars);
+	//auto b = std::get<1>(Vars);
+	//auto c = std::get<2>(Vars);
+	//auto d = std::get<3>(Vars);
 
 	//InFunc.PrintFunction();
 

@@ -1,5 +1,8 @@
 #include "QuadraticFunction.h"
 
+#include "Derivative.h"
+#include "QuarticFunction.h"
+#include "LinearFunction.h"
 #include "MiscMathEquations.h"
 
 
@@ -218,6 +221,15 @@ void QuadraticFunction::PrintFunction() const
 	}
 }
 
+LinearFunction QuadraticFunction::GetDerivativeFunction() const
+{
+	return m_DerivativeFunction;
+}
+
+void QuadraticFunction::SetDerivativeFunction(LinearFunction& InFunc)
+{
+	m_DerivativeFunction = InFunc;
+}
 
 void SetZerosQuadraticFormula(QuadraticFunction& QuadraticFunc)
 {
@@ -290,3 +302,22 @@ std::vector<double> GetZerosQuadraticFormula(const double& a, const double& b, c
 
 	return OutVec;
 }
+
+void AutoSetDerivativeFunction(QuadraticFunction& InFunc)
+{
+	//auto Vars = InFunc.GetABC();
+	//auto a = std::get<0>(Vars);
+	//auto b = std::get<1>(Vars);
+	//auto c = std::get<2>(Vars);
+
+
+	//InFunc.PrintFunction();
+
+	//CubicFunction CubicCopy(a, b, c, d);
+
+	Derivative<QuadraticFunction, LinearFunction> Derivative(InFunc);
+	InFunc.SetDerivativeFunction(Derivative.GetDerivativeFunction());
+
+
+}
+

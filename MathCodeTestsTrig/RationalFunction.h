@@ -52,8 +52,8 @@ private:
 	std::vector<int> m_CurrentDiscontinousLocations;
 	int m_AmountOfDiscontinunitiesFound = 0;
 
-	// Pointer to a type and a point it is discontinous at
-	std::unique_ptr<std::pair<DiscontinunityType, int>> m_Discontinuity = nullptr;
+	//// Pointer to a type and a point it is discontinous at
+	//std::unique_ptr<std::pair<DiscontinunityType, int>> m_Discontinuity = nullptr;
 
 	void IncreaseDiscontinunitiesFound() { m_AmountOfDiscontinunitiesFound++; }
 
@@ -72,32 +72,32 @@ public:
 	
 	//RationalFunction() : a_(new int(33)) {}
 
-	RationalFunction<NumFunc, DenomFunc>(RationalFunction<NumFunc, DenomFunc> &&data)
-		: m_Discontinuity(std::move(data.m_Discontinuity = nullptr;))
-	{
-		m_NumeratorFunction = data.m_NumeratorFunction;
-		m_DenominatorFunction = data.m_DenominatorFunction;
-		m_NumeratorFuncType = data.m_NumeratorFuncType;
-		m_DenominatorFuncType = data.m_DenominatorFuncType;
-		m_CurrentDiscontinousLocations = data.m_CurrentDiscontinousLocations;
-		// TODO: how do i move the amount of discontinuties found?
-		m_AmountOfDiscontinunitiesFound = data.m_AmountOfDiscontinunitiesFound;
-		m_LastCalculatedRes = data.m_LastCalculatedRes;
-	}
+	//RationalFunction<NumFunc, DenomFunc>(RationalFunction<NumFunc, DenomFunc> &&data)
+	//	: m_Discontinuity(std::move(data.m_Discontinuity = nullptr;))
+	//{
+	//	m_NumeratorFunction = data.m_NumeratorFunction;
+	//	m_DenominatorFunction = data.m_DenominatorFunction;
+	//	m_NumeratorFuncType = data.m_NumeratorFuncType;
+	//	m_DenominatorFuncType = data.m_DenominatorFuncType;
+	//	m_CurrentDiscontinousLocations = data.m_CurrentDiscontinousLocations;
+	//	// TODO: how do i move the amount of discontinuties found?
+	//	m_AmountOfDiscontinunitiesFound = data.m_AmountOfDiscontinunitiesFound;
+	//	m_LastCalculatedRes = data.m_LastCalculatedRes;
+	//}
 
-	RationalFunction<NumFunc, DenomFunc>& operator=(RationalFunction<NumFunc,DenomFunc> &&data)
-	{
-		m_Discontinuity = std::move(data.m_Discontinuity);
-		m_NumeratorFunction = data.m_NumeratorFunction;
-		m_DenominatorFunction = data.m_DenominatorFunction;
-		m_NumeratorFuncType = data.m_NumeratorFuncType;
-		m_DenominatorFuncType = data.m_DenominatorFuncType;
-		m_CurrentDiscontinousLocations = data.m_CurrentDiscontinousLocations;
-		m_AmountOfDiscontinunitiesFound = data.m_AmountOfDiscontinunitiesFound;
-		m_LastCalculatedRes = data.m_LastCalculatedRes;
+	//RationalFunction<NumFunc, DenomFunc>& operator=(RationalFunction<NumFunc,DenomFunc> &&data)
+	//{
+	//	m_Discontinuity = std::move(data.m_Discontinuity);
+	//	m_NumeratorFunction = data.m_NumeratorFunction;
+	//	m_DenominatorFunction = data.m_DenominatorFunction;
+	//	m_NumeratorFuncType = data.m_NumeratorFuncType;
+	//	m_DenominatorFuncType = data.m_DenominatorFuncType;
+	//	m_CurrentDiscontinousLocations = data.m_CurrentDiscontinousLocations;
+	//	m_AmountOfDiscontinunitiesFound = data.m_AmountOfDiscontinunitiesFound;
+	//	m_LastCalculatedRes = data.m_LastCalculatedRes;
 
-		return *this;
-	}
+	//	return *this;
+	//}
 
 
 
@@ -110,21 +110,21 @@ public:
 	void SetDiscontinunityPtr(const DiscontinunityType& Type, const int AtXEqualTo)
 
 	{
-		// Implicit move operation into the variable that stores the result.
-		m_Discontinuity = std::make_unique<std::pair<DiscontinunityType, int>>(Type, AtXEqualTo);
+		//// Implicit move operation into the variable that stores the result.
+		//m_Discontinuity = std::make_unique<std::pair<DiscontinunityType, int>>(Type, AtXEqualTo);
 	}
 
 	std::pair<DiscontinunityType, int> GetCurrentDiscontinunityPtrInfo()
 	{
-		if (m_Discontinuity != nullptr)
-		{
-			DiscontinunityType Type = m_Discontinuity->first;
-			int XLoc = m_Discontinuity->second;
+		//if (m_Discontinuity != nullptr)
+		//{
+		//	DiscontinunityType Type = m_Discontinuity->first;
+		//	int XLoc = m_Discontinuity->second;
 
 			std::pair<DiscontinunityType, int> OutRes(Type, XLoc);
 
 			return OutRes;
-		}
+		
 	}
 
 

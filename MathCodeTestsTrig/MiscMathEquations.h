@@ -1,8 +1,16 @@
 #pragma once
 
+#ifndef MISCMATHEQUATIONS_H
+#define MISCMATHEQUATIONS_H
+
+
 #include <utility>
+#include <string>
+
 
 using std::pair;
+using std::string;
+
 
 // http://www.rapidtables.com/calc/math/Percentage_Calculator.htm
 
@@ -66,3 +74,9 @@ inline void FlipSign(T& Num)
 	Num = Num * (-1);
 
 }
+
+
+void PrintAllFilesInDirectory(const std::string& path);
+
+
+#endif

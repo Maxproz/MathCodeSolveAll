@@ -9,11 +9,14 @@
 #include "Derivative.h"
 
 
+
 // TODO: Should I create a class for typedefs? (they are inside MathConstants for now)
 // TODO: Create the 5th/6th/7th degree polynomial classses
 // TODO: Create the base functionality for the quotient rule for derivatives
 // TODO: Setup power functions to take the derivative of a negative number exponent,
 // base functionality is maybe there? Needs confirmed.
+// TODO: I removed the std::unique_ptr from the rational function class to simplify copy/moving.
+// Need to remember that I have that variable doing nothing in some limit functions etc...
 
 
 int main()
@@ -287,13 +290,46 @@ int main()
 		//DerivativeFunc.PrintFunction();
 		//cout << endl;
 
-		CubicFunction TestCubic(1, -7, 8, 1);
-		QuadraticFunction DerivFunc = TestCubic.GetDerivativeFunction();
-		//DerivFunc.PrintFunction();
-		//cout << endl;
+		//CubicFunction TestCubic(1, -7, 8, 1);
+		//QuadraticFunction DerivFunc = TestCubic.GetDerivativeFunction();
+		////DerivFunc.PrintFunction();
+		////cout << endl;
 
-		TestCubic.PrintHorizontalTangetLineXValues();
-		cout << endl;
+		//TestCubic.PrintHorizontalTangetLineXValues();
+		//cout << endl;
+		//C:\Users\Maxpro\Downloads
+
+		
+		//PrintAllFilesInDirectory("C:/Users/Maxpro/Downloads");
+
+		//double VelocityAtOne{ 0 };
+		//double AccelerationAtOne{ 0 };
+
+		//CubicFunction PositionFunction(1, 0, -4, 2);
+		//
+		//QuadraticFunction VelocityFunction = PositionFunction.GetDerivativeFunction();
+		//VelocityAtOne = VelocityFunction(1);
+
+		//LinearFunction AccelerationFunction = VelocityFunction.GetDerivativeFunction();
+		//AccelerationAtOne = AccelerationFunction(1);
+
+		//std::cout << "Velocity at time t = 1: is " << VelocityAtOne << endl;
+		//cout << "Acceleration at time t = 1: is " << AccelerationAtOne << endl;
+
+
+		// f(t) =
+		// Where t >= 0
+		//const int TimeTEqualZero = 0;
+
+
+		//CubicFunction PositionFunction(1, -9, 24, 4);
+		//DisplayParticlePositionAndVelocityMovingAlongAxis<CubicFunction>(PositionFunction);
+		
+		const int TimeT = 3;
+		QuadraticFunction PositionQuad(1, -5, 1);
+		FindParticleMovementAtTimeT(PositionQuad, TimeT);
+
+
 
 
 	}

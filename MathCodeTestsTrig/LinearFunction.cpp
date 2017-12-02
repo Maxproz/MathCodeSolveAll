@@ -1,5 +1,10 @@
 #include "LinearFunction.h"
 
+#include "QuarticFunction.h"
+#include "QuadraticFunction.h"
+#include "CubicFunction.h"
+
+
 QuarticFunction LinearFunction::operator*(CubicFunction const & rhs) const
 {
 	double ThisA = m_a;
@@ -91,4 +96,31 @@ QuadraticFunction LinearFunction::operator*(LinearFunction const & rhs) const
 	OutQuadC = m_b * rhs.m_b;
 
 	return QuadraticFunction(OutQuadA, OutQuadB, OutQuadC);
+}
+
+QuadraticFunction LinearFunction::GetSquaredFunction() const
+{
+	// return (ax + b)(ax + b)
+	double First = m_a * m_a;
+
+	double Outside = m_a * m_b;
+	double Inside = m_b * m_a;
+
+	double QuadraticB = Outside + Inside;
+
+	double Last = m_b * m_b;
+
+	return QuadraticFunction(First, QuadraticB, Last);
+}
+
+void LinearFunction::PrintAllZeros() const
+{
+	std::cout << "Printing all zeros of the function\n";
+
+	for (const auto& zero : m_AllZeros)
+	{
+		std::cout << zero << std::endl;
+	}
+	std::cout << "Done printing all zeros\n";
+
 }
