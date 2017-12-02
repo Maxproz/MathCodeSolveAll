@@ -325,12 +325,13 @@ int main()
 		//CubicFunction PositionFunction(1, -9, 24, 4);
 		//DisplayParticlePositionAndVelocityMovingAlongAxis<CubicFunction>(PositionFunction);
 		
-		const int TimeT = 3;
-		QuadraticFunction PositionQuad(1, -5, 1);
-		FindParticleMovementAtTimeT(PositionQuad, TimeT);
+		//const int TimeT = 3;
+		//QuadraticFunction PositionQuad(1, -5, 1);
+		//FindParticleMovementAtTimeT(PositionQuad, TimeT);
 
-
-
+		
+		EstimatePopulationSizeAfterTDays(3000, 100, 3);
+		cout << endl;
 
 	}
 	catch (const std::exception& ex)

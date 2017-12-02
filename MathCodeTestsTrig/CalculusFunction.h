@@ -44,6 +44,23 @@ double GetSlope(const Point& FirstPoint, const Point& SecondPoint);
 
 void PrintSlopeInterceptForm(const Point& Point, const double& Slope);
 
+// this function was created as a helper function to help reduce code clutter for a few other functions in this header
+template <typename Func>
+void PrintPositionAtAFewTimes(const Func& PositionFunction)
+{
+	// Pretend Graph
+	double PositionAtTimeZero = PositionFunction(0);
+	double PositionAtTimeTwo = PositionFunction(2);
+	double PositionAtTimeFour = PositionFunction(4);
+	double PositionAtTimeSix = PositionFunction(6);
+
+
+	cout << "At time " << 0 << " the particle is at position " << PositionAtTimeZero << endl;
+	cout << "At time " << 2 << " the particle is at position " << PositionAtTimeTwo << endl;
+	cout << "At time " << 4 << " the particle is at position " << PositionAtTimeFour << endl;
+	cout << "At time " << 6 << " the particle is at position " << PositionAtTimeSix << endl;
+}
+
 
 
 // More Rate Of Change reserach below.
@@ -144,16 +161,18 @@ inline void DisplayParticlePositionAndVelocityMovingAlongAxis(const CubicFunctio
 	cout << endl;
 
 	// Pretend Graph
-	double PositionAtTimeZero = PositionFunction(0);
-	double PositionAtTimeTwo = PositionFunction(2);
-	double PositionAtTimeFour = PositionFunction(4);
-	double PositionAtTimeSix = PositionFunction(6);
+	PrintPositionAtAFewTimes(PositionFunction);
+
+	//double PositionAtTimeZero = PositionFunction(0);
+	//double PositionAtTimeTwo = PositionFunction(2);
+	//double PositionAtTimeFour = PositionFunction(4);
+	//double PositionAtTimeSix = PositionFunction(6);
 
 
-	cout << "At time " << 0 << " the particle is at position " << PositionAtTimeZero << endl;
-	cout << "At time " << 2 << " the particle is at position " << PositionAtTimeTwo << endl;
-	cout << "At time " << 4 << " the particle is at position " << PositionAtTimeFour << endl;
-	cout << "At time " << 6 << " the particle is at position " << PositionAtTimeSix << endl;
+	//cout << "At time " << 0 << " the particle is at position " << PositionAtTimeZero << endl;
+	//cout << "At time " << 2 << " the particle is at position " << PositionAtTimeTwo << endl;
+	//cout << "At time " << 4 << " the particle is at position " << PositionAtTimeFour << endl;
+	//cout << "At time " << 6 << " the particle is at position " << PositionAtTimeSix << endl;
 }
 
 // again assuming a start time of t = 0
@@ -208,16 +227,63 @@ inline void FindParticleMovementAtTimeT(const QuadraticFunction& PositionFunctio
 	cout << endl;
 
 	// Pretend Graph
-	double PositionAtTimeZero = PositionFunction(0);
-	double PositionAtTimeTwo = PositionFunction(2);
-	double PositionAtTimeFour = PositionFunction(4);
-	double PositionAtTimeSix = PositionFunction(6);
+	PrintPositionAtAFewTimes(PositionFunction);
 
 
-	cout << "At time " << 0 << " the particle is at position " << PositionAtTimeZero << endl;
-	cout << "At time " << 2 << " the particle is at position " << PositionAtTimeTwo << endl;
-	cout << "At time " << 4 << " the particle is at position " << PositionAtTimeFour << endl;
-	cout << "At time " << 6 << " the particle is at position " << PositionAtTimeSix << endl;
+	//double PositionAtTimeZero = PositionFunction(0);
+	//double PositionAtTimeTwo = PositionFunction(2);
+	//double PositionAtTimeFour = PositionFunction(4);
+	//double PositionAtTimeSix = PositionFunction(6);
+
+
+	//cout << "At time " << 0 << " the particle is at position " << PositionAtTimeZero << endl;
+	//cout << "At time " << 2 << " the particle is at position " << PositionAtTimeTwo << endl;
+	//cout << "At time " << 4 << " the particle is at position " << PositionAtTimeFour << endl;
+	//cout << "At time " << 6 << " the particle is at position " << PositionAtTimeSix << endl;
+}
+
+
+// Population Change
+// We can use a current population, together with a growth rate, to estimate the size of a population in the future.
+// The population growth rate is the rate of change of a population and 
+// can be represented by the derivative of the size of the population.
+// If P(t) is the number of entities present in a population,
+// then the population growth rate of is P′(t).
+// Apply // f(x + h) = f(x) + (f'(x)*h)
+
+// Really specific use function, but I can come back and look at it later to refresh memory on this stuff.
+// I also learned a bit making it.
+inline void EstimatePopulationThatTriplesEveryFiveYearsForAGivenYear(const int& InitialPopulation, const int& InYear)
+{
+	// Let P(t) be the population t years from now. 
+	// Find P'(t)
+	// P_f - P_i / t_f - t_i
+	double PFinal = InitialPopulation * 3;
+	double PInitial = InitialPopulation;
+
+	double YearFinal = 5;
+	double YearInital = 0;
+
+	double PPrime = (PFinal - PInitial) / (YearFinal - YearInital);
+
+	// Apply: f(x + h) = f(x) + (f'(x)*h)
+	// f(x + h) = f(0 + InYear) 
+	// h = InYear
+	// P(InYear) = P(0) + (PPrime*2)
+	// p(InYear) = InitialPopulation + (PPrime*InYear)
+	cout << "The population " << InYear << " years from now is ";
+	
+	double PopulationEstimate = InitialPopulation + (PPrime * InYear);
+
+	cout << PopulationEstimate;
+}
+
+inline void EstimatePopulationSizeAfterTDays(const int& InitialPopulation, const int& RateOfChange, const int& TDaysAfter)
+{
+	// Apply: f(x + h) = f(x) + (f'(x)*h)
+	cout << "The population " << TDaysAfter << " days from now is ";
+	double PopulationEstimate = InitialPopulation + (RateOfChange * TDaysAfter);
+	cout << PopulationEstimate;
 }
 
 // Find the rate of change of profit when 10,000 games are produced.
