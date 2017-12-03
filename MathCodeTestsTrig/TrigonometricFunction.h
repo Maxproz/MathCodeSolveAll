@@ -7,7 +7,7 @@
 #include "TranscendentalFunction.h"
 #include "Circle.h"
 
-#include "Derivative.h"
+
 
 #include <vector>
 #include <utility>
@@ -64,29 +64,29 @@ tan(theta) = y/x
 // https://cnx.org/contents/i4nRcikn@2.66:-xC--8XH@6/The-Limit-Laws
 
 
-// Trigonometric functions are continuous over their entire domains.
-class TrigometricFunc
-{
-
-};
-
-
-class MPSIN : public TrigometricFunc {};
-class MPCOS : public TrigometricFunc {};
-class MPTAN : public TrigometricFunc {};
-class MPCOT : public TrigometricFunc {};
-class MPSEC : public TrigometricFunc {};
-class MPCSC : public TrigometricFunc {};
-
-// Might change how I do this later but adding classes that you get from deriviatives that are multiple trig functions
-// example f(x) = sec(x)tan(x)
-class MPSECTAN : public TrigometricFunc {};
-class MPNEGCSCCOT : public TrigometricFunc {};
-
-// Added the classes below to track the negative functions you get from derivatives
-class MPNEGSIN : public TrigometricFunc {};
-class MPNEGCOS : public TrigometricFunc {};
-class MPNEGCSC : public TrigometricFunc {};
+//// Trigonometric functions are continuous over their entire domains.
+//class TrigometricFunc
+//{
+//
+//};
+//
+//
+//class MPSIN : public TrigometricFunc {};
+//class MPCOS : public TrigometricFunc {};
+//class MPTAN : public TrigometricFunc {};
+//class MPCOT : public TrigometricFunc {};
+//class MPSEC : public TrigometricFunc {};
+//class MPCSC : public TrigometricFunc {};
+//
+//// Might change how I do this later but adding classes that you get from deriviatives that are multiple trig functions
+//// example f(x) = sec(x)tan(x)
+//class MPSECTAN : public TrigometricFunc {};
+//class MPNEGCSCCOT : public TrigometricFunc {};
+//
+//// Added the classes below to track the negative functions you get from derivatives
+//class MPNEGSIN : public TrigometricFunc {};
+//class MPNEGCOS : public TrigometricFunc {};
+//class MPNEGCSC : public TrigometricFunc {};
 
 
 
@@ -106,19 +106,38 @@ class MPNEGCSC : public TrigometricFunc {};
 // TODO: Make PrintFunction()'s for these classes to make them easier to debug.
 // TODO: Figure out a way to make reading the type of function into string from the MPTrigFunction classes easier.
 
-
-// NOTE: These functions currently expect the full form to be imputed into the function... all 5 variables + sin/cos/tan..
-template <typename TrigFunc, int Power>
-class TrigometricFunction
-{
-public:
+// TODO IMPORTANT: It appears I can make derivative functions for the higher ordered powers by using the method I saw on Line 539: - void AutoSetSECDerivativeFunction(MPSEC<2>& InFunc);
+// I would just have to figure out what the return type would be and then make a corresponding derivative function in the derivative header.
 
 
 
-};
 
-template<>
-class TrigometricFunction<MPCOS, 1>
+//// NOTE: These functions currently expect the full form to be imputed into the function... all 5 variables + sin/cos/tan..
+//template <typename TrigFunc, int Power>
+//class TrigometricFunction
+//{
+//public:
+//
+//
+//
+//};
+template<int POWER = 1> class MPSIN;
+template<int POWER = 1> class MPCOS;
+template<int POWER = 1> class MPTAN;
+template<int POWER = 1> class MPNEGSIN;
+template<int POWER = 1> class MPCOT;
+template<int POWER = 1> class MPSEC;
+template<int POWER = 1> class MPSECTAN;
+template<int POWER = 1> class MPNEGCSC;
+template<int POWER = 1> class MPNEGCSCCOT;
+template<int POWER = 1> class MPCSC;
+template<int POWER = 1> class MPNEGCOS;
+
+
+
+
+template <int POWER>
+class MPNEGSIN
 {
 private:
 	double m_a;
@@ -127,20 +146,102 @@ private:
 	double m_d;
 
 	//int m_Power = Power;
-	int Power = 1;
+	int m_Power = POWER;
 
 public:
 
-	 TrigometricFunction() = default;
-	TrigometricFunction(const TrigometricFunction<MPCOS, 1>&) = default;
-	//explicit TrigometricFunction(TrigometricFunction<MPCOS, 1>&) = default;
-	TrigometricFunction<MPCOS,1>& operator=(const TrigometricFunction<MPCOS,1>&) = default;
 
-	 TrigometricFunction(const double& a, const double& b, const double& c, const double& d)
+	explicit MPNEGSIN() = default;
+	MPNEGSIN(const MPNEGSIN&) = default;
+
+	explicit MPNEGSIN(const double& a, const double& b, const double& c, const double& d)
 		: m_a{ a }, m_b{ b }, m_c{ c }, m_d{ d }
 	{
 
 	}
+
+	inline tuple<double, double, double, double> GetABCD() const
+	{
+		return tuple<double, double, double, double>(m_a, m_b, m_c, m_d);
+	}
+
+
+	// try this out for a bit? until I better understand the inverse crap
+	double operator()(const double& x, const bool& bIsInverseFunction = false)
+	{
+		double X = x;
+
+		if (bIsInverseFunction == true)
+		{
+			X = std::pow(x, (-1));
+		}
+		else
+		{
+
+		}
+
+		double First = (X + m_c) * m_b;
+		double InFunc = (std::pow(std::sin(First), m_Power)) * (-1);
+		double StretchOrShrink = InFunc * m_a;
+		double VertShift = StretchOrShrink + m_d;
+
+		return VertShift;
+	}
+
+};
+
+
+void AutoSetCOSDerivativeFunction(MPCOS<1>& InFunc);
+
+template<int POWER>
+class MPCOS
+{
+private:
+	double m_a;
+	double m_b;
+	double m_c;
+	double m_d;
+
+	//int m_Power = Power;
+	int m_Power = POWER;
+
+	MPNEGSIN<1> m_DerivativeFunction = MPNEGSIN<1>(1, 1, 0, 0);
+
+public:
+
+	explicit MPCOS() = default;
+	MPCOS(const MPCOS&) = default;
+	//explicit TrigometricFunction(TrigometricFunction<MPCOS, 1>&) = default;
+	//TrigometricFunction<MPCOS,1>& operator=(const TrigometricFunction<MPCOS,1>&) = default;
+
+	 explicit MPCOS(const double& a, const double& b, const double& c, const double& d)
+		: m_a{ a }, m_b{ b }, m_c{ c }, m_d{ d }
+	{
+		 AutoSetCOSDerivativeFunction(*this);
+
+	}
+
+	 inline void SetDerivativeFunction(const MPNEGSIN<1>& InFunc)
+	 {
+		 //if (Power != 1)
+		 //{
+		 //	throw std::logic_error("You have not setup taking derivatives with higher level sin function powers");
+		 //}
+
+		 m_DerivativeFunction = InFunc;
+	 }
+
+
+	 inline MPNEGSIN<1> GetDerivativeFunction() const
+	 {
+		 //if (Power != 1)
+		 //{
+		 //	throw std::logic_error("You have not setup taking derivatives with higher level sin function powers");
+		 //}
+
+		 return m_DerivativeFunction;
+	 }
+
 
 	inline tuple<double, double, double, double> GetABCD() const
 	{
@@ -172,14 +273,16 @@ public:
 };
 
 
-void AutoSetDerivativeFunction(TrigometricFunction<MPSIN, 1>& InFunc);
+
+
+void AutoSetSinDerivativeFunction(MPSIN<1>& InFunc);
 
 
 // Now accepts functions of the form sin^2(x)
 // If a power is not specified on construction it's assumed to be in the form f(x) = sin(x) with also equal to - sin^1(x)
 // https://calculus.subwiki.org/wiki/Sine_function
-template <>
-class TrigometricFunction<MPSIN, 1>
+template <int POWER>
+class MPSIN
 {
 private:
 	double m_a;
@@ -188,10 +291,10 @@ private:
 	double m_d;
 	
 	//int m_Power = Power;
-	int Power = 1;
+	int m_Power = POWER;
 	
 	// NOTE IMPORTANT: Need to think of a way to get the derivative from higher ordered Trig functions using the Power Variable
-	TrigometricFunction<MPCOS, 1> m_DerivativeFunction = TrigometricFunction<MPCOS, 1>(1,1,0,0);
+	MPCOS<1> m_DerivativeFunction = MPCOS<1>(1,1,0,0);
 
 
 public:
@@ -201,38 +304,19 @@ public:
 
 
 
-	 TrigometricFunction() = default;
+	explicit MPSIN() = default;
 
-	TrigometricFunction(const TrigometricFunction<MPSIN, 1>&) = default;
+	MPSIN(const MPSIN&) = default;
 
-	 TrigometricFunction(const double& a, const double& b, const double& c, const double& d)
+	explicit MPSIN(const double& a, const double& b, const double& c, const double& d)
 		: m_a{ a }, m_b{ b }, m_c{ c }, m_d{ d }
 	{
 
-		AutoSetDerivativeFunction(*this);
+		AutoSetSinDerivativeFunction(*this);
 	}
 
-	inline void SetDerivativeFunction(const TrigometricFunction<MPCOS, 1>& InFunc)
-	{
-		//if (Power != 1)
-		//{
-		//	throw std::logic_error("You have not setup taking derivatives with higher level sin function powers");
-		//}
-
-		m_DerivativeFunction = InFunc;
-	}
-
-
-
-	inline TrigometricFunction<MPCOS, 1> GetDerivativeFunction() const
-	{
-		//if (Power != 1)
-		//{
-		//	throw std::logic_error("You have not setup taking derivatives with higher level sin function powers");
-		//}
-
-		return m_DerivativeFunction;
-	}
+	void SetDerivativeFunction(const MPCOS<1>& InFunc);
+	MPCOS<1> GetDerivativeFunction() const;
 
 
 
@@ -268,7 +352,7 @@ public:
 		}
 
 		double First = (X + m_c) * m_b;
-		double InFunc = std::pow(std::sin(First), Power);
+		double InFunc = std::pow(std::sin(First), m_Power);
 		double StretchOrShrink = InFunc * m_a;
 		double VertShift = StretchOrShrink + m_d;
 
@@ -278,11 +362,8 @@ public:
 };
 
 
-
-
-
-template <>
-class TrigometricFunction<MPNEGSIN, 1>
+template <int POWER>
+class MPNEGCOS
 {
 private:
 	double m_a;
@@ -291,71 +372,16 @@ private:
 	double m_d;
 
 	//int m_Power = Power;
-	int Power = 1;
+	int m_Power = POWER;
 
 public:
 
+	MPNEGCOS() = default;
 
-
-	TrigometricFunction() = default;
-	TrigometricFunction(const TrigometricFunction&) = default;
-
-	explicit TrigometricFunction(const double& a, const double& b, const double& c, const double& d)
+	explicit MPNEGCOS(const double& a, const double& b, const double& c, const double& d)
 		: m_a{ a }, m_b{ b }, m_c{ c }, m_d{ d }
 	{
 
-	}
-
-	inline tuple<double, double, double, double> GetABCD() const
-	{
-		return tuple<double, double, double, double>(m_a, m_b, m_c, m_d);
-	}
-
-
-	// try this out for a bit? until I better understand the inverse crap
-	double operator()(const double& x, const bool& bIsInverseFunction = false)
-	{
-		double X = x;
-
-		if (bIsInverseFunction == true)
-		{
-			X = std::pow(x, (-1));
-		}
-		else
-		{
-
-		}
-
-		double First = (X + m_c) * m_b;
-		double InFunc = (std::pow(std::sin(First), Power)) * (-1);
-		double StretchOrShrink = InFunc * m_a;
-		double VertShift = StretchOrShrink + m_d;
-
-		return VertShift;
-	}
-
-};
-//
-
-template <>
-class TrigometricFunction<MPNEGCOS, 1>
-{
-private:
-	double m_a;
-	double m_b;
-	double m_c;
-	double m_d;
-
-	//int m_Power = Power;
-	int Power = 1;
-
-public:
-
-	TrigometricFunction() = default;
-
-	explicit TrigometricFunction(const double& a, const double& b, const double& c, const double& d)
-		: m_a{ a }, m_b{ b }, m_c{ c }, m_d{ d }
-	{
 
 	}
 
@@ -388,8 +414,11 @@ public:
 
 };
 
-template <>
-class TrigometricFunction<MPTAN, 1>
+
+void AutoSetTANDerivativeFunction(MPTAN<1>& InFunc);
+
+template <int POWER>
+class MPTAN
 {
 private:
 	double m_a;
@@ -398,17 +427,26 @@ private:
 	double m_d;
 	
 	//int m_Power = Power;
-	int Power = 1;
-		
+	int m_Power = POWER;
+	
+	MPSEC<2> m_DerivativeFunction = MPSEC<2>(1, 1, 0, 0);
+
+
 public:
 
-	TrigometricFunction() = default;
+	MPTAN() = default;
 
-	explicit TrigometricFunction(const double& a, const double& b, const double& c, const double& d)
+	explicit MPTAN(const double& a, const double& b, const double& c, const double& d)
 		: m_a{ a }, m_b{ b }, m_c{ c }, m_d{ d }
 	{
 
+		AutoSetTANDerivativeFunction(*this);
+
 	}
+
+	void SetDerivativeFunction(const MPSEC<2>& InFunc);
+	MPSEC<2> GetDerivativeFunction() const;
+
 
 	inline tuple<double, double, double, double> GetABCD() const
 	{
@@ -439,8 +477,10 @@ public:
 
 };
 
-template <>
-class TrigometricFunction<MPCOT, 1>
+void AutoSetCOTDerivativeFunction(MPCOT<1>& InFunc);
+
+template <int POWER>
+class MPCOT
 {
 private:
 	double m_a;
@@ -448,18 +488,25 @@ private:
 	double m_c;
 	double m_d;
 
-	//int m_Power = Power;
-	int Power = 1;
+	int m_Power = POWER;
+	
+	MPNEGCSC<2> m_DerivativeFunction = MPNEGCSC<2>(1, 1, 0, 0);
 
 public:
 
-	TrigometricFunction() = default;
+	MPCOT() = default;
 
-	explicit TrigometricFunction(const double& a, const double& b, const double& c, const double& d)
+	explicit MPCOT(const double& a, const double& b, const double& c, const double& d)
 		: m_a{ a }, m_b{ b }, m_c{ c }, m_d{ d }
 	{
-
+		AutoSetCOTDerivativeFunction(*this);
 	}
+
+	void SetDerivativeFunction(const MPNEGCSC<2>& InFunc);
+
+
+
+	MPNEGCSC<2> GetDerivativeFunction() const;
 
 	inline tuple<double, double, double, double> GetABCD() const
 	{
@@ -481,7 +528,7 @@ public:
 		}
 
 		double First = (X + m_c) * m_b;
-		double InFunc = (std::pow(std::cos(First), Power) / std::pow(std::sin(First), Power));
+		double InFunc = (std::pow(std::cos(First), m_Power) / std::pow(std::sin(First), m_Power));
 		double StretchOrShrink = InFunc * m_a;
 		double VertShift = StretchOrShrink + m_d;
 
@@ -490,8 +537,11 @@ public:
 
 };
 
-template <>
-class TrigometricFunction<MPSEC, 1>
+void AutoSetSECDerivativeFunction(MPSEC<1>& InFunc);
+void AutoSetSECDerivativeFunction(MPSEC<2>& InFunc);
+
+template <int POWER>
+class MPSEC
 {
 private:
 	double m_a;
@@ -499,18 +549,23 @@ private:
 	double m_c;
 	double m_d;
 
-	//int m_Power = Power;
-	int Power = 1;
+	int m_Power = POWER;
+	
+	MPSECTAN<1> m_DerivativeFunction = MPSECTAN<1>(1, 1, 0, 0);
 
 public:
 
-	TrigometricFunction() = default;
+	MPSEC() = default;
 
-	explicit TrigometricFunction(const double& a, const double& b, const double& c, const double& d)
+	explicit MPSEC(const double& a, const double& b, const double& c, const double& d)
 		: m_a{ a }, m_b{ b }, m_c{ c }, m_d{ d }
 	{
-
+		AutoSetSECDerivativeFunction(*this);
 	}
+
+	void SetDerivativeFunction(const MPSECTAN<1>& InFunc);
+	MPSECTAN<1> GetDerivativeFunction() const;
+
 
 	inline tuple<double, double, double, double> GetABCD() const
 	{
@@ -532,7 +587,7 @@ public:
 		}
 
 		double First = (X + m_c) * m_b;
-		double InFunc = 1.0 / std::pow(std::cos(First), Power);
+		double InFunc = 1.0 / std::pow(std::cos(First), m_Power);
 		double StretchOrShrink = InFunc * m_a;
 		double VertShift = StretchOrShrink + m_d;
 
@@ -541,8 +596,10 @@ public:
 
 };
 
-template <>
-class TrigometricFunction<MPCSC, 1>
+void AutoSetCSCDerivativeFunction(MPCSC<1>& InFunc);
+
+template <int POWER>
+class MPCSC
 {
 private:
 	double m_a;
@@ -550,18 +607,24 @@ private:
 	double m_c;
 	double m_d;
 
-	//int m_Power = Power;
-	int Power = 1;
+	int m_Power = POWER;
+	
+	MPNEGCSCCOT<1> m_DerivativeFunction = MPNEGCSCCOT<1>(1, 1, 0, 0);
 
 public:
 
-	TrigometricFunction() = default;
+	MPCSC() = default;
 
-	explicit TrigometricFunction(const double& a, const double& b, const double& c, const double& d)
+	explicit MPCSC(const double& a, const double& b, const double& c, const double& d)
 		: m_a{ a }, m_b{ b }, m_c{ c }, m_d{ d }
 	{
 
+		AutoSetCSCDerivativeFunction(*this);
+
 	}
+
+	void SetDerivativeFunction(const MPNEGCSCCOT<1>& InFunc);
+	MPNEGCSCCOT<1> GetDerivativeFunction() const;
 
 	inline tuple<double, double, double, double> GetABCD() const
 	{
@@ -583,7 +646,7 @@ public:
 		}
 
 		double First = (X + m_c) * m_b;
-		double InFunc = 1.0 / std::pow(std::sin(First), Power);
+		double InFunc = 1.0 / std::pow(std::sin(First), m_Power);
 		double StretchOrShrink = InFunc * m_a;
 		double VertShift = StretchOrShrink + m_d;
 
@@ -592,8 +655,10 @@ public:
 
 };
 
-template <>
-class TrigometricFunction<MPNEGCSC, 1>
+
+
+template <int POWER>
+class MPNEGCSC
 {
 private:
 	double m_a;
@@ -602,13 +667,13 @@ private:
 	double m_d;
 
 	//int m_Power = Power;
-	int Power = 1;
+	int m_Power = POWER;
 
 public:
 
-	TrigometricFunction() = default;
+	MPNEGCSC() = default;
 
-	explicit TrigometricFunction(const double& a, const double& b, const double& c, const double& d)
+	explicit MPNEGCSC(const double& a, const double& b, const double& c, const double& d)
 		: m_a{ a }, m_b{ b }, m_c{ c }, m_d{ d }
 	{
 
@@ -635,7 +700,7 @@ public:
 		}
 
 		double First = (X + m_c) * m_b;
-		double InFunc = (1.0 / std::pow(std::sin(First), Power)) * (-1);
+		double InFunc = (1.0 / std::pow(std::sin(First), m_Power)) * (-1);
 		double StretchOrShrink = InFunc * m_a;
 		double VertShift = StretchOrShrink + m_d;
 
@@ -644,8 +709,8 @@ public:
 
 };
 
-template <int Power>
-class TrigometricFunction<MPSECTAN, Power>
+template <int POWER>
+class MPSECTAN
 {
 private:
 	double m_a;
@@ -653,13 +718,13 @@ private:
 	double m_c;
 	double m_d;
 
-	int m_Power = Power;
+	int m_Power = POWER;
 
 public:
 
-	TrigometricFunction() = default;
+	MPSECTAN() = default;
 
-	explicit TrigometricFunction(const double& a, const double& b, const double& c, const double& d)
+	explicit MPSECTAN(const double& a, const double& b, const double& c, const double& d)
 		: m_a{ a }, m_b{ b }, m_c{ c }, m_d{ d }
 	{
 
@@ -688,7 +753,7 @@ public:
 		double First = (X + m_c) * m_b;
 
 		// the denominator power in this function is twice the Power variable
-		double CosDenomPower = Power * 2;
+		double CosDenomPower = m_Power * 2;
 		double InFunc = (std::pow(std::sin(First), m_Power)) / (std::pow(std::cos(First), CosDenomPower));
 		double StretchOrShrink = InFunc * m_a;
 		double VertShift = StretchOrShrink + m_d;
@@ -698,8 +763,8 @@ public:
 
 };
 
-template <int Power>
-class TrigometricFunction<MPNEGCSCCOT, Power>
+template <int POWER>
+class MPNEGCSCCOT
 {
 private:
 	double m_a;
@@ -707,13 +772,13 @@ private:
 	double m_c;
 	double m_d;
 
-	int m_Power = Power;
+	int m_Power = POWER;
 
 public:
 
-	TrigometricFunction() = default;
+	MPNEGCSCCOT() = default;
 
-	explicit TrigometricFunction(const double& a, const double& b, const double& c, const double& d)
+	explicit MPNEGCSCCOT(const double& a, const double& b, const double& c, const double& d)
 		: m_a{ a }, m_b{ b }, m_c{ c }, m_d{ d }
 	{
 
@@ -742,9 +807,9 @@ public:
 		double First = (X + m_c) * m_b;
 
 		// the denominator power in this function is twice the Power variable
-		double SinDenomPower = Power * 2;
+		double SinDenomPower = m_Power * 2;
 		// Calculate it using the alternate form and then times it by negative one to get the result you need
-		double InFunc = ((std::pow(std::sin(First), m_Power)) / (std::pow(std::sin(First), SinDenomPower))) * (-1);
+		double InFunc = ((std::pow(std::cos(First), m_Power)) / (std::pow(std::sin(First), SinDenomPower))) * (-1);
 		double StretchOrShrink = InFunc * m_a;
 		double VertShift = StretchOrShrink + m_d;
 
@@ -1169,4 +1234,104 @@ inline double FindInverseHyperbolicCsc(const double& x)
 
 #endif
 
+template<int POWER>
+inline void MPTAN<POWER>::SetDerivativeFunction(const MPSEC<2>& InFunc)
+{
+	//if (Power != 1)
+	//{
+	//	throw std::logic_error("You have not setup taking derivatives with higher level sin function powers");
+	//}
+
+	m_DerivativeFunction = InFunc;
+
+}
+
+template<int POWER>
+inline MPSEC<2> MPTAN<POWER>::GetDerivativeFunction() const
+{
+	return m_DerivativeFunction;
+}
+
+template<int POWER>
+inline void MPCOT<POWER>::SetDerivativeFunction(const MPNEGCSC<2>& InFunc)
+{
+	//if (Power != 1)
+	//{
+	//	throw std::logic_error("You have not setup taking derivatives with higher level sin function powers");
+	//}
+
+	m_DerivativeFunction = InFunc;
+}
+
+template<int POWER>
+inline MPNEGCSC<2> MPCOT<POWER>::GetDerivativeFunction() const
+{
+	return m_DerivativeFunction;
+}
+
+template<int POWER>
+inline void MPSEC<POWER>::SetDerivativeFunction(const MPSECTAN<1>& InFunc)
+{
+	//if (Power != 1)
+	//{
+	//	throw std::logic_error("You have not setup taking derivatives with higher level sin function powers");
+	//}
+
+	m_DerivativeFunction = InFunc;
+}
+
+template<int POWER>
+inline MPSECTAN<1> MPSEC<POWER>::GetDerivativeFunction() const
+{
+	//if (Power != 1)
+	//{
+	//	throw std::logic_error("You have not setup taking derivatives with higher level sin function powers");
+	//}
+
+	return m_DerivativeFunction;
+}
+
+template<int POWER>
+inline void MPCSC<POWER>::SetDerivativeFunction(const MPNEGCSCCOT<1>& InFunc)
+{
+	//if (Power != 1)
+	//{
+	//	throw std::logic_error("You have not setup taking derivatives with higher level sin function powers");
+	//}
+
+	m_DerivativeFunction = InFunc;
+}
+
+template<int POWER>
+inline MPNEGCSCCOT<1> MPCSC<POWER>::GetDerivativeFunction() const
+{
+	//if (Power != 1)
+	//{
+	//	throw std::logic_error("You have not setup taking derivatives with higher level sin function powers");
+	//}
+
+	return m_DerivativeFunction;
+}
+
+template<int POWER>
+inline void MPSIN<POWER>::SetDerivativeFunction(const MPCOS<1>& InFunc)
+{
+	//if (Power != 1)
+	//{
+	//	throw std::logic_error("You have not setup taking derivatives with higher level sin function powers");
+	//}
+
+	m_DerivativeFunction = InFunc;
+}
+
+template<int POWER>
+inline MPCOS<1> MPSIN<POWER>::GetDerivativeFunction() const
+{
+	//if (Power != 1)
+	//{
+	//	throw std::logic_error("You have not setup taking derivatives with higher level sin function powers");
+	//}
+
+	return m_DerivativeFunction;
+}
 

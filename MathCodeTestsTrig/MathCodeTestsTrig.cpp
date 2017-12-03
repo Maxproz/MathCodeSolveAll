@@ -343,24 +343,50 @@ int main()
 		//UseMarginalProfitToEstimateSaleOfXthItem(101, ProfitFunction);
 		//cout << endl;
 		
-		TrigometricFunction<MPSIN,1> SinTestFunc1(1, 1, 0, 0);
-		
+		//MPSIN<1> SinTestFunc1(1, 1, 0, 0);
+		//cout << SinTestFunc1(2) << endl;
+
 		// Only <MPSIN, 1> stores the derivative at the moment
 		//TrigometricFunction<MPSIN, 2> SinTestFunc2(1, 1, 0, 0);
 
-
-		cout << SinTestFunc1(2) << endl;
+		
 		//cout << SinTestFunc2(2) << endl;
 
 		// TODO: Add the Derivative function setup to these classes so I can grab it like the Quadratic Function class
-		TrigometricFunction<MPCOS, 1> CosDerivTestFunc1(1, 1, 0, 0);
-		cout << CosDerivTestFunc1(2) << endl;;
+		//MPCOS<1> CosDerivTestFunc1 = SinTestFunc1.GetDerivativeFunction();
+		//cout << CosDerivTestFunc1(2) << endl;
+		//MPNEGSIN<1> TestFunc = CosDerivTestFunc1.GetDerivativeFunction();
+		//cout << TestFunc(2) << endl;
+
 
 		//SinTestFunc1(2)
 		//cout << endl;
 		//cout << CosDerivTestFunc1(2) << endl;
 
 		//TrigometricFunction<MPSIN, 2> SinTestFunc2(1, 1, 0, 0);
+
+
+		//MPCOT<1> COTTESTFUNC(1, 1, 0, 0);
+		//cout << COTTESTFUNC(2) << endl;
+		//
+		//MPNEGCSC<2> NEGCSCSQUAREDDERIVFUNC = COTTESTFUNC.GetDerivativeFunction();
+		//cout << NEGCSCSQUAREDDERIVFUNC(2) << endl;
+
+		//MPSEC<1> SECTESTFUNC(1, 1, 0, 0);
+		//cout << SECTESTFUNC(2) << endl;
+
+		//MPSECTAN<1> SECXTANXDERIVFUNC = SECTESTFUNC.GetDerivativeFunction();
+		//cout << SECXTANXDERIVFUNC(2) << endl;
+
+		//MPCSC<1> CSCTESTFUNC(1, 1, 0, 0);
+		//cout << CSCTESTFUNC(2) << endl;
+
+		//MPNEGCSCCOT<1> NEGCSCXCOTXDERIVFUNC = CSCTESTFUNC.GetDerivativeFunction();
+		//cout << NEGCSCXCOTXDERIVFUNC(2) << endl;
+
+		
+
+
 
 	}
 	catch (const std::exception& ex)

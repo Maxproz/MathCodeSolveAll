@@ -8,7 +8,7 @@
 using std::cout;
 using std::endl;
 
-void AutoSetDerivativeFunction(CubicFunction& InFunc)
+void AutoSetCubicDerivativeFunction(CubicFunction& InFunc)
 {
 	//auto Vars = InFunc.GetABCD();
 	//auto a = std::get<0>(Vars);

@@ -1,10 +1,58 @@
 #include "TrigonometricFunction.h"
 
+#include "Derivative.h"
+
+
+void AutoSetCOSDerivativeFunction(MPCOS<1>& InFunc)
+{
+	Derivative<MPCOS<1>, MPNEGSIN<1>> Derivative(InFunc);
+	InFunc.SetDerivativeFunction(Derivative.GetDerivativeFunction());
+}
+
+void AutoSetSinDerivativeFunction(MPSIN<1>& InFunc)
+{
+	//if (Power != 1)
+	//{
+	//	throw std::logic_error("You have not setup taking derivatives with higher level sin function powers");
+	//}
+
+	Derivative<MPSIN<1>, MPCOS<1>> Derivative(InFunc);
+	InFunc.SetDerivativeFunction(Derivative.GetDerivativeFunction());
+}
+
+void AutoSetTANDerivativeFunction(MPTAN<1>& InFunc)
+{
+	Derivative<MPTAN<1>, MPSEC<2> > Derivative(InFunc);
+	InFunc.SetDerivativeFunction(Derivative.GetDerivativeFunction());
+}
+
+void AutoSetCOTDerivativeFunction(MPCOT<1>& InFunc)
+{
+	Derivative<MPCOT<1>, MPNEGCSC<2>> Derivative(InFunc);
+	InFunc.SetDerivativeFunction(Derivative.GetDerivativeFunction());
+}
+
+void AutoSetSECDerivativeFunction(MPSEC<1>& InFunc)
+{
+	Derivative<MPSEC<1>, MPSECTAN<1>> Derivative(InFunc);
+	InFunc.SetDerivativeFunction(Derivative.GetDerivativeFunction());
+}
+
+void AutoSetSECDerivativeFunction(MPSEC<2>& InFunc)
+{
+	//Derivative<MPSEC<2>, TODO: Find out and finish function > Derivative(InFunc);
+	//InFunc.SetDerivativeFunction(Derivative.GetDerivativeFunction());
 
 
 
+}
 
 
+void AutoSetCSCDerivativeFunction(MPCSC<1>& InFunc)
+{
+	Derivative<MPCSC<1>, MPNEGCSCCOT<1>> Derivative(InFunc);
+	InFunc.SetDerivativeFunction(Derivative.GetDerivativeFunction());
+}
 
 
 
@@ -95,13 +143,3 @@
 //	return SinOfAngle / CosOfAngle;
 //}
 
-void AutoSetDerivativeFunction(TrigometricFunction<MPSIN, 1>& InFunc)
-{
-	//if (Power != 1)
-	//{
-	//	throw std::logic_error("You have not setup taking derivatives with higher level sin function powers");
-	//}
-
-	Derivative<TrigometricFunction<MPSIN, 1>, TrigometricFunction<MPCOS, 1>> Derivative(InFunc);
-	InFunc.SetDerivativeFunction(Derivative.GetDerivativeFunction());
-}

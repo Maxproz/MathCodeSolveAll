@@ -45,7 +45,7 @@ using std::pow;
 
 class CubicFunction;
 
-void AutoSetDerivativeFunction(CubicFunction& InFunc);
+void AutoSetCubicDerivativeFunction(CubicFunction& InFunc);
 
 class CubicFunction : public PolynomialFunction
 {
@@ -112,7 +112,7 @@ public:
 
 
 		//CubicFunction CopyHelp(m_a, m_b, m_c, m_d);
-		AutoSetDerivativeFunction(*this);
+		AutoSetCubicDerivativeFunction(*this);
 		// Here I will Use the Derivative function to automatically set the zeros 
 		AutoSetHorizontalTangetLines();
 

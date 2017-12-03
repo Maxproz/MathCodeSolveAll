@@ -40,17 +40,7 @@
 // TODO: Figure out a way to create classes for functions that are the result of calculations between polynomials and trigometric functions
 // Maybe make a function that first prints the variables out and then work from there.
 
-//template class TrigometricFunction<MPSIN, 1>; // Explicitly instantiate template Array<int>
-//template class TrigometricFunction<MPCOS, 1>; // Explicitly instantiate template Array<double>
-//template class TrigometricFunction<MPTAN, 1>; // Explicitly instantiate template Array<int>
-//template class TrigometricFunction<MPCOT, 1>; // Explicitly instantiate template Array<double>
-//template class TrigometricFunction<MPSEC, 1>; // Explicitly instantiate template Array<int>
-//template class TrigometricFunction<MPCSC, 1>; // Explicitly instantiate template Array<double>
-//
-//template class TrigometricFunction<MPNEGSIN, 1>; // Explicitly instantiate template Array<int>
-//template class TrigometricFunction<MPNEGCSC, 2>; // Explicitly instantiate template Array<double>
-//template class TrigometricFunction<MPSECTAN, 1>; // Explicitly instantiate template Array<int>
-//template class TrigometricFunction<MPNEGCSCCOT, 1>; // Explicitly instantiate template Array<double>
+
 
 template <typename InFunction, typename OutFunction>
 class Derivative
@@ -77,7 +67,7 @@ private:
 	//TrigometricFunction<MPNEGCSCCOT, 1> EvaluateFunctionDerivative(const TrigometricFunction<MPCSC, 1>& InFunction);
 
 	//template<TrigometricFunction<MPSIN, 1>, TrigometricFunction<MPCOS, 1>>
-	 TrigometricFunction<MPCOS, 1> EvaluateFunctionDerivative(const TrigometricFunction<MPSIN, 1>& InFunction)
+	 inline MPCOS<1> EvaluateFunctionDerivative(const MPSIN<1>& InFunction)
 	{
 		// TODO: which variables do I grab for these transfers? most online examples only show generic function
 		auto AllVars = InFunction.GetABCD();
@@ -91,13 +81,13 @@ private:
 		c = c;
 		d = 0;
 
-		TrigometricFunction<MPCOS, 1> OutFunc(a, b, c, d);
+		MPCOS<1> OutFunc(a, b, c, d);
 
 		return OutFunc;
 	}
 
 	//template<TrigometricFunction<MPCOS, 1>, TrigometricFunction<MPNEGSIN, 1>>
-	TrigometricFunction<MPNEGSIN, 1> EvaluateFunctionDerivative(const TrigometricFunction<MPCOS, 1>& InFunction)
+	inline MPNEGSIN<1> EvaluateFunctionDerivative(const MPCOS<1>& InFunction)
 	{
 		// TODO: which variables do I grab for these transfers? most online examples only show generic function
 		auto AllVars = InFunction.GetABCD();
@@ -112,13 +102,13 @@ private:
 		c = c;
 		d = 0;
 
-		TrigometricFunction<MPNEGSIN, 1> OutFunc(a, b, c, d);
+		MPNEGSIN<1> OutFunc(a, b, c, d);
 
 		return OutFunc;
 	}
 
 	//template<TrigometricFunction<MPTAN, 1>, TrigometricFunction<MPSEC, 2>>
-	 TrigometricFunction<MPSEC, 2> EvaluateFunctionDerivative(const TrigometricFunction<MPTAN, 1>& InFunction)
+	inline MPSEC<2> EvaluateFunctionDerivative(const MPTAN<1>& InFunction)
 	{
 		auto AllVars = InFunction.GetABCD();
 		double a = std::get<0>(AllVars);
@@ -132,11 +122,13 @@ private:
 		c = c;
 		d = 0;
 
-		TrigometricFunction<MPSEC, 2> OutFunc(a, b, c, d);
+		MPSEC<2> OutFunc(a, b, c, d);
+
+		return OutFunc;
 	}
 
 	//template<TrigometricFunction<MPCOT, 1>, TrigometricFunction<MPNEGCSC, 2>>
-	 TrigometricFunction<MPNEGCSC, 2> EvaluateFunctionDerivative(const TrigometricFunction<MPCOT, 1>& InFunction)
+	inline MPNEGCSC<2> EvaluateFunctionDerivative(const MPCOT<1>& InFunction)
 	{
 		auto AllVars = InFunction.GetABCD();
 		double a = std::get<0>(AllVars);
@@ -150,11 +142,13 @@ private:
 		c = c;
 		d = 0;
 
-		TrigometricFunction<MPNEGCSC, 2> OutFunc(a, b, c, d);
+		MPNEGCSC<2> OutFunc(a, b, c, d);
+
+		return OutFunc;
 	}
 
-	//template<TrigometricFunction<MPSEC, 1>, TrigometricFunction<MPSECTAN, 1>>
-	 TrigometricFunction<MPSECTAN, 1> EvaluateFunctionDerivative(const TrigometricFunction<MPSEC, 1>& InFunction)
+	////template<TrigometricFunction<MPSEC, 1>, TrigometricFunction<MPSECTAN, 1>>
+	inline MPSECTAN<1> EvaluateFunctionDerivative(const MPSEC<1>& InFunction)
 	{
 		auto AllVars = InFunction.GetABCD();
 		double a = std::get<0>(AllVars);
@@ -168,11 +162,13 @@ private:
 		c = c;
 		d = 0;
 
-		TrigometricFunction<MPSECTAN, 1> OutFunc(a, b, c, d);
+		MPSECTAN<1> OutFunc(a, b, c, d);
+
+		return OutFunc;
 	}
 
-	//template<TrigometricFunction<MPCSC, 1>, TrigometricFunction<MPNEGCSCCOT, 1>>
-	 TrigometricFunction<MPNEGCSCCOT, 1> EvaluateFunctionDerivative(const TrigometricFunction<MPCSC, 1>& InFunction)
+	////template<TrigometricFunction<MPCSC, 1>, TrigometricFunction<MPNEGCSCCOT, 1>>
+	inline MPNEGCSCCOT<1> EvaluateFunctionDerivative(const MPCSC<1>& InFunction)
 	{
 		auto AllVars = InFunction.GetABCD();
 		double a = std::get<0>(AllVars);
@@ -186,8 +182,9 @@ private:
 		c = c;
 		d = 0;
 
-		TrigometricFunction<MPNEGCSCCOT, 1> OutFunc(a, b, c, d);
+		MPNEGCSCCOT<1> OutFunc(a, b, c, d);
 
+		return OutFunc;
 	}
 
 	//template <int HighestExponent, int NumberOfTerms>
@@ -263,12 +260,12 @@ public:
 
 	explicit Derivative() = default;
 
-	explicit Derivative(InFunction& InFunc)
-	{
-		m_InFunction = std::move(InFunc);
+	//explicit Derivative(InFunction& InFunc)
+	//{
+	//	m_InFunction = std::move(InFunc);
 
-		m_OutFunction = EvaluateFunctionDerivative(InFunc);
-	}
+	//	m_OutFunction = EvaluateFunctionDerivative(InFunc);
+	//}
 
 	explicit Derivative(const InFunction& InFunc)
 		: m_InFunction(InFunc)
