@@ -12,3 +12,5 @@ TranscendentalFunction::~TranscendentalFunction()
 {
 
 }
+
+

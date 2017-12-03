@@ -5,15 +5,23 @@
 #define DERIVATIVE_H
 
 
-#include "Limit.h"
+
 #include "LinearFunction.h"
 #include "QuadraticFunction.h"
-#include "ConstantFunction.h"
-#include "PowerFunction.h"
-#include "QuarticFunction.h"
 #include "RationalFunction.h"
+#include "QuarticFunction.h"
+
+
+#include "ConstantFunction.h"
+
+#include "PowerFunction.h"
+
 #include "CubicFunction.h"
-//#include "RootFunction.h"
+
+
+#include "TrigonometricFunction.h"
+
+//class TrigometricFunction;
 
 // NOTES:
 // Let f(x) be a function and "a" be in its domain. If f(x) is differentiable at a, then f is continuous at a.
@@ -29,7 +37,20 @@
 // TODO: Figure out how I will handle derivatives for like secx = secxtanx
 // TODO: Setup a function for the constant multiple rule 
 // TODO: my solution for the sum and muiltiple rule seems garbage at the moment doesn't it? not sure to tired.
+// TODO: Figure out a way to create classes for functions that are the result of calculations between polynomials and trigometric functions
+// Maybe make a function that first prints the variables out and then work from there.
 
+//template class TrigometricFunction<MPSIN, 1>; // Explicitly instantiate template Array<int>
+//template class TrigometricFunction<MPCOS, 1>; // Explicitly instantiate template Array<double>
+//template class TrigometricFunction<MPTAN, 1>; // Explicitly instantiate template Array<int>
+//template class TrigometricFunction<MPCOT, 1>; // Explicitly instantiate template Array<double>
+//template class TrigometricFunction<MPSEC, 1>; // Explicitly instantiate template Array<int>
+//template class TrigometricFunction<MPCSC, 1>; // Explicitly instantiate template Array<double>
+//
+//template class TrigometricFunction<MPNEGSIN, 1>; // Explicitly instantiate template Array<int>
+//template class TrigometricFunction<MPNEGCSC, 2>; // Explicitly instantiate template Array<double>
+//template class TrigometricFunction<MPSECTAN, 1>; // Explicitly instantiate template Array<int>
+//template class TrigometricFunction<MPNEGCSCCOT, 1>; // Explicitly instantiate template Array<double>
 
 template <typename InFunction, typename OutFunction>
 class Derivative
@@ -45,8 +66,129 @@ private:
 	LinearFunction EvaluateFunctionDerivative(const QuadraticFunction& InFunction);
 	ConstantFunction EvaluateFunctionDerivative(const LinearFunction& InFunction);
 	QuadraticFunction EvaluateFunctionDerivative(const CubicFunction& InFunction);
-	TrigometricFunction<MPCOS> EvaluateFunctionDerivative(const TrigometricFunction<MPSIN>& InFunction);
 	RootFunction<-2> EvaluateFunctionDerivative(const RootFunction<2>& InFunction);
+	
+	//
+	//TrigometricFunction<MPCOS, 1> EvaluateFunctionDerivative(const TrigometricFunction<MPSIN, 1>& InFunction);
+	//TrigometricFunction<MPNEGSIN, 1> EvaluateFunctionDerivative(const TrigometricFunction<MPCOS, 1>& InFunction);
+	//TrigometricFunction<MPSEC, 2> EvaluateFunctionDerivative(const TrigometricFunction<MPTAN, 1>& InFunction);
+	//TrigometricFunction<MPNEGCSC, 2> EvaluateFunctionDerivative(const TrigometricFunction<MPCOT, 1>& InFunction);
+	//TrigometricFunction<MPSECTAN, 1> EvaluateFunctionDerivative(const TrigometricFunction<MPSEC, 1>& InFunction);
+	//TrigometricFunction<MPNEGCSCCOT, 1> EvaluateFunctionDerivative(const TrigometricFunction<MPCSC, 1>& InFunction);
+
+	//template<TrigometricFunction<MPSIN, 1>, TrigometricFunction<MPCOS, 1>>
+	 TrigometricFunction<MPCOS, 1> EvaluateFunctionDerivative(const TrigometricFunction<MPSIN, 1>& InFunction)
+	{
+		// TODO: which variables do I grab for these transfers? most online examples only show generic function
+		auto AllVars = InFunction.GetABCD();
+		double a = std::get<0>(AllVars);
+		double b = std::get<1>(AllVars);
+		double c = std::get<2>(AllVars);
+		double d = std::get<3>(AllVars);
+
+		a = a * b;
+		b = b;
+		c = c;
+		d = 0;
+
+		TrigometricFunction<MPCOS, 1> OutFunc(a, b, c, d);
+
+		return OutFunc;
+	}
+
+	//template<TrigometricFunction<MPCOS, 1>, TrigometricFunction<MPNEGSIN, 1>>
+	TrigometricFunction<MPNEGSIN, 1> EvaluateFunctionDerivative(const TrigometricFunction<MPCOS, 1>& InFunction)
+	{
+		// TODO: which variables do I grab for these transfers? most online examples only show generic function
+		auto AllVars = InFunction.GetABCD();
+		double a = std::get<0>(AllVars);
+		double b = std::get<1>(AllVars);
+		double c = std::get<2>(AllVars);
+		double d = std::get<3>(AllVars);
+
+
+		a = a * b;
+		b = b;
+		c = c;
+		d = 0;
+
+		TrigometricFunction<MPNEGSIN, 1> OutFunc(a, b, c, d);
+
+		return OutFunc;
+	}
+
+	//template<TrigometricFunction<MPTAN, 1>, TrigometricFunction<MPSEC, 2>>
+	 TrigometricFunction<MPSEC, 2> EvaluateFunctionDerivative(const TrigometricFunction<MPTAN, 1>& InFunction)
+	{
+		auto AllVars = InFunction.GetABCD();
+		double a = std::get<0>(AllVars);
+		double b = std::get<1>(AllVars);
+		double c = std::get<2>(AllVars);
+		double d = std::get<3>(AllVars);
+
+
+		a = a * b;
+		b = b;
+		c = c;
+		d = 0;
+
+		TrigometricFunction<MPSEC, 2> OutFunc(a, b, c, d);
+	}
+
+	//template<TrigometricFunction<MPCOT, 1>, TrigometricFunction<MPNEGCSC, 2>>
+	 TrigometricFunction<MPNEGCSC, 2> EvaluateFunctionDerivative(const TrigometricFunction<MPCOT, 1>& InFunction)
+	{
+		auto AllVars = InFunction.GetABCD();
+		double a = std::get<0>(AllVars);
+		double b = std::get<1>(AllVars);
+		double c = std::get<2>(AllVars);
+		double d = std::get<3>(AllVars);
+
+
+		a = a * b;
+		b = b;
+		c = c;
+		d = 0;
+
+		TrigometricFunction<MPNEGCSC, 2> OutFunc(a, b, c, d);
+	}
+
+	//template<TrigometricFunction<MPSEC, 1>, TrigometricFunction<MPSECTAN, 1>>
+	 TrigometricFunction<MPSECTAN, 1> EvaluateFunctionDerivative(const TrigometricFunction<MPSEC, 1>& InFunction)
+	{
+		auto AllVars = InFunction.GetABCD();
+		double a = std::get<0>(AllVars);
+		double b = std::get<1>(AllVars);
+		double c = std::get<2>(AllVars);
+		double d = std::get<3>(AllVars);
+
+
+		a = a * b;
+		b = b;
+		c = c;
+		d = 0;
+
+		TrigometricFunction<MPSECTAN, 1> OutFunc(a, b, c, d);
+	}
+
+	//template<TrigometricFunction<MPCSC, 1>, TrigometricFunction<MPNEGCSCCOT, 1>>
+	 TrigometricFunction<MPNEGCSCCOT, 1> EvaluateFunctionDerivative(const TrigometricFunction<MPCSC, 1>& InFunction)
+	{
+		auto AllVars = InFunction.GetABCD();
+		double a = std::get<0>(AllVars);
+		double b = std::get<1>(AllVars);
+		double c = std::get<2>(AllVars);
+		double d = std::get<3>(AllVars);
+
+
+		a = a * b;
+		b = b;
+		c = c;
+		d = 0;
+
+		TrigometricFunction<MPNEGCSCCOT, 1> OutFunc(a, b, c, d);
+
+	}
 
 	//template <int HighestExponent, int NumberOfTerms>
 	//inline PowerFunction EvaluateFunctionDerivative(PowerFunction<HighestExponent>& InFunction)
@@ -121,12 +263,12 @@ public:
 
 	explicit Derivative() = default;
 
-	//explicit Derivative(InFunction& InFunc)
-	//{
-	//	m_InFunction = std::move(InFunc);
+	explicit Derivative(InFunction& InFunc)
+	{
+		m_InFunction = std::move(InFunc);
 
-	//	m_OutFunction = EvaluateFunctionDerivative(InFunc);
-	//}
+		m_OutFunction = EvaluateFunctionDerivative(InFunc);
+	}
 
 	explicit Derivative(const InFunction& InFunc)
 		: m_InFunction(InFunc)
@@ -156,72 +298,12 @@ public:
 
 
 	// public function that can be called, assumes that everything went ok in the constructors with assigning the m_OutFunction template
-	inline double EstimateDerivative(const int& x)
-	{
-		std::vector<std::pair<double, double>> PosDirVec;
-		std::vector<std::pair<double, double>> NegDirVec;
-
-		RunFunctionFromPosAndNegDirections(PosDirVec, NegDirVec, std::move(m_OutFunction)/*(Numerator, Denominator)*/, x);
-
-		std::cout << "Evaluating Limit: Please Wait...\n\n";
-
-		std::cout << "From Positive Direction\n";
-		for (auto & num : PosDirVec)
-		{
-			std::cout << std::setprecision(std::numeric_limits<double>::digits10 + 1)
-				<< std::setw(7) << num.first << " " << num.second << std::endl;
-		}
-
-		std::cout << std::endl;
-
-		std::cout << "From Negative Direction\n";
-		for (auto & num : NegDirVec)
-		{
-			std::cout << std::setprecision(std::numeric_limits<double>::digits10 + 1)
-				<< std::setw(7) << num.first << " " << num.second << std::endl;
-		}
-
-		std::cout << std::endl;
-
-		Limit<OutFunction> LocalLimit(m_OutFunction, x);
-		return LocalLimit.GetLimitResult();
-
-	}
+	double EstimateDerivative(const int& x);
 
 	// Overloaded because I needed a double to check exact prices with decimals during rate of change production tests 
 	// see CalculusFunction header -(ShouldProductionBeIncreasedUsingRateOfChange(const QuadraticFunction& Profit, const double& PriceOfItem)
 	// public function that can be called, assumes that everything went ok in the constructors with assigning the m_OutFunction template
-	inline double EstimateDerivative(const double& x)
-	{
-		std::vector<std::pair<double, double>> PosDirVec;
-		std::vector<std::pair<double, double>> NegDirVec;
-
-		RunFunctionFromPosAndNegDirections(PosDirVec, NegDirVec, std::move(m_OutFunction)/*(Numerator, Denominator)*/, x);
-
-		std::cout << "Evaluating Limit: Please Wait...\n\n";
-
-		std::cout << "From Positive Direction\n";
-		for (auto & num : PosDirVec)
-		{
-			std::cout << std::setprecision(std::numeric_limits<double>::digits10 + 1)
-				<< std::setw(7) << num.first << " " << num.second << std::endl;
-		}
-
-		std::cout << std::endl;
-
-		std::cout << "From Negative Direction\n";
-		for (auto & num : NegDirVec)
-		{
-			std::cout << std::setprecision(std::numeric_limits<double>::digits10 + 1)
-				<< std::setw(7) << num.first << " " << num.second << std::endl;
-		}
-
-		std::cout << std::endl;
-
-		Limit<OutFunction> LocalLimit(m_OutFunction, x);
-		return LocalLimit.GetLimitResult();
-
-	}
+	double EstimateDerivative(const double& x);
 
 };
 

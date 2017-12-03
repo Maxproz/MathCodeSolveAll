@@ -7,9 +7,12 @@
 #include "TranscendentalFunction.h"
 #include "Circle.h"
 
+#include "Derivative.h"
+
 #include <vector>
 #include <utility>
 #include <tuple>
+#include <cmath>
 
 using std::vector;
 using std::pair;
@@ -62,36 +65,60 @@ tan(theta) = y/x
 
 
 // Trigonometric functions are continuous over their entire domains.
-
-class MPSIN
-{
-	
-};
-
-class MPCOS
+class TrigometricFunc
 {
 
 };
 
-class MPTAN
-{
 
-};
+class MPSIN : public TrigometricFunc {};
+class MPCOS : public TrigometricFunc {};
+class MPTAN : public TrigometricFunc {};
+class MPCOT : public TrigometricFunc {};
+class MPSEC : public TrigometricFunc {};
+class MPCSC : public TrigometricFunc {};
+
+// Might change how I do this later but adding classes that you get from deriviatives that are multiple trig functions
+// example f(x) = sec(x)tan(x)
+class MPSECTAN : public TrigometricFunc {};
+class MPNEGCSCCOT : public TrigometricFunc {};
+
+// Added the classes below to track the negative functions you get from derivatives
+class MPNEGSIN : public TrigometricFunc {};
+class MPNEGCOS : public TrigometricFunc {};
+class MPNEGCSC : public TrigometricFunc {};
+
+
 
 // TODO: Still got to add necessary checks/functionality for how to handle the input when a/b/c/d variables are not all filled out
+// TODO: Add this functionality listed in the following 2 lines so its tracked in the sin/cos functions
+// f(x) = sinx is increasing, f′(x) = cosx > 0 
+// f(x) = sinx is decreasing, f′(x) = cosx < 0.
+// TODO: Add this tracking in variables in sin function listed in the 2 lines below.
+// Notice that at the points where f(x) = sinx has a horizontal tangent, 
+// its derivative f′(x) = cosx takes on the value zero. 
+// TODO IMPORTANT: How I setup the trig functions to handle NEGCOS NEGSIN is going to cause me a lot of confusion later on if I don't handle
+// how they will work with the current m_a variable and how the signs of them will interact,
+// as of right now I am just using a hardcoded constant in the operator() function to represent it
+// UPDATE: after looking at it again i am pretty sure it won't interact with the A variable so I should be ok to move forward,
+// and do additional testing as I go on
+
+// TODO: Make PrintFunction()'s for these classes to make them easier to debug.
+// TODO: Figure out a way to make reading the type of function into string from the MPTrigFunction classes easier.
 
 
 // NOTE: These functions currently expect the full form to be imputed into the function... all 5 variables + sin/cos/tan..
-template <typename T>
+template <typename TrigFunc, int Power>
 class TrigometricFunction
 {
 public:
-	
+
+
 
 };
 
-template <>
-class TrigometricFunction<MPSIN>
+template<>
+class TrigometricFunction<MPCOS, 1>
 {
 private:
 	double m_a;
@@ -99,70 +126,17 @@ private:
 	double m_c;
 	double m_d;
 
-public:
-
-
-	TrigometricFunction() = default;
-
-	explicit TrigometricFunction(const double& a, const double& b, const double& c, const double& d)
-		: m_a{ a }, m_b{ b }, m_c{ c }, m_d{ d }
-	{
-
-	}
-
-	inline tuple<double, double, double, double> GetABCD() const
-	{
-		return tuple<double, double, double, double>(m_a, m_b, m_c, m_d);
-	}
-
-	//double operator()(const double& x)
-	//{
-	//	double First = (x + m_c) * m_b;
-	//	double InFunc = std::sin(First);
-	//	double StretchOrShrink = InFunc * m_a;
-	//	double VertShift = StretchOrShrink + m_d;
-
-	//	return VertShift;
-	//}
-
-	// try this out for a bit? until I better understand the inverse crap
-	double operator()(const double& x, const bool& bIsInverseFunction = false)
-	{
-		double X = x;
-
-		if (bIsInverseFunction == true)
-		{
-			 X = std::pow(x, -1);
-		}
-		else
-		{
-			
-		}
-
-		double First = (X + m_c) * m_b;
-		double InFunc = std::sin(First);
-		double StretchOrShrink = InFunc * m_a;
-		double VertShift = StretchOrShrink + m_d;
-
-		return VertShift;
-	}
-
-};
-
-template <>
-class TrigometricFunction<MPCOS>
-{
-private:
-	double m_a;
-	double m_b;
-	double m_c;
-	double m_d;
+	//int m_Power = Power;
+	int Power = 1;
 
 public:
 
-	TrigometricFunction() = default;
+	 TrigometricFunction() = default;
+	TrigometricFunction(const TrigometricFunction<MPCOS, 1>&) = default;
+	//explicit TrigometricFunction(TrigometricFunction<MPCOS, 1>&) = default;
+	TrigometricFunction<MPCOS,1>& operator=(const TrigometricFunction<MPCOS,1>&) = default;
 
-	explicit TrigometricFunction(const double& a, const double& b, const double& c, const double& d)
+	 TrigometricFunction(const double& a, const double& b, const double& c, const double& d)
 		: m_a{ a }, m_b{ b }, m_c{ c }, m_d{ d }
 	{
 
@@ -198,8 +172,117 @@ public:
 };
 
 
+void AutoSetDerivativeFunction(TrigometricFunction<MPSIN, 1>& InFunc);
+
+
+// Now accepts functions of the form sin^2(x)
+// If a power is not specified on construction it's assumed to be in the form f(x) = sin(x) with also equal to - sin^1(x)
+// https://calculus.subwiki.org/wiki/Sine_function
 template <>
-class TrigometricFunction<MPTAN>
+class TrigometricFunction<MPSIN, 1>
+{
+private:
+	double m_a;
+	double m_b;
+	double m_c;
+	double m_d;
+	
+	//int m_Power = Power;
+	int Power = 1;
+	
+	// NOTE IMPORTANT: Need to think of a way to get the derivative from higher ordered Trig functions using the Power Variable
+	TrigometricFunction<MPCOS, 1> m_DerivativeFunction = TrigometricFunction<MPCOS, 1>(1,1,0,0);
+
+
+public:
+	
+	// NOTE IMPORTANT: Need to think of a way to get the derivative from higher ordered Trig functions using the Power Variable
+
+
+
+
+	 TrigometricFunction() = default;
+
+	TrigometricFunction(const TrigometricFunction<MPSIN, 1>&) = default;
+
+	 TrigometricFunction(const double& a, const double& b, const double& c, const double& d)
+		: m_a{ a }, m_b{ b }, m_c{ c }, m_d{ d }
+	{
+
+		AutoSetDerivativeFunction(*this);
+	}
+
+	inline void SetDerivativeFunction(const TrigometricFunction<MPCOS, 1>& InFunc)
+	{
+		//if (Power != 1)
+		//{
+		//	throw std::logic_error("You have not setup taking derivatives with higher level sin function powers");
+		//}
+
+		m_DerivativeFunction = InFunc;
+	}
+
+
+
+	inline TrigometricFunction<MPCOS, 1> GetDerivativeFunction() const
+	{
+		//if (Power != 1)
+		//{
+		//	throw std::logic_error("You have not setup taking derivatives with higher level sin function powers");
+		//}
+
+		return m_DerivativeFunction;
+	}
+
+
+
+	inline tuple<double, double, double, double> GetABCD() const
+	{
+		return tuple<double, double, double, double>(m_a, m_b, m_c, m_d);
+	}
+
+	
+
+	//double operator()(const double& x)
+	//{
+	//	double First = (x + m_c) * m_b;
+	//	double InFunc = std::sin(First);
+	//	double StretchOrShrink = InFunc * m_a;
+	//	double VertShift = StretchOrShrink + m_d;
+
+	//	return VertShift;
+	//}
+
+	// try this out for a bit? until I better understand the inverse crap
+	double operator()(const double& x, const bool& bIsInverseFunction = false)
+	{
+		double X = x;
+
+		if (bIsInverseFunction == true)
+		{
+			 X = std::pow(x, (-1));
+		}
+		else
+		{
+			
+		}
+
+		double First = (X + m_c) * m_b;
+		double InFunc = std::pow(std::sin(First), Power);
+		double StretchOrShrink = InFunc * m_a;
+		double VertShift = StretchOrShrink + m_d;
+
+		return VertShift;
+	}
+
+};
+
+
+
+
+
+template <>
+class TrigometricFunction<MPNEGSIN, 1>
 {
 private:
 	double m_a;
@@ -207,6 +290,116 @@ private:
 	double m_c;
 	double m_d;
 
+	//int m_Power = Power;
+	int Power = 1;
+
+public:
+
+
+
+	TrigometricFunction() = default;
+	TrigometricFunction(const TrigometricFunction&) = default;
+
+	explicit TrigometricFunction(const double& a, const double& b, const double& c, const double& d)
+		: m_a{ a }, m_b{ b }, m_c{ c }, m_d{ d }
+	{
+
+	}
+
+	inline tuple<double, double, double, double> GetABCD() const
+	{
+		return tuple<double, double, double, double>(m_a, m_b, m_c, m_d);
+	}
+
+
+	// try this out for a bit? until I better understand the inverse crap
+	double operator()(const double& x, const bool& bIsInverseFunction = false)
+	{
+		double X = x;
+
+		if (bIsInverseFunction == true)
+		{
+			X = std::pow(x, (-1));
+		}
+		else
+		{
+
+		}
+
+		double First = (X + m_c) * m_b;
+		double InFunc = (std::pow(std::sin(First), Power)) * (-1);
+		double StretchOrShrink = InFunc * m_a;
+		double VertShift = StretchOrShrink + m_d;
+
+		return VertShift;
+	}
+
+};
+//
+
+template <>
+class TrigometricFunction<MPNEGCOS, 1>
+{
+private:
+	double m_a;
+	double m_b;
+	double m_c;
+	double m_d;
+
+	//int m_Power = Power;
+	int Power = 1;
+
+public:
+
+	TrigometricFunction() = default;
+
+	explicit TrigometricFunction(const double& a, const double& b, const double& c, const double& d)
+		: m_a{ a }, m_b{ b }, m_c{ c }, m_d{ d }
+	{
+
+	}
+
+	inline tuple<double, double, double, double> GetABCD() const
+	{
+		return tuple<double, double, double, double>(m_a, m_b, m_c, m_d);
+	}
+
+	// try this out for a bit? until I better understand the inverse crap
+	double operator()(const double& x, const bool& bIsInverseFunction = false)
+	{
+		double X = x;
+
+		if (bIsInverseFunction == true)
+		{
+			X = std::pow(x, -1);
+		}
+		else
+		{
+
+		}
+
+		double First = (X + m_c) * m_b;
+		double InFunc = (std::pow(std::cos(First), Power)) * (-1);
+		double StretchOrShrink = InFunc * m_a;
+		double VertShift = StretchOrShrink + m_d;
+
+		return VertShift;
+	}
+
+};
+
+template <>
+class TrigometricFunction<MPTAN, 1>
+{
+private:
+	double m_a;
+	double m_b;
+	double m_c;
+	double m_d;
+	
+	//int m_Power = Power;
+	int Power = 1;
+		
 public:
 
 	TrigometricFunction() = default;
@@ -245,6 +438,321 @@ public:
 	}
 
 };
+
+template <>
+class TrigometricFunction<MPCOT, 1>
+{
+private:
+	double m_a;
+	double m_b;
+	double m_c;
+	double m_d;
+
+	//int m_Power = Power;
+	int Power = 1;
+
+public:
+
+	TrigometricFunction() = default;
+
+	explicit TrigometricFunction(const double& a, const double& b, const double& c, const double& d)
+		: m_a{ a }, m_b{ b }, m_c{ c }, m_d{ d }
+	{
+
+	}
+
+	inline tuple<double, double, double, double> GetABCD() const
+	{
+		return tuple<double, double, double, double>(m_a, m_b, m_c, m_d);
+	}
+
+	// try this out for a bit? until I better understand the inverse crap
+	double operator()(const double& x, const bool& bIsInverseFunction = false)
+	{
+		double X = x;
+
+		if (bIsInverseFunction == true)
+		{
+			X = std::pow(x, -1);
+		}
+		else
+		{
+
+		}
+
+		double First = (X + m_c) * m_b;
+		double InFunc = (std::pow(std::cos(First), Power) / std::pow(std::sin(First), Power));
+		double StretchOrShrink = InFunc * m_a;
+		double VertShift = StretchOrShrink + m_d;
+
+		return VertShift;
+	}
+
+};
+
+template <>
+class TrigometricFunction<MPSEC, 1>
+{
+private:
+	double m_a;
+	double m_b;
+	double m_c;
+	double m_d;
+
+	//int m_Power = Power;
+	int Power = 1;
+
+public:
+
+	TrigometricFunction() = default;
+
+	explicit TrigometricFunction(const double& a, const double& b, const double& c, const double& d)
+		: m_a{ a }, m_b{ b }, m_c{ c }, m_d{ d }
+	{
+
+	}
+
+	inline tuple<double, double, double, double> GetABCD() const
+	{
+		return tuple<double, double, double, double>(m_a, m_b, m_c, m_d);
+	}
+
+	// try this out for a bit? until I better understand the inverse crap
+	double operator()(const double& x, const bool& bIsInverseFunction = false)
+	{
+		double X = x;
+
+		if (bIsInverseFunction == true)
+		{
+			X = std::pow(x, -1);
+		}
+		else
+		{
+
+		}
+
+		double First = (X + m_c) * m_b;
+		double InFunc = 1.0 / std::pow(std::cos(First), Power);
+		double StretchOrShrink = InFunc * m_a;
+		double VertShift = StretchOrShrink + m_d;
+
+		return VertShift;
+	}
+
+};
+
+template <>
+class TrigometricFunction<MPCSC, 1>
+{
+private:
+	double m_a;
+	double m_b;
+	double m_c;
+	double m_d;
+
+	//int m_Power = Power;
+	int Power = 1;
+
+public:
+
+	TrigometricFunction() = default;
+
+	explicit TrigometricFunction(const double& a, const double& b, const double& c, const double& d)
+		: m_a{ a }, m_b{ b }, m_c{ c }, m_d{ d }
+	{
+
+	}
+
+	inline tuple<double, double, double, double> GetABCD() const
+	{
+		return tuple<double, double, double, double>(m_a, m_b, m_c, m_d);
+	}
+
+	// try this out for a bit? until I better understand the inverse crap
+	double operator()(const double& x, const bool& bIsInverseFunction = false)
+	{
+		double X = x;
+
+		if (bIsInverseFunction == true)
+		{
+			X = std::pow(x, -1);
+		}
+		else
+		{
+
+		}
+
+		double First = (X + m_c) * m_b;
+		double InFunc = 1.0 / std::pow(std::sin(First), Power);
+		double StretchOrShrink = InFunc * m_a;
+		double VertShift = StretchOrShrink + m_d;
+
+		return VertShift;
+	}
+
+};
+
+template <>
+class TrigometricFunction<MPNEGCSC, 1>
+{
+private:
+	double m_a;
+	double m_b;
+	double m_c;
+	double m_d;
+
+	//int m_Power = Power;
+	int Power = 1;
+
+public:
+
+	TrigometricFunction() = default;
+
+	explicit TrigometricFunction(const double& a, const double& b, const double& c, const double& d)
+		: m_a{ a }, m_b{ b }, m_c{ c }, m_d{ d }
+	{
+
+	}
+
+	inline tuple<double, double, double, double> GetABCD() const
+	{
+		return tuple<double, double, double, double>(m_a, m_b, m_c, m_d);
+	}
+
+	// TODO IMPORTANT: Hmmm getting an inkling the way I am doing inverses here will fuck me in these function.
+	// try this out for a bit? until I better understand the inverse crap
+	double operator()(const double& x, const bool& bIsInverseFunction = false)
+	{
+		double X = x;
+
+		if (bIsInverseFunction == true)
+		{
+			X = std::pow(x, -1);
+		}
+		else
+		{
+
+		}
+
+		double First = (X + m_c) * m_b;
+		double InFunc = (1.0 / std::pow(std::sin(First), Power)) * (-1);
+		double StretchOrShrink = InFunc * m_a;
+		double VertShift = StretchOrShrink + m_d;
+
+		return VertShift;
+	}
+
+};
+
+template <int Power>
+class TrigometricFunction<MPSECTAN, Power>
+{
+private:
+	double m_a;
+	double m_b;
+	double m_c;
+	double m_d;
+
+	int m_Power = Power;
+
+public:
+
+	TrigometricFunction() = default;
+
+	explicit TrigometricFunction(const double& a, const double& b, const double& c, const double& d)
+		: m_a{ a }, m_b{ b }, m_c{ c }, m_d{ d }
+	{
+
+	}
+
+	inline tuple<double, double, double, double> GetABCD() const
+	{
+		return tuple<double, double, double, double>(m_a, m_b, m_c, m_d);
+	}
+
+	// TODO IMPORTANT: Hmmm getting an inkling the way I am doing inverses here will fuck me in these function.
+	// try this out for a bit? until I better understand the inverse crap
+	double operator()(const double& x, const bool& bIsInverseFunction = false)
+	{
+		double X = x;
+
+		if (bIsInverseFunction == true)
+		{
+			X = std::pow(x, -1);
+		}
+		else
+		{
+
+		}
+
+		double First = (X + m_c) * m_b;
+
+		// the denominator power in this function is twice the Power variable
+		double CosDenomPower = Power * 2;
+		double InFunc = (std::pow(std::sin(First), m_Power)) / (std::pow(std::cos(First), CosDenomPower));
+		double StretchOrShrink = InFunc * m_a;
+		double VertShift = StretchOrShrink + m_d;
+
+		return VertShift;
+	}
+
+};
+
+template <int Power>
+class TrigometricFunction<MPNEGCSCCOT, Power>
+{
+private:
+	double m_a;
+	double m_b;
+	double m_c;
+	double m_d;
+
+	int m_Power = Power;
+
+public:
+
+	TrigometricFunction() = default;
+
+	explicit TrigometricFunction(const double& a, const double& b, const double& c, const double& d)
+		: m_a{ a }, m_b{ b }, m_c{ c }, m_d{ d }
+	{
+
+	}
+
+	inline tuple<double, double, double, double> GetABCD() const
+	{
+		return tuple<double, double, double, double>(m_a, m_b, m_c, m_d);
+	}
+
+	// TODO IMPORTANT: Hmmm getting an inkling the way I am doing inverses here will fuck me in these function.
+	// try this out for a bit? until I better understand the inverse crap
+	double operator()(const double& x, const bool& bIsInverseFunction = false)
+	{
+		double X = x;
+
+		if (bIsInverseFunction == true)
+		{
+			X = std::pow(x, -1);
+		}
+		else
+		{
+
+		}
+
+		double First = (X + m_c) * m_b;
+
+		// the denominator power in this function is twice the Power variable
+		double SinDenomPower = Power * 2;
+		// Calculate it using the alternate form and then times it by negative one to get the result you need
+		double InFunc = ((std::pow(std::sin(First), m_Power)) / (std::pow(std::sin(First), SinDenomPower))) * (-1);
+		double StretchOrShrink = InFunc * m_a;
+		double VertShift = StretchOrShrink + m_d;
+
+		return VertShift;
+	}
+
+};
+
 inline double FixAngleBetweenZeroAndTwoRad(const double & InAngle)
 {
 	double FixedAngle = InAngle;
@@ -660,4 +1168,5 @@ inline double FindInverseHyperbolicCsc(const double& x)
 
 
 #endif
+
 

@@ -339,11 +339,28 @@ int main()
 		//const int Items = 101;
 		//EstimateTheRevenueObtainedFromSellingXItems(StartInterval, EndInterval, Items, PriceFunction);
 
-		QuadraticFunction ProfitFunction(-0.03, 8, -50);
-		UseMarginalProfitToEstimateSaleOfXthItem(101, ProfitFunction);
-		cout << endl;
+		//QuadraticFunction ProfitFunction(-0.03, 8, -50);
+		//UseMarginalProfitToEstimateSaleOfXthItem(101, ProfitFunction);
+		//cout << endl;
+		
+		TrigometricFunction<MPSIN,1> SinTestFunc1(1, 1, 0, 0);
+		
+		// Only <MPSIN, 1> stores the derivative at the moment
+		//TrigometricFunction<MPSIN, 2> SinTestFunc2(1, 1, 0, 0);
 
 
+		cout << SinTestFunc1(2) << endl;
+		//cout << SinTestFunc2(2) << endl;
+
+		// TODO: Add the Derivative function setup to these classes so I can grab it like the Quadratic Function class
+		TrigometricFunction<MPCOS, 1> CosDerivTestFunc1(1, 1, 0, 0);
+		cout << CosDerivTestFunc1(2) << endl;;
+
+		//SinTestFunc1(2)
+		//cout << endl;
+		//cout << CosDerivTestFunc1(2) << endl;
+
+		//TrigometricFunction<MPSIN, 2> SinTestFunc2(1, 1, 0, 0);
 
 	}
 	catch (const std::exception& ex)

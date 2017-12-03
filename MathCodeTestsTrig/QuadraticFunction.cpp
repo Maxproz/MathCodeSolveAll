@@ -4,6 +4,7 @@
 #include "QuarticFunction.h"
 #include "LinearFunction.h"
 #include "MiscMathEquations.h"
+#include "TrigonometricFunction.h"
 
 
 void QuadraticFunction::AutoSetHowManyRealZeroVariables()
@@ -68,6 +69,7 @@ QuadraticFunction QuadraticFunction::operator-(QuadraticFunction const & rhs) co
 
 	return QuadraticFunction(OutA, OutB, OutC);
 }
+
 
 void QuadraticFunction::SetTheMaxMinValue(double InNum)
 {
@@ -230,6 +232,8 @@ void QuadraticFunction::SetDerivativeFunction(LinearFunction& InFunc)
 {
 	m_DerivativeFunction = InFunc;
 }
+
+
 
 void SetZerosQuadraticFormula(QuadraticFunction& QuadraticFunc)
 {

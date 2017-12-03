@@ -1,5 +1,66 @@
 #include "Limit.h"
 
+//
+//double EvaluateFuncLimit(const RationalFunction<LinearFunction, LinearFunction>& InFunction)
+//{
+//
+//
+//
+//}
+//
+//inline double EvaluateFuncLimit(const RationalFunction<QuadraticFunction, LinearFunction>& InFunction)
+//{
+//
+//}
+//
+//inline double EvaluateFuncLimit(const RationalFunction<ConstantFunction, QuadraticFunction>& InFunction)
+//{
+//
+//
+//}
+//
+//inline double EvaluateFuncLimit(QuadraticFunction& InFunction)
+//{
+//
+//
+//}
+//
+//inline double EvaluateFuncLimit(const LinearFunction& InFunction)
+//{
+//
+//	
+//}
+//
+//inline double EvaluateFuncLimit(const CubicFunction& InFunction)
+//{
+//
+//	
+//}
+//
+//// TODO IMPORTANT: How do I handle the differences in power variables here?
+////template <int Power>
+//// TODO: Important I should move the EvaluateFuncLimit functions to the cpp file
+////
+//inline double EvaluateFuncLimit(const TrigometricFunction<MPSIN>& InFunction)
+//{
+//
+//	
+//}
+//
+////template <int Power>
+//inline double EvaluateFuncLimit(const TrigometricFunction<MPCOS>& InFunction)
+//{
+//
+//
+//}
+//
+////template <int Power>
+//inline double EvaluateFuncLimit(const TrigometricFunction<MPTAN>& InFunction)
+//{
+//
+//
+//}
+
 
 //template <typename Function>
 //double Limit<Function>::EvaluateRootFuncLimit(const RootFunction & InRootFunc)

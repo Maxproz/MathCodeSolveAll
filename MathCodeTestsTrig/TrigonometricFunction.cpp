@@ -1,5 +1,14 @@
 #include "TrigonometricFunction.h"
 
+
+
+
+
+
+
+
+
+
 //double FixAngleBetweenZeroAndTwoRad(const double & InAngle)
 //{
 //	double FixedAngle = InAngle;
@@ -85,3 +94,14 @@
 //
 //	return SinOfAngle / CosOfAngle;
 //}
+
+void AutoSetDerivativeFunction(TrigometricFunction<MPSIN, 1>& InFunc)
+{
+	//if (Power != 1)
+	//{
+	//	throw std::logic_error("You have not setup taking derivatives with higher level sin function powers");
+	//}
+
+	Derivative<TrigometricFunction<MPSIN, 1>, TrigometricFunction<MPCOS, 1>> Derivative(InFunc);
+	InFunc.SetDerivativeFunction(Derivative.GetDerivativeFunction());
+}

@@ -29,6 +29,13 @@ using std::endl;
 class QuarticFunction;
 class LinearFunction;
 class QuadraticFunction;
+//class MPSIN;
+//class MPCOS;
+
+
+
+
+
 
 void SetZerosQuadraticFormula(QuadraticFunction& QuadraticFunc);
 
@@ -43,9 +50,11 @@ private:
 
 	friend class ConstantFunction;
 
+protected:
 	double m_a;
 	double m_b;
 	double m_c;
+private:
 
 	ParabolaOpen m_ParabolaOpens;
 
@@ -210,6 +219,9 @@ public:
 	// multiplication
 	QuarticFunction operator*(QuadraticFunction const& rhs) const;
 	QuadraticFunction operator-(QuadraticFunction const& rhs) const;
+	
+	// The operator overloaded directly below didnt work
+	//QuadraticTrigometric operator*(const TrigometricFunction<MPSIN>& rhs) const;
 	/*QuarticFunction& operator*=(CubicFunction const& rhs);*/
 
 	double operator()(const double x) const
@@ -273,11 +285,32 @@ bool is_close_to_zero(T x)
 
 
 
-//inline bool isEven(int n);
 
-
-
-
+////inline bool isEven(int n);
+//// A QuadraticFunction in the form
+//// ax^2TrigA(x) + bxTrigB(x) + TrigC(x)
+//class QuadraticTrigometric : public QuadraticFunction
+//{
+//private:
+//
+//	TrigometricFunction<MPSIN> m_TrigA = TrigometricFunction<MPSIN>(1, 1, 0, 0);
+//	//TrigometricFunction<BType> m_TrigB;
+//	//TrigometricFunction<CType> m_TrigC;
+//
+//public:
+//
+//	explicit QuadraticTrigometric(const double& a, const TrigometricFunction<MPSIN>& triga, const double& b, const double& c)
+//		: m_TrigA(triga)/*, m_TrigB(trigb), m_TrigC(trigc)*/
+//	{
+//		m_a = a;
+//		m_b = b;
+//		m_c = c;
+//
+//	}
+//
+//	QuadraticTrigometric(const QuadraticTrigometric&) = default;
+//};
+//
 
 
 #endif

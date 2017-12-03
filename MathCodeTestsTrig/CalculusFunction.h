@@ -46,6 +46,12 @@ double GetSlope(const Point& FirstPoint, const Point& SecondPoint);
 
 void PrintSlopeInterceptForm(const Point& Point, const double& Slope);
 
+
+
+
+
+
+
 // this function was created as a helper function to help reduce code clutter for a few other functions in this header
 template <typename Func>
 void PrintPositionAtAFewTimes(const Func& PositionFunction)
