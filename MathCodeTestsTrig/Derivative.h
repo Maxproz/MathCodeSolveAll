@@ -13,6 +13,7 @@
 #include "QuarticFunction.h"
 #include "RationalFunction.h"
 #include "CubicFunction.h"
+//#include "RootFunction.h"
 
 // NOTES:
 // Let f(x) be a function and "a" be in its domain. If f(x) is differentiable at a, then f is continuous at a.
@@ -39,74 +40,13 @@ private:
 
 
 	// Evaluate a quadratic function derivative get a linear function
-	inline double EvaluateFunctionDerivative(ConstantFunction& InFunction)
-	{
-		return 0;
-	}
-
+	double EvaluateFunctionDerivative(const ConstantFunction& InFunction);
 	// Evaluate a quadratic function derivative get a linear function
-	inline LinearFunction EvaluateFunctionDerivative(QuadraticFunction& InFunction)
-	{
-		// When getting derivative here the c variable doesnt matter
-		auto AB = InFunction.GetAB();
-
-		double a = std::get<0>(AB);
-		double b = std::get<1>(AB);
-
-		// need to change for higher powered functions
-		a = 2 * a;
-
-		// loses x variable
-		b = b;
-
-		LinearFunction OutFunc(a, b);
-
-		return OutFunc;
-	}
-
-	inline ConstantFunction EvaluateFunctionDerivative(LinearFunction& InFunction)
-	{
-		// When getting derivative here the c variable doesnt matter
-		auto a = InFunction.GetA();
-		auto b = InFunction.GetB();
-
-		// a loses x variable
-		a = a;
-
-		// b is dropped from derivative function
-		b = 0;
-
-		ConstantFunction OutFunc(a);
-
-		return OutFunc;
-	}
-
-	inline QuadraticFunction EvaluateFunctionDerivative(CubicFunction& InFunction)
-	{
-		// When getting derivative here the c variable doesnt matter
-		auto Vars = InFunction.GetABCD();
-		double a = std::get<0>(Vars);
-		double b = std::get<1>(Vars);
-		double c = std::get<2>(Vars);
-		double d = std::get<3>(Vars);
-
-		double OutA(0);
-		double OutAN(0);
-		ApplyDerivativePowerRules(a, 3, OutA, OutAN);
-
-		double OutB(0);
-		double OutBN(0);
-		ApplyDerivativePowerRules(b, 2, OutB, OutBN);
-
-		double OutC(0);
-		double OutCN(0);
-		ApplyDerivativePowerRules(c, 1, OutC, OutCN);
-
-		// taking the derivative of a cubic function makes the d constant equal zero
-		d = 0;
-
-		return QuadraticFunction(OutA, OutB, OutC);
-	}
+	LinearFunction EvaluateFunctionDerivative(const QuadraticFunction& InFunction);
+	ConstantFunction EvaluateFunctionDerivative(const LinearFunction& InFunction);
+	QuadraticFunction EvaluateFunctionDerivative(const CubicFunction& InFunction);
+	TrigometricFunction<MPCOS> EvaluateFunctionDerivative(const TrigometricFunction<MPSIN>& InFunction);
+	RootFunction<-2> EvaluateFunctionDerivative(const RootFunction<2>& InFunction);
 
 	//template <int HighestExponent, int NumberOfTerms>
 	//inline PowerFunction EvaluateFunctionDerivative(PowerFunction<HighestExponent>& InFunction)
@@ -128,7 +68,7 @@ private:
 
 	// To evaluate a power function with form // y = a[k(x – d)]^n + c
 	template <int Exponent>
-	inline PowerFunction<Exponent - 1> EvaluateFunctionDerivative(PowerFunction<Exponent>& InFunction)
+	inline PowerFunction<Exponent - 1> EvaluateFunctionDerivative(const PowerFunction<Exponent>& InFunction)
 	{
 
 		auto GetAllInputVariables = InFunction.GetNAKDC();
@@ -174,59 +114,19 @@ private:
 		return OutFunc;
 	}
 
-	inline TrigometricFunction<MPCOS> EvaluateFunctionDerivative(TrigometricFunction<MPSIN>& InFunction)
-	{
-		// TODO: which variables do I grab for these transfers? most online examples only show generic function
-		auto AllVars =  InFunction.GetABCD();
-		double a = std::get<0>(AllVars);
-		double b = std::get<1>(AllVars);
-		double c = std::get<2>(AllVars);
-		double d = std::get<3>(AllVars);
-		
-		a = a * b;
-		b = b;
-		c = c;
-		d = 0;
 
-		TrigometricFunction<MPCOS> OutFunc(a,b,c,d);
-
-		return OutFunc;
-	}
-
-	inline RootFunction<-2> EvaluateFunctionDerivative(RootFunction<2>& InFunction)
-	{
-		// TODO: which variables do I grab for these transfers? most online examples only show generic function
-		auto AllVars = InFunction.GetNABC();
-		double N = std::get<0>(AllVars);
-		double a = std::get<1>(AllVars);
-		double b = std::get<2>(AllVars);
-		double c = std::get<3>(AllVars);
-		
-		const double RootExponent = 1.0 / N;
-		
-		a = a * RootExponent;
-		b = b;
-		c = 0;
-
-		//double ExponentAfterSubtraction = RootExponent - 1.0;
-		// dont need i guess but I could convert to fraction and add the -2 that way.
-
-		RootFunction<-2> OutFunc(a,b,c);
-
-		return OutFunc;
-	}
 
 
 public:
 
 	explicit Derivative() = default;
 
-	explicit Derivative(InFunction& InFunc)
-	{
-		m_InFunction = std::move(InFunc);
+	//explicit Derivative(InFunction& InFunc)
+	//{
+	//	m_InFunction = std::move(InFunc);
 
-		m_OutFunction = EvaluateFunctionDerivative(InFunc);
-	}
+	//	m_OutFunction = EvaluateFunctionDerivative(InFunc);
+	//}
 
 	explicit Derivative(const InFunction& InFunc)
 		: m_InFunction(InFunc)
@@ -237,6 +137,10 @@ public:
 	}
 
 	inline OutFunction GetDerivativeFunction() const { return m_OutFunction; }
+
+
+
+
 
 	//double GetDerivative(const double& x)
 	//{

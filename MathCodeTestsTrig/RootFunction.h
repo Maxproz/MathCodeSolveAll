@@ -142,6 +142,8 @@ private:
 public:
 	RootFunction() = default;
 
+	RootFunction(const RootFunction&) = default;
+
 	explicit RootFunction(const double& a,const double& b, const double& c) 
 		: m_n(Root), m_a(a), m_b(b), m_c(c)
 	{

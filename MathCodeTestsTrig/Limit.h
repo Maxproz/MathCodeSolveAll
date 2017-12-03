@@ -389,7 +389,7 @@ private:
 		
 
 
-	inline double EvaluateFuncLimit(RationalFunction<LinearFunction, LinearFunction>& InFunction)
+	inline double EvaluateFuncLimit(const RationalFunction<LinearFunction, LinearFunction>& InFunction)
 	{
 
 		LinearFunction Numerator = InFunction.GetNumeratorFunction();
@@ -613,7 +613,7 @@ private:
 
 	}
 
-	inline double EvaluateFuncLimit(RationalFunction<QuadraticFunction, LinearFunction>& InFunction)
+	inline double EvaluateFuncLimit(const RationalFunction<QuadraticFunction, LinearFunction>& InFunction)
 	{
 		//double NumeratorRes{ 0 };
 		//double DenominatorRes{ 0 };
@@ -1224,7 +1224,7 @@ private:
 		//return NumeratorRes / DenominatorRes;
 	}
 
-	inline double EvaluateFuncLimit(RationalFunction<ConstantFunction, QuadraticFunction>& InFunction)
+	inline double EvaluateFuncLimit(const RationalFunction<ConstantFunction, QuadraticFunction>& InFunction)
 	{
 
 		std::vector<std::pair<double, double>> PosDirVec;
@@ -1652,7 +1652,7 @@ private:
 		return NAN;
 	}
 
-	inline double EvaluateFuncLimit(LinearFunction& InFunction)
+	inline double EvaluateFuncLimit(const LinearFunction& InFunction)
 	{
 
 		std::vector<std::pair<double, double>> PosDirVec;
@@ -1866,7 +1866,7 @@ private:
 		return NAN;
 	}
 
-	inline double EvaluateFuncLimit(CubicFunction& InFunction)
+	inline double EvaluateFuncLimit(const CubicFunction& InFunction)
 	{
 
 		std::vector<std::pair<double, double>> PosDirVec;
@@ -2080,7 +2080,7 @@ private:
 		return NAN;
 	}
 
-	inline double EvaluateFuncLimit(TrigometricFunction<MPSIN>& InFunction)
+	inline double EvaluateFuncLimit(const TrigometricFunction<MPSIN>& InFunction)
 	{
 
 		std::vector<std::pair<double, double>> PosDirVec;
@@ -2294,7 +2294,7 @@ private:
 		return NAN;
 	}
 
-	inline double EvaluateFuncLimit(TrigometricFunction<MPCOS>& InFunction)
+	inline double EvaluateFuncLimit(const TrigometricFunction<MPCOS>& InFunction)
 	{
 
 		std::vector<std::pair<double, double>> PosDirVec;
@@ -2509,7 +2509,7 @@ private:
 	}
 
 
-	inline double EvaluateFuncLimit(TrigometricFunction<MPTAN>& InFunction)
+	inline double EvaluateFuncLimit(const TrigometricFunction<MPTAN>& InFunction)
 	{
 
 		std::vector<std::pair<double, double>> PosDirVec;
@@ -3303,13 +3303,10 @@ public:
 		}
 	}
 
-
-
-
-	 explicit Limit(Function& InFunction, const double& a)
-		: /* m_Function(InFunction), */m_a(a)
+	explicit Limit(const Function& InFunction, const double& a)
+		:  m_Function(InFunction), m_a(a)
 	{
-		m_Function = std::move(InFunction);
+		//m_Function = std::move(InFunction);
 
 		double TestIfNan = m_Function(m_a);
 
@@ -3347,6 +3344,49 @@ public:
 		// TODO: remove debug code
 		DisplayLimitResult();
 	}
+
+
+	// explicit Limit(Function& InFunction, const double& a)
+	//	: /* m_Function(InFunction), */m_a(a)
+	//{
+	//	m_Function = std::move(InFunction);
+
+	//	double TestIfNan = m_Function(m_a);
+
+	//	if (std::isnan(TestIfNan))
+	//	{
+	//		// If its not a number we got to evaluate from both sides
+	//		m_L = EvaluateFuncLimit(InFunction);
+	//	}
+	//	else
+	//	{
+	//		// If its a real number this is our limit
+	//		// TODO: Mark the function as continuous here using a variable that all functions have
+	//		// because if a function is differentiable it must be continuous.
+	//		// bool InFunction.bIsContinuous = true;
+
+
+	//		m_L = TestIfNan;
+	//	}
+
+		// automatically run the limit on construction
+		//m_L = operator()(a);
+
+		//std::cout << "Is NumeratorFuncType Quadratic?: ";
+		//auto NumeratorFuncType = m_Function.GetNumeratorFunctionType();
+		//
+		//if (NumeratorFuncType == PolynomialFunctionType::QUADRATIC)
+		//{
+		//	std::cout << "Move Success" << endl;
+		//}
+		//else
+		//{
+		//	cout << "Fail" << endl;
+		//}
+
+		// TODO: remove debug code
+	//	DisplayLimitResult();
+	//}
 
 	
 	 // TODO: Set your evaluate func limit function up so it works for all types of template instantiations
