@@ -250,7 +250,7 @@ public:
 
 	void PrintBasicFunctionInfo() const;
 	void PrintFunction() const;
-
+	std::string GetFunctionString() const;
 
 	inline bool IsABForm() const { return m_bJustABForm; }
 	inline bool IsACForm() const { return m_bJustACForm; }

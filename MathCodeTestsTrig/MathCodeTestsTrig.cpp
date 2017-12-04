@@ -18,7 +18,7 @@
 // TODO: I removed the std::unique_ptr from the rational function class to simplify copy/moving.
 // Need to remember that I have that variable doing nothing in some limit functions etc...
 // TODO: Create a function that uses the abs(velocity) = speed function to better understand it
-
+// TODO: Have the PrintFunction()'s on the Quadratic and Cubic functions filter between postives and negatives for clean code.
 
 int main()
 {
@@ -387,9 +387,28 @@ int main()
 		
 		// TODO: Test out the "Start New Feature" button in sourcetree
 
-		MPCOT<1> TestFunc(1, 1, 0, 0);
-		std::string TestStr = TestFunc.GetEquationForATangentLineAtInputAngle(M_PIOverFour);
-		cout << TestStr << endl << endl;
+		//MPCOT<1> TestFunc(1, 1, 0, 0);
+		//std::string TestStr = TestFunc.GetEquationForATangentLineAtInputAngle(M_PIOverFour);
+		//cout << TestStr << endl << endl;
+		//TestFunc.PrintHigherOrderedDerivativeFunctionType(74);
+		
+		//MPSIN<1> Position(2, 1, 0, 0);
+
+		//const double TimeInput = FiveM_PIOverSix;
+
+		//MPCOS<1> VelocityFunction = Position.GetDerivativeFunction();
+		//MPNEGSIN<1> AccelerationFunction = VelocityFunction.GetDerivativeFunction();
+
+		//double Velocity = VelocityFunction(TimeInput);
+		//double Acceleration = AccelerationFunction(TimeInput);
+
+		//PrintParticleTravelInfoGivenVelocityAndAcceleration(Velocity, Acceleration);
+
+		PowerFunction<4> FOFX(1, 1, 0, 0);
+		CubicFunction GOFX(2, 0, 2, -1);
+		ApplyChainRuleFirstVersion(FOFX, GOFX);
+		cout << endl;
+
 
 
 	}

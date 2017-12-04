@@ -25,7 +25,9 @@ using std::endl;
 // I already have functions defined for power functions with Exponents == 2 and 3
 // So as of right now this is for polynomial functions with exponents > 3 
 
-//
+
+
+
 template <int Exponent>
 class PowerFunction : PolynomialFunction
 {
@@ -38,6 +40,10 @@ private:
 	double m_d;
 	double m_c;
 
+	//PowerFunction<Exponent - 1> m_DerivativeFunction = PowerFunction<Exponent - 1>(1,1,0,0);
+
+	//void AutoSetPowerDerivativeFunction(PowerFunction<Exponent>& InFunc);
+
 public:
 
 	PowerFunction() = default;
@@ -48,10 +54,15 @@ public:
 		: m_a(a), m_k(k), m_d(d), m_c(c), m_n(Exponent)
 	{
 		m_PolyFunctionType = PolynomialFunctionType::POWER;
+		//if (Exponent <= 0)
+		//	return;
 
 
-
+		//AutoSetPowerDerivativeFunction(*this);
 	}
+
+	//PowerFunction<Exponent - 1> GetDerivativeFunction() const;
+	//void SetDerivativeFunction(PowerFunction<Exponent >& InFunc);
 
 	double operator()(const double& x) const
 	{
@@ -236,4 +247,29 @@ public:
 //};
 
 
+
+//template<int Exponent>
+//inline void PowerFunction<Exponent>::AutoSetPowerDerivativeFunction(PowerFunction<Exponent>& InFunc)
+//{
+//	Derivative<PowerFunction<Exponent>, PowerFunction<Exponent - 1>> Derivative(InFunc);
+//	InFunc.SetDerivativeFunction(Derivative.GetDerivativeFunction());
+//}
+//
+//template<int Exponent>
+//inline PowerFunction<Exponent - 1> PowerFunction<Exponent>::GetDerivativeFunction() const
+//{
+//	return m_DerivativeFunction;
+//}
+//
+//template<int Exponent>
+//inline void PowerFunction<Exponent>::SetDerivativeFunction(PowerFunction<Exponent - 1>& InFunc)
+//{
+//	m_DerivativeFunction = InFunc;
+//}
+
+
+
 #endif
+
+
+

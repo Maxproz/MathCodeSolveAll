@@ -223,6 +223,19 @@ void QuadraticFunction::PrintFunction() const
 	}
 }
 
+std::string QuadraticFunction::GetFunctionString() const
+{
+	std::string OutString;
+	OutString.append(std::to_string(m_a));
+	OutString.append("x^2");
+	OutString.append(" + ");
+	OutString.append(std::to_string(m_b));
+	OutString.append("x + ");
+	OutString.append(std::to_string(m_c));
+
+	return OutString;
+}
+
 LinearFunction QuadraticFunction::GetDerivativeFunction() const
 {
 	return m_DerivativeFunction;

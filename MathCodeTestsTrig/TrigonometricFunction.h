@@ -207,6 +207,13 @@ private:
 
 	MPNEGSIN<1> m_DerivativeFunction = MPNEGSIN<1>(1, 1, 0, 0);
 
+	//template <typename T>
+	//inline T GetHigherOrderedDerivativeFunction(const unsigned int& DesiredDerivativeNum)
+	//{
+
+
+	//}
+
 public:
 
 	explicit MPCOS() = default;
@@ -297,6 +304,7 @@ private:
 	MPCOS<1> m_DerivativeFunction = MPCOS<1>(1,1,0,0);
 
 
+
 public:
 	
 	// NOTE IMPORTANT: Need to think of a way to get the derivative from higher ordered Trig functions using the Power Variable
@@ -318,13 +326,11 @@ public:
 	void SetDerivativeFunction(const MPCOS<1>& InFunc);
 	MPCOS<1> GetDerivativeFunction() const;
 
+	inline tuple<double, double, double, double> GetABCD() const { return tuple<double, double, double, double>(m_a, m_b, m_c, m_d); }
 
 
-	inline tuple<double, double, double, double> GetABCD() const
-	{
-		return tuple<double, double, double, double>(m_a, m_b, m_c, m_d);
-	}
-
+	
+	void PrintHigherOrderedDerivativeFunctionType(const unsigned int& DesiredDerivativeNum);
 	
 
 	//double operator()(const double& x)
@@ -1362,6 +1368,45 @@ inline MPCOS<1> MPSIN<POWER>::GetDerivativeFunction() const
 	//}
 
 	return m_DerivativeFunction;
+}
+
+template<int POWER>
+inline void MPSIN<POWER>::PrintHigherOrderedDerivativeFunctionType(const unsigned int & DesiredDerivativeNum)
+{
+	int Remainder = (DesiredDerivativeNum % 4);
+
+	//double a = m_a * m_b;
+	//double b = m_b;
+	//double c = m_c;
+	//double d = 0;
+
+	if (Remainder == 0)
+	{
+		cout << "SIN";
+		//return MPCOS(a, b, c, d);
+	}
+	else if (Remainder == 1)
+	{
+		cout << "COS";
+		//return MPNEGSIN(a, b, c, d);
+	}
+	else if (Remainder == 2)
+	{
+		cout << "-SIN";
+		//return MPNEGCOS(a, b, c, d);
+	}
+	else if (Remainder == 3)
+	{
+		cout << "-COS";
+		//return MPSIN(a, b, c, d);
+	}
+	else if (Remainder == 4)
+	{
+		cout << "SIN";
+		//return MPSIN(a, b, c, d);
+	}
+	
+
 }
 
 #endif

@@ -118,6 +118,8 @@ public:
 
 	}
 	
+	std::string GetFunctionString() const;
+
 	inline pair<double, double> GetAAndDCubicFuncForm() const { return m_JustAAndDCubic; }
 
 	inline tuple<double, double, double, double> GetABCD() const

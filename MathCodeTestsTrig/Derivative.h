@@ -304,6 +304,76 @@ public:
 
 };
 
+
+// PROBLEM-SOLVING STRATEGY: APPLYING THE CHAIN RULE
+
+/*
+To differentiate h(x) = f(g(x)), begin by identifying f(x) and g(x).
+Find f'(x) and evaluate it at g(x) to obtain f′(g(x))
+Find g′(x)
+Write h′(x) = f′(g(x)) ⋅ g′(x).
+*/
+
+template <typename F, typename FPrime, typename G, typename GPrime, typename HPrime>
+inline HPrime ApplyChainRuleFirstVersion(const F& FOFX, const G& GOFX)
+{
+	// 1. begin by identifying f(x) and g(x).
+	// These are my input functions FOFX and GOFX
+
+	// 2. Find f'(x) 
+	FPrime FDerivativeFunction = FOFX.GetDerivativeFunction();
+	// and evaluate it at g(x) to obtain f′(g(x))
+	FDerivativeFunction(GOFX);
+
+	// 3. Find g′(x)
+	GPrime GDerivativeFunction = GOFX.GetDerivativeFunction();
+
+	// 4. Last Step: - Write h′(x) = f′(g(x)) ⋅ g′(x).
+	HPrime HDerivativeFunction = FDerivativeFunction(GOFX) * GDerivativeFunction;
+
+	return HDerivativeFunction;
+}
+
+// RULE: POWER RULE FOR COMPOSITION OF FUNCTIONS
+
+
+inline void ApplyChainRuleFirstVersion(const PowerFunction<4>& FOFX, const CubicFunction& GOFX)
+{
+	// 1. begin by identifying f(x) and g(x).
+	// These are my input functions FOFX and GOFX
+
+	double FFuncExponent = std::get<0>(FOFX.GetNAKDC());
+	double FDerivExponent = FFuncExponent - 1;
+
+	// 2. Find f'(x) 
+	Derivative<PowerFunction<4>, PowerFunction<3>> FDeriv(FOFX);
+	PowerFunction<3> FDerivativeFunction = FDeriv.GetDerivativeFunction();
+
+	// and evaluate it at g(x) to obtain NOutSide*(g(x))^NNewExponent
+	double NOutSide = std::get<0>(FOFX.GetNAKDC());
+	double NNewExponent = NOutSide - 1;
+
+	// 3. Find g′(x)
+	QuadraticFunction GDerivativeFunction = GOFX.GetDerivativeFunction();
+
+	// 4. Last Step: - Write h′(x) = f′(g(x)) ⋅ g′(x).
+	std::string HDerivativeFunction = ("h'(x) = ");
+	HDerivativeFunction.append(std::to_string(NOutSide));
+	HDerivativeFunction.append(" * ");
+	HDerivativeFunction.append(" (");
+	HDerivativeFunction.append(GOFX.GetFunctionString());
+	HDerivativeFunction.append(")^");
+	HDerivativeFunction.append(std::to_string(NNewExponent));
+	HDerivativeFunction.append(" * (");
+	HDerivativeFunction.append(GDerivativeFunction.GetFunctionString());
+	HDerivativeFunction.append(")");
+	
+	cout << HDerivativeFunction;
+
+	//return HDerivativeFunction;
+}
+
+
 // These Two sum and difference rule functions below are garbage and cant really return anything....
 
 // Let f(x)and g(x) be differentiable functions and k be a constant. Then each of the following equations holds.

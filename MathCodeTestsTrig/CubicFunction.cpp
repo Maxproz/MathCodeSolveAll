@@ -24,6 +24,22 @@ void AutoSetCubicDerivativeFunction(CubicFunction& InFunc)
 
 }
 
+std::string CubicFunction::GetFunctionString() const
+{
+	std::string OutString; 
+	OutString.append(std::to_string(m_a));
+	OutString.append("x^3");
+	OutString.append(" + ");
+	OutString.append(std::to_string(m_b));
+	OutString.append("x^2 + ");
+	OutString.append(std::to_string(m_c));
+	OutString.append("x + ");
+	OutString.append(std::to_string(m_d));
+
+	return OutString;
+}
+
+
 void CubicFunction::PrintFunction() const
 {
 	cout << m_a << "x^3";

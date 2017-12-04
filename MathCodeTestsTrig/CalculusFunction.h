@@ -94,6 +94,52 @@ The formula for average velocity is (the change in x) / (the change in t) or (x2
 
 */
 
+
+
+inline void PrintParticleTravelInfoGivenVelocityAndAcceleration(const double& Velocity, const double& Acceleration)
+{
+	// Because v(1) < 0, the particle is moving from right to left.
+	// Because v(1) < 0 and a(1) > 0,  velocity and acceleration are acting in opposite directions.
+	bool bIsParticleMovingFromRightToLeft = (Velocity < 0);
+	bool bIsParticleAcceleratingToTheLeft = (Acceleration < 0);
+
+	if (bIsParticleMovingFromRightToLeft)
+	{
+		if (bIsParticleAcceleratingToTheLeft)
+		{
+			cout << "Velocity and Acceleration are going in the same direction object is speeding up to the left.";
+		}
+		else
+		{
+			// Particle is accelerating to the right 
+			cout << "Velocity and Acceleration are going in opposite direction object is traveling to the left but slowing down";
+		}
+	}
+	else if (bIsParticleMovingFromRightToLeft == false)
+	{
+		// Particle is moving from left to right
+
+		if (bIsParticleAcceleratingToTheLeft)
+		{
+			cout << "Velocity and Acceleration are going in opposite directions object is traveling to the right but slowing down";
+		}
+		else
+		{
+			// Particle is accelerating to the right 
+			cout << "Velocity and Acceleration are going in the same direction object is traveling to the right and speeding up";
+		}
+
+	}
+	else
+	{
+		throw std::logic_error("Particle is not moving???? logic is not setup yet");
+	}
+
+}
+
+
+
+
 // Motion along a line concering particles 
 // Interpreting the Relationship between v(t) and a(t)
 
