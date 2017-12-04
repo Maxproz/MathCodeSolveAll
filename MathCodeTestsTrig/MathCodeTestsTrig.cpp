@@ -387,6 +387,9 @@ int main()
 		
 		// TODO: Test out the "Start New Feature" button in sourcetree
 
+		MPCOT<1> TestFunc(1, 1, 0, 0);
+		std::string TestStr = TestFunc.GetEquationForATangentLineAtInputAngle(M_PIOverFour);
+		cout << TestStr << endl << endl;
 
 
 	}

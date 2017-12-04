@@ -503,15 +503,11 @@ public:
 	}
 
 	void SetDerivativeFunction(const MPNEGCSC<2>& InFunc);
-
-
-
 	MPNEGCSC<2> GetDerivativeFunction() const;
 
-	inline tuple<double, double, double, double> GetABCD() const
-	{
-		return tuple<double, double, double, double>(m_a, m_b, m_c, m_d);
-	}
+	inline tuple<double, double, double, double> GetABCD() const {	return tuple<double, double, double, double>(m_a, m_b, m_c, m_d); }
+
+	std::string GetEquationForATangentLineAtInputAngle(const double& x);
 
 	// try this out for a bit? until I better understand the inverse crap
 	double operator()(const double& x, const bool& bIsInverseFunction = false)
@@ -1231,9 +1227,6 @@ inline double FindInverseHyperbolicCsc(const double& x)
 }
 
 
-
-#endif
-
 template<int POWER>
 inline void MPTAN<POWER>::SetDerivativeFunction(const MPSEC<2>& InFunc)
 {
@@ -1268,6 +1261,42 @@ inline MPNEGCSC<2> MPCOT<POWER>::GetDerivativeFunction() const
 {
 	return m_DerivativeFunction;
 }
+
+
+template<int POWER>
+inline std::string MPCOT<POWER>::GetEquationForATangentLineAtInputAngle(const double & x)
+{
+	double y = operator()(x);
+	MPNEGCSC<2> DerivativeFunc = GetDerivativeFunction();
+	double Slope = DerivativeFunc(x);
+	cout << "TestSlope Value: " << endl;
+	// Using the point-slope equation of the line, we obtain
+
+	// Y - y = Slope(X - x)
+	// format into std::string
+	// return
+	double SlopeX = Slope;
+
+
+	// TODO: Something tells me I need a better system for determining the signs for these variables.
+
+	double RHSPI = ((Slope * x) * (-1));
+	double RHSY = y;
+	
+	//FlipSign(RHSY);
+
+
+	std::string OutString("y = ");
+	OutString.append(std::to_string(SlopeX));
+	OutString.append("x + ");
+	OutString.append(std::to_string(RHSY));
+	OutString.append(" + ");
+	OutString.append(std::to_string(RHSPI));
+
+	return OutString;
+}
+
+
 
 template<int POWER>
 inline void MPSEC<POWER>::SetDerivativeFunction(const MPSECTAN<1>& InFunc)
@@ -1335,3 +1364,4 @@ inline MPCOS<1> MPSIN<POWER>::GetDerivativeFunction() const
 	return m_DerivativeFunction;
 }
 
+#endif
