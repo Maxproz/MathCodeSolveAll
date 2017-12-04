@@ -233,6 +233,8 @@ public:
 	inline bool IsBOnlyForm() const { return m_bIsBOnlyForm; }
 
 	void PrintAllZeros() const;
+	std::string GetFunctionString() const;
+
 };
 
 inline void ConvertFromPointSlopeFromToLinearForm(const Point& InPoint, const double& InSlope, LinearFunction& OutTangentLine)

@@ -277,6 +277,8 @@ public:
 		return VertShift;
 	}
 
+	std::string GetFunctionString() const;
+
 };
 
 
@@ -364,6 +366,8 @@ public:
 
 		return VertShift;
 	}
+
+	std::string GetFunctionString() const;
 
 };
 
@@ -1409,4 +1413,36 @@ inline void MPSIN<POWER>::PrintHigherOrderedDerivativeFunctionType(const unsigne
 
 }
 
+template<int POWER>
+inline std::string MPSIN<POWER>::GetFunctionString() const
+{
+	std::string OutString;
+	OutString.append(std::to_string(m_a));
+	OutString.append("sin");
+	OutString.append(std::to_string(m_b));
+	OutString.append("(x - ");
+	OutString.append(std::to_string(m_c));
+	OutString.append(") + ");
+	OutString.append(std::to_string(m_d));
+
+	return OutString;
+}
+
+template<int POWER>
+inline std::string MPCOS<POWER>::GetFunctionString() const
+{
+	std::string OutString;
+	OutString.append(std::to_string(m_a));
+	OutString.append("cos");
+	OutString.append(std::to_string(m_b));
+	OutString.append("(x - ");
+	OutString.append(std::to_string(m_c));
+	OutString.append(") + ");
+	OutString.append(std::to_string(m_d));
+
+	return OutString;
+}
+
+
 #endif
+

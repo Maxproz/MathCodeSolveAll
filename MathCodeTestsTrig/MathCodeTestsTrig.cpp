@@ -404,10 +404,22 @@ int main()
 
 		//PrintParticleTravelInfoGivenVelocityAndAcceleration(Velocity, Acceleration);
 
-		PowerFunction<4> FOFX(1, 1, 0, 0);
-		CubicFunction GOFX(2, 0, 2, -1);
-		ApplyChainRuleFirstVersion(FOFX, GOFX);
+		//PowerFunction<4> FOFX(1, 1, 0, 0);
+		//CubicFunction GOFX(2, 0, 2, -1);
+		//ApplyChainRuleFirstVersion(FOFX, GOFX);
+		//cout << endl;
+
+
+		//PowerFunction<-2> FOFX(1, 1, 0, 0);
+		//QuadraticFunction GOFX(3,0,1);
+		//ApplyChainRuleFPowerGQuadratic(FOFX, GOFX);
+		//cout << endl;
+
+		PowerFunction<3> FOFX(1, 1, 0, 0);
+		MPSIN<1> GOFX(1,1,0,0);
+		ApplyChainRuleFPowerGSin(FOFX, GOFX);
 		cout << endl;
+
 
 
 

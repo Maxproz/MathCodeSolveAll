@@ -124,3 +124,13 @@ void LinearFunction::PrintAllZeros() const
 	std::cout << "Done printing all zeros\n";
 
 }
+
+std::string LinearFunction::GetFunctionString() const
+{
+	std::string OutString;
+	OutString.append(std::to_string(m_a));
+	OutString.append("x + ");
+	OutString.append(std::to_string(m_b));
+
+	return OutString;
+}

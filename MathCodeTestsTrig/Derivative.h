@@ -336,8 +336,8 @@ inline HPrime ApplyChainRuleFirstVersion(const F& FOFX, const G& GOFX)
 
 // RULE: POWER RULE FOR COMPOSITION OF FUNCTIONS
 
-
-inline void ApplyChainRuleFirstVersion(const PowerFunction<4>& FOFX, const CubicFunction& GOFX)
+template <int EXPONENT>
+inline void ApplyChainRuleFPowerGCubic(const PowerFunction<EXPONENT>& FOFX, const CubicFunction& GOFX)
 {
 	// 1. begin by identifying f(x) and g(x).
 	// These are my input functions FOFX and GOFX
@@ -346,8 +346,8 @@ inline void ApplyChainRuleFirstVersion(const PowerFunction<4>& FOFX, const Cubic
 	double FDerivExponent = FFuncExponent - 1;
 
 	// 2. Find f'(x) 
-	Derivative<PowerFunction<4>, PowerFunction<3>> FDeriv(FOFX);
-	PowerFunction<3> FDerivativeFunction = FDeriv.GetDerivativeFunction();
+	Derivative<PowerFunction<EXPONENT>, PowerFunction<EXPONENT - 1>> FDeriv(FOFX);
+	PowerFunction<EXPONENT - 1> FDerivativeFunction = FDeriv.GetDerivativeFunction();
 
 	// and evaluate it at g(x) to obtain NOutSide*(g(x))^NNewExponent
 	double NOutSide = std::get<0>(FOFX.GetNAKDC());
@@ -367,10 +367,87 @@ inline void ApplyChainRuleFirstVersion(const PowerFunction<4>& FOFX, const Cubic
 	HDerivativeFunction.append(" * (");
 	HDerivativeFunction.append(GDerivativeFunction.GetFunctionString());
 	HDerivativeFunction.append(")");
-	
+
 	cout << HDerivativeFunction;
 
 	//return HDerivativeFunction;
+
+}
+
+template <int EXPONENT>
+inline void ApplyChainRuleFPowerGQuadratic(const PowerFunction<EXPONENT>& FOFX, const QuadraticFunction& GOFX)
+{
+	// 1. begin by identifying f(x) and g(x).
+	// These are my input functions FOFX and GOFX
+
+	double FFuncExponent = std::get<0>(FOFX.GetNAKDC());
+	double FDerivExponent = FFuncExponent - 1;
+
+	// 2. Find f'(x) 
+	Derivative<PowerFunction<EXPONENT>, PowerFunction<EXPONENT - 1>> FDeriv(FOFX);
+	PowerFunction<EXPONENT - 1> FDerivativeFunction = FDeriv.GetDerivativeFunction();
+
+	// and evaluate it at g(x) to obtain NOutSide*(g(x))^NNewExponent
+	double NOutSide = std::get<0>(FOFX.GetNAKDC());
+	double NNewExponent = NOutSide - 1;
+
+	// 3. Find g′(x)
+	LinearFunction GDerivativeFunction = GOFX.GetDerivativeFunction();
+
+	// 4. Last Step: - Write h′(x) = f′(g(x)) ⋅ g′(x).
+	std::string HDerivativeFunction = ("h'(x) = ");
+	HDerivativeFunction.append(std::to_string(NOutSide));
+	HDerivativeFunction.append(" * ");
+	HDerivativeFunction.append(" (");
+	HDerivativeFunction.append(GOFX.GetFunctionString());
+	HDerivativeFunction.append(")^");
+	HDerivativeFunction.append(std::to_string(NNewExponent));
+	HDerivativeFunction.append(" * (");
+	HDerivativeFunction.append(GDerivativeFunction.GetFunctionString());
+	HDerivativeFunction.append(")");
+
+	cout << HDerivativeFunction;
+
+	//return HDerivativeFunction;
+
+}
+
+template <int EXPONENT>
+inline void ApplyChainRuleFPowerGSin(const PowerFunction<EXPONENT>& FOFX, const MPSIN<1>& GOFX)
+{
+	// 1. begin by identifying f(x) and g(x).
+	// These are my input functions FOFX and GOFX
+
+	double FFuncExponent = std::get<0>(FOFX.GetNAKDC());
+	double FDerivExponent = FFuncExponent - 1;
+
+	// 2. Find f'(x) 
+	Derivative<PowerFunction<EXPONENT>, PowerFunction<EXPONENT - 1>> FDeriv(FOFX);
+	PowerFunction<EXPONENT - 1> FDerivativeFunction = FDeriv.GetDerivativeFunction();
+
+	// and evaluate it at g(x) to obtain NOutSide*(g(x))^NNewExponent
+	double NOutSide = std::get<0>(FOFX.GetNAKDC());
+	double NNewExponent = NOutSide - 1;
+
+	// 3. Find g′(x)
+	auto GDerivativeFunction = GOFX.GetDerivativeFunction();
+
+	// 4. Last Step: - Write h′(x) = f′(g(x)) ⋅ g′(x).
+	std::string HDerivativeFunction = ("h'(x) = ");
+	HDerivativeFunction.append(std::to_string(NOutSide));
+	HDerivativeFunction.append(" * ");
+	HDerivativeFunction.append(" (");
+	HDerivativeFunction.append(GOFX.GetFunctionString());
+	HDerivativeFunction.append(")^");
+	HDerivativeFunction.append(std::to_string(NNewExponent));
+	HDerivativeFunction.append(" * (");
+	HDerivativeFunction.append(GDerivativeFunction.GetFunctionString());
+	HDerivativeFunction.append(")");
+
+	cout << HDerivativeFunction;
+
+	//return HDerivativeFunction;
+
 }
 
 
