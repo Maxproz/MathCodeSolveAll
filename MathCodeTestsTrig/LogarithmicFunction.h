@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 
 #ifndef LOGARITHMICFUNCTION_H
@@ -34,6 +34,16 @@ private:
 
 	Domain m_Domain;
 	Range m_Range;
+
+
+	// THE DERIVATIVE OF THE NATURAL LOGARITHMIC FUNCTION
+	// if x > 0 and y = ln(x)
+	// dy/dx = 1/x
+
+	// More generally, let g(x) be a differentiable function.
+	// For all values of x for which g′(x) > 0
+	// the derivative of h(x) = ln(g(x)) is given by
+	// h'(x) = (1/g(x)) * g'(x)
 
 
 public:

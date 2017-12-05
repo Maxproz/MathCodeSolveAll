@@ -58,7 +58,6 @@ private:
 	QuadraticFunction EvaluateFunctionDerivative(const CubicFunction& InFunction);
 	RootFunction<-2> EvaluateFunctionDerivative(const RootFunction<2>& InFunction);
 	
-	//
 	//TrigometricFunction<MPCOS, 1> EvaluateFunctionDerivative(const TrigometricFunction<MPSIN, 1>& InFunction);
 	//TrigometricFunction<MPNEGSIN, 1> EvaluateFunctionDerivative(const TrigometricFunction<MPCOS, 1>& InFunction);
 	//TrigometricFunction<MPSEC, 2> EvaluateFunctionDerivative(const TrigometricFunction<MPTAN, 1>& InFunction);
@@ -187,6 +186,25 @@ private:
 		return OutFunc;
 	}
 
+
+	// TODO: need to figure out how I wnat to return algerbraic expression here
+	//// f(x)= a*root(x - b) + c
+	//inline RootFunction<-2> EvaluateFunctionDerivative(const MPINVERSESIN<1>& InFunction)
+	//{
+	//	auto AllVars = InFunction.GetABCD();
+	//	double a = std::get<0>(AllVars);
+	//	double b = std::get<1>(AllVars);
+	//	double c = std::get<2>(AllVars);
+	//	double d = std::get<3>(AllVars);
+
+	//	double OutA = 1;
+	//	double OutC = 0;
+	//	double OutB = 
+
+	//	RootFunction<-2> OutFunction(,)
+	//}
+
+
 	//template <int HighestExponent, int NumberOfTerms>
 	//inline PowerFunction EvaluateFunctionDerivative(PowerFunction<HighestExponent>& InFunction)
 	//{
@@ -303,6 +321,14 @@ public:
 	double EstimateDerivative(const double& x);
 
 };
+
+
+
+// Derivatives of Inverse Trigonometric Functions
+// The derivatives of inverse trigonometric functions are quite surprising in that their derivatives are actually algebraic functions. 
+
+
+
 
 
 // PROBLEM-SOLVING STRATEGY: APPLYING THE CHAIN RULE

@@ -133,7 +133,13 @@ template<int POWER = 1> class MPNEGCSCCOT;
 template<int POWER = 1> class MPCSC;
 template<int POWER = 1> class MPNEGCOS;
 
-
+// Inverse Functiosn
+template<int POWER = 1> class MPINVERSESIN;
+template<int POWER = 1> class MPINVERSECOS;
+template<int POWER = 1> class MPINVERSETAN;
+template<int POWER = 1> class MPINVERSECOT;
+template<int POWER = 1> class MPINVERSESEC;
+template<int POWER = 1> class MPINVERSECSC;
 
 
 template <int POWER>
@@ -816,6 +822,292 @@ public:
 		double SinDenomPower = m_Power * 2;
 		// Calculate it using the alternate form and then times it by negative one to get the result you need
 		double InFunc = ((std::pow(std::cos(First), m_Power)) / (std::pow(std::sin(First), SinDenomPower))) * (-1);
+		double StretchOrShrink = InFunc * m_a;
+		double VertShift = StretchOrShrink + m_d;
+
+		return VertShift;
+	}
+
+};
+
+template <int POWER>
+class MPINVERSESIN
+{
+private:
+	double m_a;
+	double m_b;
+	double m_c;
+	double m_d;
+
+	int m_Power = POWER;
+
+public:
+
+	MPINVERSESIN() = default;
+
+	explicit MPINVERSESIN(const double& a, const double& b, const double& c, const double& d)
+		: m_a{ a }, m_b{ b }, m_c{ c }, m_d{ d }
+	{
+
+	}
+
+	inline tuple<double, double, double, double> GetABCD() const
+	{
+		return tuple<double, double, double, double>(m_a, m_b, m_c, m_d);
+	}
+
+
+	/* INPUT: Value whose arc sine is computed, in the interval[-1, +1].
+	If the argument is out of this interval, a domain error occurs. */
+	/* RETURN: Principal arc sine of x, in the interval [-pi/2,+pi/2] radians.
+	One radian is equivalent to 180/PI degrees.*/
+	double operator()(const double& x, const bool& bIsInverseFunction = false)
+	{
+		double X = x;
+
+		double First = (X + m_c) * m_b;
+		double InFunc = std::pow(std::asin(First), m_Power);
+		double StretchOrShrink = InFunc * m_a;
+		double VertShift = StretchOrShrink + m_d;
+
+		return VertShift;
+	}
+
+	// Temporary measue until I figure out how I want to return an algerabic expression in this format.
+	inline double RunDerivativeFunction(const double& x)
+	{
+		double Numerator = m_a * m_b;
+		double DenominatorParanthesis = std::pow((m_c - x), 2);
+		double DenominatorLeftSide = 1 - std::pow(m_b, 2);
+		double FullDenominator = DenominatorParanthesis * DenominatorLeftSide;
+
+		return Numerator / FullDenominator;
+	}
+
+};
+
+
+template <int POWER>
+class MPINVERSECOS
+{
+private:
+	double m_a;
+	double m_b;
+	double m_c;
+	double m_d;
+
+	int m_Power = POWER;
+
+public:
+
+	MPINVERSECOS() = default;
+
+	explicit MPINVERSECOS(const double& a, const double& b, const double& c, const double& d)
+		: m_a{ a }, m_b{ b }, m_c{ c }, m_d{ d }
+	{
+
+	}
+
+	inline tuple<double, double, double, double> GetABCD() const
+	{
+		return tuple<double, double, double, double>(m_a, m_b, m_c, m_d);
+	}
+
+	// TODO IMPORTANT: Hmmm getting an inkling the way I am doing inverses here will fuck me in these function.
+	// try this out for a bit? until I better understand the inverse crap
+	double operator()(const double& x, const bool& bIsInverseFunction = false)
+	{
+		double X = x;
+
+		//if (bIsInverseFunction == true)
+		//{
+		//	X = std::pow(x, -1);
+		//}
+		//else
+		//{
+
+		//}
+
+		double First = (X + m_c) * m_b;
+		double InFunc = std::pow(std::acos(First), m_Power);
+		double StretchOrShrink = InFunc * m_a;
+		double VertShift = StretchOrShrink + m_d;
+
+		return VertShift;
+	}
+
+};
+
+template <int POWER>
+class MPINVERSETAN
+{
+private:
+	double m_a;
+	double m_b;
+	double m_c;
+	double m_d;
+
+	int m_Power = POWER;
+
+public:
+
+	MPINVERSETAN() = default;
+
+	explicit MPINVERSETAN(const double& a, const double& b, const double& c, const double& d)
+		: m_a{ a }, m_b{ b }, m_c{ c }, m_d{ d }
+	{
+
+	}
+
+	inline tuple<double, double, double, double> GetABCD() const
+	{
+		return tuple<double, double, double, double>(m_a, m_b, m_c, m_d);
+	}
+
+	// TODO IMPORTANT: Hmmm getting an inkling the way I am doing inverses here will fuck me in these function.
+	// try this out for a bit? until I better understand the inverse crap
+	double operator()(const double& x, const bool& bIsInverseFunction = false)
+	{
+		double X = x;
+
+		//if (bIsInverseFunction == true)
+		//{
+		//	X = std::pow(x, -1);
+		//}
+		//else
+		//{
+
+		//}
+
+		double First = (X + m_c) * m_b;
+		double InFunc = std::atan(First);
+		double StretchOrShrink = InFunc * m_a;
+		double VertShift = StretchOrShrink + m_d;
+
+		return VertShift;
+	}
+
+};
+
+
+template <int POWER>
+class MPINVERSECOT
+{
+private:
+	double m_a;
+	double m_b;
+	double m_c;
+	double m_d;
+
+	int m_Power = POWER;
+
+public:
+
+	MPINVERSECOT() = default;
+
+	explicit MPINVERSECOT(const double& a, const double& b, const double& c, const double& d)
+		: m_a{ a }, m_b{ b }, m_c{ c }, m_d{ d }
+	{
+
+	}
+
+	inline tuple<double, double, double, double> GetABCD() const
+	{
+		return tuple<double, double, double, double>(m_a, m_b, m_c, m_d);
+	}
+
+	// TODO IMPORTANT: Hmmm getting an inkling the way I am doing inverses here will fuck me in these function.
+	// try this out for a bit? until I better understand the inverse crap
+	double operator()(const double& x, const bool& bIsInverseFunction = false)
+	{
+		double X = x;
+
+		double First = (X + m_c) * m_b;
+		double InFunc = (std::pow(std::atan(1 / First), m_Power))
+		double StretchOrShrink = InFunc * m_a;
+		double VertShift = StretchOrShrink + m_d;
+
+		return VertShift;
+	}
+
+};
+
+template <int POWER>
+class MPINVERSESEC
+{
+private:
+	double m_a;
+	double m_b;
+	double m_c;
+	double m_d;
+
+	int m_Power = POWER;
+
+public:
+
+	MPINVERSESEC() = default;
+
+	explicit MPINVERSESEC(const double& a, const double& b, const double& c, const double& d)
+		: m_a{ a }, m_b{ b }, m_c{ c }, m_d{ d }
+	{
+
+	}
+
+	inline tuple<double, double, double, double> GetABCD() const
+	{
+		return tuple<double, double, double, double>(m_a, m_b, m_c, m_d);
+	}
+
+	// TODO IMPORTANT: Hmmm getting an inkling the way I am doing inverses here will fuck me in these function.
+	// try this out for a bit? until I better understand the inverse crap
+	double operator()(const double& x, const bool& bIsInverseFunction = false)
+	{
+		double X = x;
+
+		double First = (X + m_c) * m_b;
+		double InFunc = std::pow(std::acos(1 / First), m_Power);
+		double StretchOrShrink = InFunc * m_a;
+		double VertShift = StretchOrShrink + m_d;
+
+		return VertShift;
+	}
+
+};
+
+template <int POWER>
+class MPINVERSECSC
+{
+private:
+	double m_a;
+	double m_b;
+	double m_c;
+	double m_d;
+
+	int m_Power = POWER;
+
+public:
+
+	MPINVERSECSC() = default;
+
+	explicit MPINVERSECSC(const double& a, const double& b, const double& c, const double& d)
+		: m_a{ a }, m_b{ b }, m_c{ c }, m_d{ d }
+	{
+
+	}
+
+	inline tuple<double, double, double, double> GetABCD() const
+	{
+		return tuple<double, double, double, double>(m_a, m_b, m_c, m_d);
+	}
+
+
+
+	double operator()(const double& x, const bool& bIsInverseFunction = false)
+	{
+		double X = x;
+
+		double First = (X + m_c) * m_b;
+		double InFunc = std::pow(std::asin(1 / First), m_Power);
 		double StretchOrShrink = InFunc * m_a;
 		double VertShift = StretchOrShrink + m_d;
 

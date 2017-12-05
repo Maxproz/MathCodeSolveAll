@@ -48,7 +48,18 @@ void PrintSlopeInterceptForm(const Point& Point, const double& Slope);
 
 
 
+//PROBLEM - SOLVING STRATEGY : IMPLICIT DIFFERENTIATION
+// 1. Take the derivative of both sides of the equation. Keep in mind that y is a function of x. 
+// 2. Rewrite the equation so that all terms containing dy/dx are on the left and
+// all terms that do not contain dy/dx are on the right.
+// 3. Factor out dy/dx on the left.
+// 4. Solve for dy/dx by dividing both sides of the equation by an appropriate algebraic expression.
 
+// Assuming that y is defined implicitly by the equation x^2+y^2=25 find dy/dx.
+//inline void UsingImplicitDifferentiation()
+//{
+//
+//}
 
 
 

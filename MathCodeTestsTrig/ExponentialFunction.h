@@ -37,6 +37,10 @@ private:
 	EndBehavior m_AsXGoesPosEndBehavior;
 	EndBehavior m_AsXGoesNegEndBehavior;
 
+	// The derivative of e^x is e^x
+	// The derivative of e^(g(x)) is e^(g(x)) * g'(x)
+
+
 public:
 	// Exponential functions have constant bases and variable exponents
 	explicit ExponentialFunction(const double& a, const double& b)

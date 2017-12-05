@@ -90,16 +90,56 @@ public:
 	std::map<double, double> GetRadianTanMap() const { return m_RadianTanMap; }
 };
 
-class myCircle
+class CircleFunction
 {
 private:
-	Point m_Center;
-	unsigned int m_Radius = 1;
+	//Point m_Center;
+
+
+	double m_x;
+	double m_h;
+	
+	double m_y;
+	double m_k;
+
+	double m_r;
+
 
 
 public:
-	//myCircle();    
-	
+	CircleFunction() = default;
+
+	explicit CircleFunction(const double& x, const double& h, const double& y, const double& k, const double &r)
+		: m_x{ x }, m_h{ h }, m_y{ y }, m_k{ k }, m_r{ r }
+	{
+
+
+	}
+
+	inline tuple<double, double, double, double, double> GetXHYKR() const
+	{
+		return tuple<double, double, double, double, double>(m_x, m_h, m_y, m_k, m_r);
+	}
+
+
+	/* INPUT: Value whose arc sine is computed, in the interval[-1, +1].
+	If the argument is out of this interval, a domain error occurs. */
+	/* RETURN: Principal arc sine of x, in the interval [-pi/2,+pi/2] radians.
+	One radian is equivalent to 180/PI degrees.*/
+	double operator()(const double& x, const double& y)
+	{
+
+		double LocalX = std::pow(x - m_h, 2);
+		double LocalY = std::pow(y - m_k, 2);
+
+		double LHS = LocalX + LocalY;
+
+		double RHS = std::pow(m_r, 2);
+
+		LHS == RHS;
+
+		return 0;
+	}
 
 };
 

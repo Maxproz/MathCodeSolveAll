@@ -178,7 +178,7 @@ public:
 		}
 	}
 
-	double operator()(const double x) const
+	double operator()(const double& x) const
 	{
 		if (x <= 0)
 		{
