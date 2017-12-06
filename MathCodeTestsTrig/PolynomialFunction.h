@@ -4,16 +4,15 @@
 #ifndef POLYNOMIALFUNCTION_H
 #define POLYNOMIALFUNCTION_H
 
+
 #include "FunctionEnums.h"
 #include "MiscMathEquations.h"
 
-//#include "PowerFunction.h"
-//
-//#include <list>
-//
-//using std::list;
+
+#include <tuple>
 
 
+using std::tuple;
 
 
 enum class PolynomialFunctionType
@@ -51,6 +50,9 @@ protected:
 
 	Domain m_Domain;
 	Range m_Range;
+
+	Interval m_DomainInterval = std::make_tuple(0.0f, 0.0f, IntervalType::IT_UNASSIGNED);
+	Interval m_RangeInterval = std::make_tuple(0.0f, 0.0f, IntervalType::IT_UNASSIGNED);
 
 	PolynomialFunctionType m_PolyFunctionType;
 
@@ -148,6 +150,10 @@ public:
 
 	FuncEndBehavior GetEndBehaviourNegDir() const { return m_XGoesNegDir; }
 	FuncEndBehavior GetEndBehaviourPosDir() const { return m_XGoesPosDir; }
+
+
+	inline Interval GetDomainInterval() const { return m_DomainInterval; }
+	inline Interval GetRangeInterval() const { return m_RangeInterval; }
 
 
 	void PrintEndBehaviours() const;

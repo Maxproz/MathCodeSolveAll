@@ -49,25 +49,25 @@ private:
 	
 	// Domain Ranges specific to LinearFunctions 	//  set of real numbers
 	// for linear functions (NEGINFINITY, POSINFINITY) 
-	Interval m_DomainInterval = std::make_tuple(0.0f, 0.0f, IntervalType::IT_UNASSIGNED);
-	Interval m_RangeInterval = std::make_tuple(0.0f, 0.0f, IntervalType::IT_UNASSIGNED);
 
 
 	// TODO: Validate this function
 	void FindAndStoreAllRealZeros();
+
 
 	void AutoSetXAndYIntercepts(const double& b);
 	void AutoSetSlopeAndFunctionForm(const double& a);
 	void AutoSetFunctionsLineBehaviour(const double& a);
 	void AutoCheckSetDegree(const double& a);
 
+
 	void AutoSetDomainInterval();
 	void AutoSetRangeInterval();
 
+
 public:
 
-	inline Interval GetDomainInterval() const { return m_DomainInterval; }
-	inline Interval GetRangeInterval() const { return m_RangeInterval; }
+
 
 	//inline std::vector<double> GetRealNumberZerosVec() const { return m_AllRealZeros; }
 	inline std::vector<double> GetAllZerosVec() const { return m_AllZeros; }
