@@ -5,6 +5,17 @@
 #define FUNCTIONENUMS_H
 
 
+enum class IntervalType
+{
+	//IT_LEFT_OPEN,
+	//IT_RIGHT_OPEN,
+	IT_UNASSIGNED,
+	IT_OPEN,
+
+	IT_LEFT_CLOSED,
+	IT_RIGHT_CLOSED,
+	IT_CLOSED,
+};
 
 
 // Inclusive uses bracket notation

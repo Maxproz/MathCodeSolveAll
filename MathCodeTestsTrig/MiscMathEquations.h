@@ -7,6 +7,8 @@
 #include <utility>
 #include <string>
 
+#include "MathConstants.h"
+#include "FunctionEnums.h"
 
 using std::pair;
 using std::string;
@@ -75,8 +77,18 @@ inline void FlipSign(T& Num)
 
 }
 
+inline bool isEven(int n) // add to helper function?
+{
+	if (n % 2 == 0)
+		return true;
+	else
+		return false;
+}
+
 
 void PrintAllFilesInDirectory(const std::string& path);
+
+void PrintInterval(const Interval& InInterval);
 
 
 #endif

@@ -7,6 +7,8 @@
 // TODO: THIS FUNCTION NEEDS REFACTORED, A ROOT FUNCTION IS NOT A POLYNOMIAL FUNCTION!!!!!
 
 #include "PolynomialFunction.h"
+#include "MiscMathEquations.h"
+
 
 #include <exception>
 #include <stdexcept>
@@ -19,13 +21,7 @@ using std::cout;
 using std::endl;
 using std::tuple;
 
-inline bool isEven(int n) // add to helper function?
-{
-	if (n % 2 == 0)
-		return true;
-	else
-		return false;
-}
+
 
 
 /*

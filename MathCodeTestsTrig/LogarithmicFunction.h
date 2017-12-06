@@ -46,6 +46,8 @@ private:
 	// h'(x) = (1/g(x)) * g'(x)
 
 
+
+
 public:
 
 	explicit LogarithmicFunction(const double& b) //const double& b)

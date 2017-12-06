@@ -6,7 +6,15 @@
 #include <cmath>
 #include <utility>
 #include <map>
+#include <tuple>
+
+
 #include "TrigFunctions.h"
+
+
+using std::tuple;
+
+
 
 const double Zero = 0;
 const double M_PIOverSix = M_PI / 6.0;
@@ -116,10 +124,7 @@ public:
 
 	}
 
-	inline tuple<double, double, double, double, double> GetXHYKR() const
-	{
-		return tuple<double, double, double, double, double>(m_x, m_h, m_y, m_k, m_r);
-	}
+	std::tuple<double, double, double, double, double> GetXHYKR() const;
 
 
 	/* INPUT: Value whose arc sine is computed, in the interval[-1, +1].

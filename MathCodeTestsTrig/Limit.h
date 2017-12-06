@@ -1921,7 +1921,7 @@ inline double Limit<Function>::EvaluateFuncLimit(const RationalFunction<Quadrati
 
 
 
-	//		if (NewFactoredFunction.GetNumeratorLinear().IsBOnlyForm())
+	//		if (NewFactoredFunction.GetNumeratorLinear().IsConstantFunction())
 	//		{
 	//			NumeratorRes = NewFactoredFunction.GetNumeratorLinear().GetB();
 	//		}

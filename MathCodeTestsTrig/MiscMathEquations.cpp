@@ -5,7 +5,7 @@
 #include <cmath>
 #include <iostream>
 #include <filesystem>
-
+#include <tuple>
 
 using std::endl;
 using std::cout;
@@ -139,4 +139,55 @@ void PrintAllFilesInDirectory(const std::string& path)
 {
 	for (auto & p : std::experimental::filesystem::directory_iterator(path))
 		std::cout << p << std::endl;
+}
+
+void PrintInterval(const Interval& InInterval)
+{
+	float a = std::get<0>(InInterval);
+	float b = std::get<1>(InInterval);
+	IntervalType Type = std::get<2>(InInterval);
+
+	float IntervalStart = a;
+	float IntervalEnd = b;
+
+	switch (Type)
+	{
+		case IntervalType::IT_LEFT_CLOSED:
+		{
+			cout << "[" << IntervalStart << "," << IntervalEnd <<  ")";
+
+			return;
+		}
+		//case IntervalType::IT_LEFT_OPEN:
+		//{
+		//	cout << "(" << IntervalStart << "," << IntervalEnd << ")";
+
+		//	return;
+		//}
+		case IntervalType::IT_RIGHT_CLOSED:
+		{
+			cout << "(" << IntervalStart << "," << IntervalEnd << "]";
+
+			return;
+		}
+		//case IntervalType::IT_RIGHT_OPEN:
+		//{
+		//	cout << "(" << IntervalStart << "," << IntervalEnd << ")";
+
+		//	return;
+		//}
+		case IntervalType::IT_CLOSED:
+		{
+			cout << "[" << IntervalStart << "," << IntervalEnd << "]";
+
+			return;
+		}
+		case IntervalType::IT_OPEN:
+		{
+			cout << "(" << IntervalStart << "," << IntervalEnd << ")";
+
+			return;
+		}
+	}
+
 }

@@ -20,6 +20,14 @@
 // TODO: Create a function that uses the abs(velocity) = speed function to better understand it
 // TODO: Have the PrintFunction()'s on the Quadratic and Cubic functions filter between postives and negatives for clean code.
 
+// FERMAT’S THEOREM
+// NOTE: If f has a local extremum at c and f is differentiable (derivative exists at c) at c, then f'(c)=0.
+
+// Intervals
+// An open interval does not include its endpoints, and is indicated with parentheses
+// A closed interval includes its endpoints, and is denoted with square brackets
+// A half-open interval includes only one of its endpoints
+
 int main()
 {
 	try
@@ -415,13 +423,21 @@ int main()
 		//ApplyChainRuleFPowerGQuadratic(FOFX, GOFX);
 		//cout << endl;
 
-		PowerFunction<3> FOFX(1, 1, 0, 0);
-		MPSIN<1> GOFX(1,1,0,0);
-		ApplyChainRuleFPowerGSin(FOFX, GOFX);
+		//PowerFunction<3> FOFX(1, 1, 0, 0);
+		//MPSIN<1> GOFX(1,1,0,0);
+		//ApplyChainRuleFPowerGSin(FOFX, GOFX);
+		//cout << endl;
+
+		
+		LinearFunction TestLinear(2, 3);
+		cout << "Domain";
+		PrintInterval(TestLinear.GetDomainInterval());
+		cout << endl; 
+		cout << "Range";
+		PrintInterval(TestLinear.GetRangeInterval());
 		cout << endl;
 
-
-
+		TestLinear.PrintEndBehaviours();
 
 	}
 	catch (const std::exception& ex)
