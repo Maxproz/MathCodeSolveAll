@@ -97,11 +97,15 @@ private:
 	void AutoSetVertexFromVertexForm(const double& h, const double& k);
 
 
+	//virtual void FindCriticalPoints() override;
+
+	//void FindGlobalExtremums();
+
+public:
+
 	virtual void FindCriticalPoints() override;
 
 	void FindGlobalExtremums();
-
-public:
 
 	 QuadraticFunction() = default;
 	 QuadraticFunction(const QuadraticFunction&) = default;
@@ -140,7 +144,7 @@ public:
 		AutoSetDerivativeFunction(*this);
 		
 
-		FindCriticalPoints();
+		//FindCriticalPoints();
 
 
 	}

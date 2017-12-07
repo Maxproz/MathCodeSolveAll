@@ -41,6 +41,7 @@ protected:
 	bool m_bIsEvenFunction = false;
 	bool m_bIsLeadingCoefficentPositive = false;
 	bool m_bIsContinuousFunction = false;
+	bool m_bIsDifferientableEveryWhere = true; // all polynomials are
 	bool m_bHasDomainBeenRestricted = false;
 
 
@@ -64,13 +65,15 @@ protected:
 
 	// any value in its domain where its derivative is 0
 	std::vector<double> m_CriticalPoints;
+	// any value in its domain where its derivative is 0
+	std::vector<Point> m_CriticalValueCordPoints;
 
 	std::vector<Point> m_LocalMaximumPoints;
 	std::vector<Point> m_LocalMinimumPoints;
 
 	// unnassigned at the moment
-	float m_AbsoluteMaximum = 0.f;
-	float m_AbsoluteMinimum = 0.f;
+	double m_AbsoluteMaximum = 0;
+	double m_AbsoluteMinimum = 0;
 	bool bHasAbsoluteMax = false;
 	bool bHasAbsoluteMin = false;
 
@@ -89,14 +92,16 @@ protected:
 	inline void SetIsContinuousFunction(const bool& Input) { m_bIsContinuousFunction = Input; }
 
 
-	void SetAbsoluteMaximum(const float& InVal) { m_AbsoluteMaximum = InVal; }
-	void SetAbsoluteMinimum(const float& InVal) { m_AbsoluteMinimum = InVal; }
+	void SetAbsoluteMaximum(const double& InVal) { m_AbsoluteMaximum = InVal; }
+	void SetAbsoluteMinimum(const double& InVal) { m_AbsoluteMinimum = InVal; }
 	void SetHasAbsoluteMaximum(const bool& InRes) { bHasAbsoluteMax = InRes; }
 	void SetHasAbsoluteMinimum(const bool& InRes) { bHasAbsoluteMin = InRes; }
 	
 
 	// any value in its domain where its derivative is 0
 	virtual void FindCriticalPoints() = 0;
+
+
 
 public:
 	explicit PolynomialFunction() = default;

@@ -445,10 +445,15 @@ int main()
 
 		//TestLinear.CheckIsContinuousFunction();
 
-		QuadraticFunction TestQuad(1, 2, 3);
-		
+		//QuadraticFunction TestQuad(-1, 3, -2);
+		//TestQuad.RestrictDomain(Interval(1.f, 3.f,IntervalType::IT_CLOSED));
+		//TestQuad.FindCriticalPoints();
+		//TestQuad.FindGlobalExtremums();
 
-
+		QuadraticFunction TestQuad(1, -4, 3);
+		//TestQuad.RestrictDomain(Interval(1, 4, IntervalType::IT_CLOSED));
+		TestQuad.FindCriticalPoints();
+		TestQuad.FindGlobalExtremums();
 	}
 	catch (const std::exception& ex)
 	{

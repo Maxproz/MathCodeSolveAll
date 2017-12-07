@@ -1,4 +1,4 @@
-#include "QuadraticFunction.h"
+﻿#include "QuadraticFunction.h"
 
 #include "Derivative.h"
 #include "QuarticFunction.h"
@@ -416,6 +416,14 @@ void QuadraticFunction::FindCriticalPoints()
 	LinearFunction DerivativeFunc = GetDerivativeFunction();
 	std::vector<double> CriticalPoints = DerivativeFunc.GetAllZerosVec();
 
+	// if f'(c) is undefined its a critical point of f
+	// AKA (This Derivative is defined for all real numbers) so this doesnt matter
+	//if (std::isnan(CriticalValue))
+	//{
+	//
+	//}
+
+
 	int AmountOfCriticalPoints = CriticalPoints.size();
 	cout << "Amount of critical Points: " << AmountOfCriticalPoints << endl;
 
@@ -426,7 +434,12 @@ void QuadraticFunction::FindCriticalPoints()
 		m_CriticalPoints.push_back(CriticalPoint);
 		double CriticalValue = DerivativeFunc(CriticalPoint);
 
+
+
 		Point PointOfIntrest(CriticalPoint, CriticalValue);
+
+		double CriticalValueForNonDerivativeFunction = operator()(CriticalPoint);
+		m_CriticalValueCordPoints.push_back(Point(CriticalPoint, CriticalValueForNonDerivativeFunction));
 
 		bool bGoesFromNegativeToPositiveAroundCriticalPoint = ((DerivativeFunc(CriticalPoint - 0.1) < 0) && (DerivativeFunc(CriticalPoint + 0.1) > 0));
 		
@@ -451,7 +464,7 @@ void QuadraticFunction::FindCriticalPoints()
 	cout << "Printing all Critical Points\n";
 	for (int i = 0; i < m_CriticalPoints.size(); ++i)
 	{
-		cout << m_CriticalPoints[i] << endl;
+		cout << "x = " <<  m_CriticalPoints[i] << endl;
 	}
 	cout << endl;
 
@@ -470,7 +483,7 @@ void QuadraticFunction::FindCriticalPoints()
 	cout << endl;
 
 
-	FindGlobalExtremums();
+	//FindGlobalExtremums();
 
 
 }
@@ -480,36 +493,92 @@ void QuadraticFunction::FindCriticalPoints()
 void QuadraticFunction::FindGlobalExtremums()
 {
 
-	if (m_bHasDomainBeenRestricted)
+	IntervalType DomainInterval = std::get<2>(GetDomainInterval());
+
+	if (DomainInterval == IntervalType::IT_CLOSED)
 	{
-		cout << "Restricted" << endl;
+		cout << "Closed Interval" << endl;
 
 		double StartOfCriticalPointsInterval = std::get<0>(GetDomainInterval());
-
-		if (std::isinf(StartOfCriticalPointsInterval))
+		if (std::isinf(StartOfCriticalPointsInterval) * (-1))
 		{
-
+			throw std::logic_error("You cant have a closed intervals with infinitys in it");
 		}
 		else
 		{
 			double StartOfIntervalCriticalPointValue = operator()(StartOfCriticalPointsInterval);
+			m_CriticalValueCordPoints.push_back(Point(StartOfCriticalPointsInterval, StartOfIntervalCriticalPointValue));
 		}
 
 
 		double EndOfCriticalPointsInterval = std::get<1>(GetDomainInterval());
-
 		if (std::isinf(EndOfCriticalPointsInterval))
 		{
-
+			throw std::logic_error("You cant have a closed intervals with infinitys in it");
 		}
 		else
 		{
 			double EndOfIntervalCriticalPointValue = operator()(EndOfCriticalPointsInterval);
+			m_CriticalValueCordPoints.push_back(Point(EndOfCriticalPointsInterval, EndOfIntervalCriticalPointValue));
 		}
+
+		cout << "Closed Part2" << endl;
+
+
+		if (m_CriticalValueCordPoints.size() > 1)
+		{
+			cout << "Test1" << endl;
+
+			cout << m_CriticalValueCordPoints.size();
+
+			std::sort(m_CriticalValueCordPoints.begin(), m_CriticalValueCordPoints.end(), [](auto &left, auto &right)
+			{
+				return left.second < right.second;
+			});
+
+			cout << "Printing all potentials for Global Externums Points\n";
+			for (int i = 0; i < m_CriticalValueCordPoints.size(); ++i)
+			{
+				cout << "(" << m_CriticalValueCordPoints[i].first << "," << m_CriticalValueCordPoints[i].second << ")" << endl;
+			}
+
+			SetAbsoluteMinimum(m_CriticalValueCordPoints.front().first);
+			SetAbsoluteMaximum(m_CriticalValueCordPoints.back().first);
+		}
+		else if (m_CriticalValueCordPoints.size() == 1)
+		{
+			cout << "Test2" << endl;
+			
+			throw std::exception("Shouldnt happen1");
+
+		}
+		else
+		{
+			//// There is no global minimum
+			//SetAbsoluteMinimum(NAN);
+			throw std::exception("Shouldnt happen2");
+
+
+		}
+
+
+		cout << "Printing Absolute Maximum Point\n";
+		cout << m_AbsoluteMaximum << std::endl;
+
+		cout << endl;
+
+		cout << "Printing Absolute Minimum Point\n";
+		cout << m_AbsoluteMinimum << std::endl;
+
+
+		cout << endl;
+	
+		return;
+
 	}
-	else
+	else if (DomainInterval == IntervalType::IT_OPEN)
 	{
-		cout << "Not Restricted" << endl;
+		cout << "Open Interval" << endl;
 
 
 		if (m_LocalMinimumPoints.size() > 1)

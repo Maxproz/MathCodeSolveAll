@@ -143,12 +143,12 @@ void PrintAllFilesInDirectory(const std::string& path)
 
 void PrintInterval(const Interval& InInterval)
 {
-	float a = std::get<0>(InInterval);
-	float b = std::get<1>(InInterval);
+	double a = std::get<0>(InInterval);
+	double b = std::get<1>(InInterval);
 	IntervalType Type = std::get<2>(InInterval);
 
-	float IntervalStart = a;
-	float IntervalEnd = b;
+	double IntervalStart = a;
+	double IntervalEnd = b;
 
 	switch (Type)
 	{
