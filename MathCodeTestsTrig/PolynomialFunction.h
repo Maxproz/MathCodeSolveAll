@@ -63,6 +63,7 @@ protected:
 
 	double m_LeadingCoefficent = 0;
 
+	// TODO: Sloppy should fix this later, whats the point in two varibles
 	// any value in its domain where its derivative is 0
 	std::vector<double> m_CriticalPoints;
 	// any value in its domain where its derivative is 0

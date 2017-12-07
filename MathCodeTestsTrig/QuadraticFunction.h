@@ -136,6 +136,7 @@ public:
 
 		// Normal polynomials are continuous 
 		SetIsContinuousFunction(true);
+		m_bIsDifferientableEveryWhere = true;
 
 		AutoSetHowManyRealZeroVariables();
 
