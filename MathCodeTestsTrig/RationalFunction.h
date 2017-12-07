@@ -59,6 +59,9 @@ private:
 
 	mutable double m_LastCalculatedRes = 0;
 
+
+	virtual void FindCriticalPoints() override;
+
 public:
 
 	////template<typename NumFunc, typename DenomFunc>
@@ -325,3 +328,9 @@ public:
 
 
 #endif
+
+template<typename NumFunc, typename DenomFunc>
+inline void RationalFunction<NumFunc, DenomFunc>::FindCriticalPoints()
+{
+
+}

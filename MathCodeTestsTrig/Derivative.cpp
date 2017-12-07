@@ -19,10 +19,10 @@ template<typename InFunction, typename OutFunction>
 LinearFunction Derivative<InFunction, OutFunction>::EvaluateFunctionDerivative(const QuadraticFunction& InFunction)
 {
 	// When getting derivative here the c variable doesnt matter
-	auto AB = InFunction.GetAB();
+	auto ABC = InFunction.GetABC();
 
-	double a = std::get<0>(AB);
-	double b = std::get<1>(AB);
+	double a = std::get<0>(ABC);
+	double b = std::get<1>(ABC);
 
 	// need to change for higher powered functions
 	a = 2 * a;

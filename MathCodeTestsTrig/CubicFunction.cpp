@@ -24,6 +24,11 @@ void AutoSetCubicDerivativeFunction(CubicFunction& InFunc)
 
 }
 
+void CubicFunction::FindCriticalPoints()
+{
+
+}
+
 std::string CubicFunction::GetFunctionString() const
 {
 	std::string OutString; 

@@ -78,6 +78,7 @@ private:
 		m_HorizontalTangentLines = (DerivZerosVec);
 	}
 
+	virtual void FindCriticalPoints() override;
 	
 
 public:
@@ -115,6 +116,9 @@ public:
 		AutoSetCubicDerivativeFunction(*this);
 		// Here I will Use the Derivative function to automatically set the zeros 
 		AutoSetHorizontalTangetLines();
+
+		m_AbsoluteMaximum = NAN;
+		m_AbsoluteMinimum = NAN;
 
 	}
 	

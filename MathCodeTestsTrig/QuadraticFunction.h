@@ -5,8 +5,8 @@
 
 
 #include "PolynomialFunction.h"
-#include "LinearFunction.h"
 
+#include "LinearFunction.h"
 
 //#include "Derivative.h"
 
@@ -51,9 +51,14 @@ private:
 	friend class ConstantFunction;
 
 protected:
+
 	double m_a;
 	double m_b;
 	double m_c;
+
+	double m_VertexX;
+	double m_VertexY;
+
 private:
 
 	ParabolaOpen m_ParabolaOpens;
@@ -66,13 +71,14 @@ private:
 
 	double m_SymmetryLine;
 
+	// no idea what these variables are tracking
 	double m_MaxValueAtXIsEqualTo;
 	double m_MinValueAtXIsEqualTo;
 
 	void AutoSetHowManyRealZeroVariables();
 
-	bool m_bJustABForm = false;
-	bool m_bJustACForm = false;
+	bool m_bIsFunctionGeneralForm = false;
+	bool m_bIsFunctionVertexForm = false;
 
 
 	void PrintFunctionEndBehavior() const;
@@ -81,16 +87,25 @@ private:
 
 	LinearFunction m_DerivativeFunction;// = LinearFunction(1, 0);
 
-	
+	// Open Down means function is upside down bowl shape
+	inline void SetParabolaOpeningDirection(const double& LeadingCoefficent);
+
+	void AutoSetDomainInterval();
+	void AutoSetRangeInterval();
+
+	void AutoSetVertexFromGeneralForm();
+	void AutoSetVertexFromVertexForm(const double& h, const double& k);
+
+
+	virtual void FindCriticalPoints() override;
+
+	void FindGlobalExtremums();
 
 public:
 
 	 QuadraticFunction() = default;
-
 	 QuadraticFunction(const QuadraticFunction&) = default;
-
 	//QuadraticFunction(QuadraticFunction&&) = default;
-
 	//QuadraticFunction& operator =(const QuadraticFunction &) = default;
 
 	explicit QuadraticFunction(double a, double b, double c = 0) : m_a(a), m_b(b), m_c(c)
@@ -98,37 +113,25 @@ public:
 		m_PolyFunctionType = PolynomialFunctionType::QUADRATIC;
 
 		if (a == 0)
-			throw std::exception("a cannot == 0 for quadratic func initalization");
+			throw std::exception("a cannot == 0 for quadratic func initalization (general form constructor)");
 
-		
-		// Qudratic degree is 2
-		m_Degree = 2;
+		AutoSetVertexFromGeneralForm();
+		AutoSetDomainInterval();
+	
 
-		// The degree of quadratic function is 2 so its even
-		m_bIsEvenFunction = true;
+		// Qudratic degree is 2 and also even 
+		SetDegree(2); 
+		SetLeadingCoefficent(m_a);
+		SetPolynomialEndBehaviours();
+		SetIsEvenFunction(true);
+		SetParabolaOpeningDirection(a);
+		m_bIsFunctionGeneralForm = true;
 
-		if (a > 0)
-		{
-			m_EndBehavior = EndBehavior::AsXGoesToPosOrNegInfinityFOfXGoesToPosInfinity;
-			m_ParabolaOpens = ParabolaOpen::UP;
-		}
-		else
-		{
-			// a < 0 at this point 
-			m_EndBehavior = EndBehavior::AsXGoesToPosOrNegInfinityFOfXGoesToNegInfinity;
-			m_ParabolaOpens = ParabolaOpen::DOWN;
+		// This needs to be called after ParabolaOpensDirection and After the VertexYCord has been set
+		AutoSetRangeInterval();
 
-		}
-
-		if (c == 0)
-		{
-			m_bJustABForm = true;
-		}
-
-		if (b == 0)
-		{
-			m_bJustACForm = true;
-		}
+		// Normal polynomials are continuous 
+		SetIsContinuousFunction(true);
 
 		AutoSetHowManyRealZeroVariables();
 
@@ -136,84 +139,17 @@ public:
 
 		AutoSetDerivativeFunction(*this);
 		
+
+		FindCriticalPoints();
+
+
 	}
 
 	// assumes user has put in Vertex Form example y = a*(x - h)^2 + k
 	// TODO: This is an awesome function, polish it and finish it up
 	// TODO: need to add additional functionality for the different operator options
 	// TODO: need to try different values for the "a" input and see what happens and add fixes 
-	explicit QuadraticFunction(const std::string& FuncForm)
-	{
-		std::istringstream iss(FuncForm);
-
-		double a = 0;
-		char FirstParathensis;
-		char x;
-		char PlusOrMinusOpOne;
-		double h;
-		char PowerOp;
-		char TwoChar;
-		char SecondParathensis;
-		char PlusOrMinusOpTwo;
-		double k;
-
-		// TODO: Add check for an implicit + k missing
-
-		int MaybeA = iss.peek();
-		if (MaybeA == EOF) return;
-		if (!isdigit(MaybeA))
-		{
-			// Assume that we are dealing with an implicit 1 for the a variable
-			a = 1;
-			iss >> FirstParathensis >> x >> PlusOrMinusOpOne >> h >> PowerOp >> TwoChar >> SecondParathensis >>
-				PlusOrMinusOpTwo >> k;
-		}
-		else
-		{
-			// otherwise read the function like normal
-			iss >> a >> FirstParathensis >> x >> PlusOrMinusOpOne >> h >> PowerOp >> TwoChar >> SecondParathensis >>
-				PlusOrMinusOpTwo >> k;
-		}
-
-		// TODO: remove debug code
-		std::cout << a << std::endl;
-		std::cout << FirstParathensis << std::endl;
-		std::cout << x << std::endl;
-		std::cout << PlusOrMinusOpOne << std::endl;
-		std::cout << h << std::endl;
-		std::cout << PowerOp << std::endl;
-		std::cout << TwoChar << std::endl;
-		std::cout << SecondParathensis << std::endl;
-		std::cout << PlusOrMinusOpTwo << std::endl;
-		std::cout << k << std::endl;
-
-		double TermInOne, TermInTwo, TermInThree;
-
-		if (PlusOrMinusOpOne == '-')
-		{
-			if (PlusOrMinusOpTwo == '+')
-			{
-				// y = a*(x-h)^2 + k
-				TermInOne = a;
-				TermInTwo = (((h) * (-1)) * 2);
-				TermInThree = (std::pow(h, 2) * (a)) + k;
-
-				m_a = TermInOne;
-				m_b = TermInTwo;
-				m_c = TermInThree;
-
-			}
-		}
-
-		// make a helper function to handle all the misc constuctor stuff that is used in the main constuctor above
-
-		AutoSetHowManyRealZeroVariables();
-
-		SetZerosQuadraticFormula(*this);
-
-		AutoSetDerivativeFunction(*this);
-
-	}
+	explicit QuadraticFunction(const std::string& FuncForm);
 
 
 	// multiplication
@@ -224,7 +160,7 @@ public:
 	//QuadraticTrigometric operator*(const TrigometricFunction<MPSIN>& rhs) const;
 	/*QuarticFunction& operator*=(CubicFunction const& rhs);*/
 
-	double operator()(const double x) const
+	double operator()(const double& x) const
 	{
 		double TermOne, TermTwo, TermThree;
 		TermOne = (m_a * (std::pow(x, 2)));
@@ -233,10 +169,8 @@ public:
 		return TermOne + TermTwo + TermThree;
 	}
 
-	inline std::tuple<double, double, double> GetABC() const
-	{
-		return std::tuple<double, double, double>(m_a, m_b, m_c);
-	}
+	inline std::tuple<double, double, double> GetABC() const { return std::tuple<double, double, double>(m_a, m_b, m_c); }
+	inline std::tuple<double, double> GetAC() const { return std::tuple<double, double>(m_a, m_c); }
 
 	void SetAllZeroVec(std::vector<double> InVec) { m_AllZeros = InVec; }
 	//void SetRealNumberZeroVec(std::vector<double> InVec) { m_RealNumberZeros = InVec; }
@@ -252,19 +186,7 @@ public:
 	void PrintFunction() const;
 	std::string GetFunctionString() const;
 
-	inline bool IsABForm() const { return m_bJustABForm; }
-	inline bool IsACForm() const { return m_bJustACForm; }
-
-
-	inline std::tuple<double, double> GetAB() const
-	{
-		return std::tuple<double, double>(m_a, m_b);
-	}
-
-	inline std::tuple<double, double> GetAC() const
-	{
-		return std::tuple<double, double>(m_a, m_c);
-	}
+	
 
 	//std::vector<double> GetRealNumberZerosVec() const { return m_RealNumberZeros; }
 	//inline int GetAmountOfRealZeros() const { return m_AmountOfRealNumberZeros; }
@@ -273,7 +195,7 @@ public:
 	
 
 	LinearFunction GetDerivativeFunction() const;
-	void SetDerivativeFunction(LinearFunction& InFunc); 
+	void SetDerivativeFunction(const LinearFunction& InFunc);
 
 };
 

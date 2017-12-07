@@ -30,6 +30,10 @@ private:
 	double m_d; 
 	double m_e;
 
+
+	virtual void FindCriticalPoints() override;
+
+
 protected:
 	
 

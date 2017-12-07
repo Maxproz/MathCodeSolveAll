@@ -3,6 +3,9 @@
 #include "QuarticFunction.h"
 #include "QuadraticFunction.h"
 #include "CubicFunction.h"
+#include "Limit.h"
+#include "Derivative.h"
+#include "ConstantFunction.h"
 
 
 void LinearFunction::FindAndStoreAllRealZeros()
@@ -126,6 +129,132 @@ void LinearFunction::AutoSetRangeInterval()
 	// really dont need this variable in this class anymore but I can change it around later
 	m_Range = Range::NegInfinityToPosInfinity;
 }
+
+void LinearFunction::FindCriticalPoints()
+{
+
+}
+
+
+
+//void LinearFunction::CheckIsContinuousFunction()
+//{
+
+	// Regualar polynomials are continuous over their entire domain
+
+	//if (m_bHasDomainBeenRestricted == false)
+	//{
+	//	SetIsContinuousFunction(true); 
+	//	return;
+	//}
+	//
+	//float DomainStart = std::get<0>(GetDomainInterval());
+	//float DomainEnd = std::get<1>(GetDomainInterval());
+	//IntervalType DomainIntervalType = std::get<2>(GetDomainInterval());
+
+	//unsigned int AmountOfDiscontinuosLocations = 0;
+
+	//switch (DomainIntervalType)
+	//{
+	//	case IntervalType::IT_LEFT_CLOSED:
+	//	{
+
+	//		while (DomainStart != (DomainEnd - 1))
+	//		{
+	//			Limit<LinearFunction> ContinousCheckingLimit(*this, DomainStart);
+	//			bool TestPoint = ContinousCheckingLimit.GetIsEvaulatedFunctionContinuousAtLastEvaluatedPoint();
+
+	//			if (TestPoint == true)
+	//			{
+
+	//			}
+	//			else
+	//			{
+	//				AmountOfDiscontinuosLocations++;
+	//			}
+
+	//			DomainStart++;
+	//		}
+
+	//		break;
+	//	}
+	//	case IntervalType::IT_RIGHT_CLOSED:
+	//	{
+	//		while ((DomainStart + 1) != DomainEnd)
+	//		{
+	//			Limit<LinearFunction> ContinousCheckingLimit(*this, DomainStart + 1);
+	//			bool TestPoint = ContinousCheckingLimit.GetIsEvaulatedFunctionContinuousAtLastEvaluatedPoint();
+
+	//			if (TestPoint == true)
+	//			{
+
+	//			}
+	//			else
+	//			{
+	//				AmountOfDiscontinuosLocations++;
+	//			}
+
+	//			DomainStart++;
+	//		}
+
+	//		break;
+	//	}
+
+	//	case IntervalType::IT_CLOSED:
+	//	{
+	//		while (DomainStart != DomainEnd)
+	//		{
+	//			Limit<LinearFunction> ContinousCheckingLimit(*this, DomainStart);
+	//			bool TestPoint = ContinousCheckingLimit.GetIsEvaulatedFunctionContinuousAtLastEvaluatedPoint();
+
+	//			if (TestPoint == true)
+	//			{
+
+	//			}
+	//			else
+	//			{
+	//				AmountOfDiscontinuosLocations++;
+	//			}
+
+	//			DomainStart++;
+	//		}
+
+	//		break;
+	//	}
+	//	case IntervalType::IT_OPEN:
+	//	{
+	//		while ((DomainStart + 1) != (DomainEnd - 1))
+	//		{
+	//			Limit<LinearFunction> ContinousCheckingLimit(*this, DomainStart + 1);
+	//			bool TestPoint = ContinousCheckingLimit.GetIsEvaulatedFunctionContinuousAtLastEvaluatedPoint();
+
+	//			if (TestPoint == true)
+	//			{
+
+	//			}
+	//			else
+	//			{
+	//				AmountOfDiscontinuosLocations++;
+	//			}
+
+	//			DomainStart++;
+	//		}
+
+	//		break;
+	//	}
+	//}
+
+	//if (AmountOfDiscontinuosLocations > 0)
+	//{
+	//	SetIsContinuousFunction(false);
+	//}
+	//else
+	//{
+	//	SetIsContinuousFunction(true);
+	//}
+
+	//std::cout << "Amount of discontinuous locations found on domain: " << AmountOfDiscontinuosLocations << std::endl;
+//}
 
 QuarticFunction LinearFunction::operator*(CubicFunction const & rhs) const
 {
@@ -295,4 +424,21 @@ std::string LinearFunction::GetFunctionString() const
 	return OutString;
 }
 
+ConstantFunction LinearFunction::GetDerivativeFunction() const
+{
+	return m_DerivativeFunction;
+}
+
+void LinearFunction::SetDerivativeFunction(ConstantFunction & InFunc)
+{
+	m_DerivativeFunction = InFunc;
+}
+
+
+void AutoSetDerivativeFunction(LinearFunction & InFunc)
+{
+	Derivative<LinearFunction, ConstantFunction> Derivative(InFunc);
+	InFunc.SetDerivativeFunction(Derivative.GetDerivativeFunction());
+
+}
 

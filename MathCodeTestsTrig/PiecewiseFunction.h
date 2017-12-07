@@ -17,6 +17,9 @@ using std::vector;
 using std::pair;
 using std::isnan;
 
+// max min of piecewise func
+// For any function that is defined piecewise, one finds a maximum (or minimum) by finding the maximum (or minimum) of each piece separately, and then seeing which one is largest (or smallest).
+
 
 template <typename FirstFunc, typename SecondFunc>
 class PiecewiseFunction

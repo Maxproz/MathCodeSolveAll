@@ -429,15 +429,25 @@ int main()
 		//cout << endl;
 
 		
-		LinearFunction TestLinear(2, 3);
-		cout << "Domain";
-		PrintInterval(TestLinear.GetDomainInterval());
-		cout << endl; 
-		cout << "Range";
-		PrintInterval(TestLinear.GetRangeInterval());
-		cout << endl;
+		//LinearFunction TestLinear(2, 3);
+		//cout << "Domain";
+		//PrintInterval(TestLinear.GetDomainInterval());
+		//cout << endl; 
+		//cout << "Range";
+		//PrintInterval(TestLinear.GetRangeInterval());
+		//cout << endl;
 
-		TestLinear.PrintEndBehaviours();
+		//TestLinear.PrintEndBehaviours();
+
+		//std::cout << std::endl;
+
+		//TestLinear.RestrictDomain(Interval(1, 4, IntervalType::IT_LEFT_CLOSED));
+
+		//TestLinear.CheckIsContinuousFunction();
+
+		QuadraticFunction TestQuad(1, 2, 3);
+		
+
 
 	}
 	catch (const std::exception& ex)

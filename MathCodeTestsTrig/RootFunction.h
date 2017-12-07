@@ -133,7 +133,7 @@ private:
 	// find the starting number by setting the expression inside of the root >= 0
 	double m_StartingDomainNum = 0;
 	
-
+	virtual void FindCriticalPoints() override;
 
 public:
 	RootFunction() = default;
@@ -215,3 +215,8 @@ public:
 
 #endif
 
+template<int Root>
+inline void RootFunction<Root>::FindCriticalPoints()
+{
+
+}

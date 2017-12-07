@@ -589,7 +589,7 @@ inline double GetSlopeOfSecantLine(const double& a, const QuadraticFunction& F)
 inline LinearFunction FactorNumeratorRationalFunc(const QuadraticFunction& InNumerator, const LinearFunction& InDenominator)
 {
 	// assumes a simple factor with - QuadraticFunction m_a == 1;
-	auto NumABTemp = InNumerator.GetAB();
+	auto NumABTemp = InNumerator.GetABC();
 	double ExceptionCheckA = std::get<0>(NumABTemp);
 	if (ExceptionCheckA != 1)
 	{

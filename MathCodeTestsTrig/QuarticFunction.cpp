@@ -8,6 +8,11 @@
 using std::cout;
 using std::endl;
 
+void QuarticFunction::FindCriticalPoints()
+{
+
+}
+
 QuarticFunction QuarticFunction::operator+(QuarticFunction const & rhs) const
 {
 	double NewA = m_a + rhs.m_a;

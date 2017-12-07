@@ -116,6 +116,7 @@ private:
 
 	Function m_Function;
 
+	bool m_bIsEvaluatedFunctionContinuous = false;
 
 	double m_a;
 	//std::function<double(const double&)> m_Function;
@@ -998,12 +999,21 @@ public:
 		else
 		{
 			// If its a real number this is our limit
-			// TODO: Mark the function as continuous here using a variable that all functions have
-			// because if a function is differentiable it must be continuous.
-			// bool InFunction.bIsContinuous = true;
-
-
 			m_L = TestIfNan;
+		}
+		
+		// TODO: Mark the function as continuous here using a variable that all functions have
+		// because if a function is differentiable it must be continuous.
+		// bool InFunction.bIsContinuous = true;
+
+		// If Function reaches here and its a real number it is continuous.
+		if (std::isnan(m_L))
+		{
+			m_bIsEvaluatedFunctionContinuous = false;
+		}
+		else
+		{
+			m_bIsEvaluatedFunctionContinuous = true;
 		}
 
 		// automatically run the limit on construction
@@ -1025,6 +1035,8 @@ public:
 		DisplayLimitResult();
 	}
 
+
+	inline bool GetIsEvaulatedFunctionContinuousAtLastEvaluatedPoint() const { return m_bIsEvaluatedFunctionContinuous; }
 
 	// explicit Limit(Function& InFunction, const double& a)
 	//	: /* m_Function(InFunction), */m_a(a)
@@ -1978,6 +1990,7 @@ inline double Limit<Function>::EvaluateFuncLimit(const RationalFunction<Quadrati
 	//	//{
 	//	QuadraticFunction Denominator = InRationalFunc.GetDenominatorQuadratic();
 
+	// UPDATE: This function IsACForm was removed
 	//	if (Denominator.IsACForm()) // TODO: Set this up next
 	//	{
 	//		std::tuple<double, double> AC = Denominator.GetAC();

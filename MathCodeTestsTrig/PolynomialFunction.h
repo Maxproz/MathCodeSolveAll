@@ -10,10 +10,10 @@
 
 
 #include <tuple>
-
+#include <vector>
 
 using std::tuple;
-
+using std::vector;
 
 enum class PolynomialFunctionType
 {
@@ -40,16 +40,20 @@ protected:
 	int m_Degree = 0;
 	bool m_bIsEvenFunction = false;
 	bool m_bIsLeadingCoefficentPositive = false;
+	bool m_bIsContinuousFunction = false;
+	bool m_bHasDomainBeenRestricted = false;
+
+
 
 	// // https://www.varsitytutors.com/hotmath/hotmath_help/topics/end-behavior-of-a-function
 	// The end behavior of a polynomial function is the behavior of the graph of f(x)f(x) as xx approaches positive infinity or negative infinity.
-	EndBehavior m_EndBehavior;
+	EndBehavior m_EndBehavior; // not really using this one anymore
 
 	FuncEndBehavior m_XGoesNegDir = std::make_pair(0.f, 0.f); // = std::make_pair(Interval(0, 0, IntervalType::IT_UNASSIGNED), Interval(0, 0, IntervalType::IT_UNASSIGNED));
 	FuncEndBehavior m_XGoesPosDir = std::make_pair(0.f, 0.f);
 
-	Domain m_Domain;
-	Range m_Range;
+	Domain m_Domain; // not really using this one anymore
+	Range m_Range; // not really using this one anymore
 
 	Interval m_DomainInterval = std::make_tuple(0.0f, 0.0f, IntervalType::IT_UNASSIGNED);
 	Interval m_RangeInterval = std::make_tuple(0.0f, 0.0f, IntervalType::IT_UNASSIGNED);
@@ -57,6 +61,18 @@ protected:
 	PolynomialFunctionType m_PolyFunctionType;
 
 	double m_LeadingCoefficent = 0;
+
+	// any value in its domain where its derivative is 0
+	std::vector<double> m_CriticalPoints;
+
+	std::vector<Point> m_LocalMaximumPoints;
+	std::vector<Point> m_LocalMinimumPoints;
+
+	// unnassigned at the moment
+	float m_AbsoluteMaximum = 0.f;
+	float m_AbsoluteMinimum = 0.f;
+	bool bHasAbsoluteMax = false;
+	bool bHasAbsoluteMin = false;
 
 	// Might use these later
 	inline void SetEndBehaviorNegDir(const FuncEndBehavior& InBehav) { m_XGoesNegDir = InBehav; }
@@ -66,69 +82,21 @@ protected:
 	void SetLeadingCoefficent(const double& InVariable) { m_LeadingCoefficent = InVariable; }
 
 	// This function needs to have the degree and leading coefficent set before its called on a polynomial function
-	inline void SetPolynomialEndBehaviours()
-	{
-		// As x goes to the negative direction is the first interval.
-		//Interval AsXGoesToNegativeDirectionInterval = m_EndBehaviorIntervals.first;
-		//float AsXGoesNegStartInterval = 0; 
-		//float AsXGoesNegEndInterval = 0; // std::get<1>(AsXGoesToNegativeDirectionInterval);
-		//IntervalType AsXGoesNegIntervalType = IntervalType::IT_UNASSIGNED; // std::get<2>(AsXGoesToNegativeDirectionInterval);
+	void SetPolynomialEndBehaviours();
+	
 
-		//// As x goes to the positive direction is the Second interval.
-		////Interval AsXGoesToPositiveDirectionInterval = m_EndBehaviorIntervals.second;
-		//float AsXGoesPosStartInterval = 0;// std::get<0>(AsXGoesToPositiveDirectionInterval);
-		//float AsXGoesPosEndInterval = 0; // std::get<1>(AsXGoesToPositiveDirectionInterval);
-		//IntervalType AsXGoesPosIntervalType = IntervalType::IT_UNASSIGNED;// std::get<2>(AsXGoesToPositiveDirectionInterval);
+	inline void SetIsEvenFunction(const bool& Input) { m_bIsEvenFunction = Input; }
+	inline void SetIsContinuousFunction(const bool& Input) { m_bIsContinuousFunction = Input; }
 
-		bool bIsLeadingCoefficentPositive = (m_LeadingCoefficent > 0);
-		bool bIsFunctionDegreeEven = isEven(m_Degree);
 
-		if (bIsLeadingCoefficentPositive)
-		{
-			// Leading coefficent is positive
-			if (bIsFunctionDegreeEven)
-			{
-				//// leading coefficent positive and function degree even
-				//float AsXGoesNegDirectionToStartInterval = 0; 
-				//float FofXGoesToNegDir = 0; 
+	void SetAbsoluteMaximum(const float& InVal) { m_AbsoluteMaximum = InVal; }
+	void SetAbsoluteMinimum(const float& InVal) { m_AbsoluteMinimum = InVal; }
+	void SetHasAbsoluteMaximum(const bool& InRes) { bHasAbsoluteMax = InRes; }
+	void SetHasAbsoluteMinimum(const bool& InRes) { bHasAbsoluteMin = InRes; }
+	
 
-				m_XGoesNegDir = std::make_pair(NEGINFINITY, INFINITY);
-				m_XGoesPosDir = std::make_pair(INFINITY, INFINITY);
-
-				//IntervalType AsXGoesNegIntervalType = IntervalType::IT_OPEN;
-
-				//float AsXGoesPosDirectionToEndInterval = 0;
-				//float FofXGoesPosDir = 0;
-				//IntervalType AsXGoesPosIntervalType = IntervalType::IT_UNASSIGNED;
-
-			}
-			else
-			{
-				// leading coefficent positive and function degree odd
-				m_XGoesNegDir = std::make_pair(NEGINFINITY, NEGINFINITY);
-				m_XGoesPosDir = std::make_pair(INFINITY, INFINITY);
-
-			}
-		}
-		else
-		{
-			// Leading Coefficent is negative
-			if (bIsFunctionDegreeEven)
-			{
-				// leading coefficent negative and function degree even
-
-				m_XGoesNegDir = std::make_pair(NEGINFINITY, NEGINFINITY);
-				m_XGoesPosDir = std::make_pair(INFINITY, NEGINFINITY);
-			}
-			else
-			{
-				// leading coefficent negative and function degree odd
-
-				m_XGoesNegDir = std::make_pair(NEGINFINITY, INFINITY);
-				m_XGoesPosDir = std::make_pair(INFINITY, NEGINFINITY);
-			}
-		}
-	}
+	// any value in its domain where its derivative is 0
+	virtual void FindCriticalPoints() = 0;
 
 public:
 	explicit PolynomialFunction() = default;
@@ -136,17 +104,6 @@ public:
 	PolynomialFunction(const PolynomialFunction&) = default;
 
 	PolynomialFunctionType GetCurrentFunctionType() const { return m_PolyFunctionType; }
-
-	//explicit PolynomialFunction()
-	//{
-	//	int i = 0;
-	//	while (HighestDegree - i != 0)
-	//	{
-	//		
-
-	//		i = i + 1;
-	//	}
-	//}
 
 	FuncEndBehavior GetEndBehaviourNegDir() const { return m_XGoesNegDir; }
 	FuncEndBehavior GetEndBehaviourPosDir() const { return m_XGoesPosDir; }
@@ -157,8 +114,10 @@ public:
 
 
 	void PrintEndBehaviours() const;
+	void PrintDomain() const;
+	void PrintRange() const;
 
-
+	inline void RestrictDomain(const Interval& NewDomainInterval) { m_bHasDomainBeenRestricted = true;  m_DomainInterval = NewDomainInterval; }
 };
 
 

@@ -8,6 +8,9 @@
 #include "MathConstants.h"
 #include "FunctionEnums.h"
 
+#include "ConstantFunction.h"
+
+
 #include <utility>
 #include <exception>
 #include <iostream>
@@ -24,7 +27,10 @@ using std::vector;
 class QuarticFunction;
 class QuadraticFunction;
 class CubicFunction;
+class LinearFunction;
 
+
+void AutoSetDerivativeFunction(LinearFunction& InFunc);
 
 // f(x)=ax+b
 class LinearFunction : public PolynomialFunction
@@ -63,11 +69,17 @@ private:
 
 	void AutoSetDomainInterval();
 	void AutoSetRangeInterval();
+	
+	ConstantFunction m_DerivativeFunction = ConstantFunction(1);
+
+
+	virtual void FindCriticalPoints() override;
+
 
 
 public:
 
-
+	//void CheckIsContinuousFunction();
 
 	//inline std::vector<double> GetRealNumberZerosVec() const { return m_AllRealZeros; }
 	inline std::vector<double> GetAllZerosVec() const { return m_AllZeros; }
@@ -99,6 +111,10 @@ public:
 		AutoSetXAndYIntercepts(b);
 		AutoSetFunctionsLineBehaviour(a);
 
+		// Normal polynomials are continuous 
+		SetIsContinuousFunction(true);
+
+		AutoSetDerivativeFunction(*this);
 
 		FindAndStoreAllRealZeros();
 
@@ -134,6 +150,11 @@ public:
 	inline bool IsConstantFunction() const { return m_bIsConstantFunction; }
 
 	std::string GetFunctionString() const;
+
+
+	ConstantFunction GetDerivativeFunction() const;
+	void SetDerivativeFunction(ConstantFunction& InFunc);
+
 
 };
 
