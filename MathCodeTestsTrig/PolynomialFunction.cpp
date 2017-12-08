@@ -4,6 +4,9 @@
 #include <iostream>
 
 
+using std::cout;
+using std::endl;
+
 
 void PolynomialFunction::PrintEndBehaviours() const
 {
@@ -23,40 +26,74 @@ void PolynomialFunction::PrintRange() const
 	PrintInterval(GetRangeInterval());
 }
 
+void PolynomialFunction::PrintIncreasingDecreasingIntervals() const
+{
+	std::cout << "Printing Increasing intervals of function:\n";
+	for (const auto& Intervals : m_IncreasingIntervals)
+	{
+		std::cout << "from (" << Intervals.first << "," << Intervals.second << ")" << " the function is increasing\n";
+	} std::cout << std::endl;
+
+
+	std::cout << "Printing Decreasing intervals of function:\n";
+	for (const auto& Intervals : m_DecreasingIntervals)
+	{
+		std::cout << "from (" << Intervals.first << "," << Intervals.second << ")" << " the function is decreasing\n";
+	} std::cout << std::endl;
+
+
+}
+
+void PolynomialFunction::PrintRelatedCriticalPointData()
+{
+	cout << "Printing all Critical Points\n";
+	for (int i = 0; i < m_AllCriticalPoints.size(); ++i)
+	{
+		cout << "x = " << m_AllCriticalPoints[i] << endl;
+	}
+	cout << endl;
+
+	cout << "Printing Critical Points that are not a localmax or localmin \n";
+	for (int i = 0; i < m_CriticalPointsNotLocalMaxOrMins.size(); ++i)
+	{
+		cout << "x = " << m_CriticalPointsNotLocalMaxOrMins[i].first << endl;
+	}
+	if (m_CriticalPointsNotLocalMaxOrMins.size() < 1)
+	{
+		cout << "None" << std::endl;
+	}
+	cout << endl;
+
+
+
+	cout << "Printing all LocalMax Points\n";
+	for (int i = 0; i < m_LocalMaximumPoints.size(); ++i)
+	{
+		cout << "(" << m_LocalMaximumPoints[i].first << "," << m_LocalMaximumPoints[i].second << ")" << endl;
+	}
+	cout << endl;
+
+	cout << "Printing all LocalMin Points\n";
+	for (int i = 0; i < m_LocalMinimumPoints.size(); ++i)
+	{
+		cout << "(" << m_LocalMinimumPoints[i].first << "," << m_LocalMinimumPoints[i].second << ")" << endl;
+	}
+	cout << endl;
+}
+
 void PolynomialFunction::SetPolynomialEndBehaviours()
 {
-	// As x goes to the negative direction is the first interval.
-	//Interval AsXGoesToNegativeDirectionInterval = m_EndBehaviorIntervals.first;
-	//float AsXGoesNegStartInterval = 0; 
-	//float AsXGoesNegEndInterval = 0; // std::get<1>(AsXGoesToNegativeDirectionInterval);
-	//IntervalType AsXGoesNegIntervalType = IntervalType::IT_UNASSIGNED; // std::get<2>(AsXGoesToNegativeDirectionInterval);
 
-	//// As x goes to the positive direction is the Second interval.
-	////Interval AsXGoesToPositiveDirectionInterval = m_EndBehaviorIntervals.second;
-	//float AsXGoesPosStartInterval = 0;// std::get<0>(AsXGoesToPositiveDirectionInterval);
-	//float AsXGoesPosEndInterval = 0; // std::get<1>(AsXGoesToPositiveDirectionInterval);
-	//IntervalType AsXGoesPosIntervalType = IntervalType::IT_UNASSIGNED;// std::get<2>(AsXGoesToPositiveDirectionInterval);
+	m_bIsLeadingCoefficentPositive = (m_LeadingCoefficent > 0);
+	m_bIsEvenFunction = isEven(m_Degree);
 
-	bool bIsLeadingCoefficentPositive = (m_LeadingCoefficent > 0);
-	bool bIsFunctionDegreeEven = isEven(m_Degree);
-
-	if (bIsLeadingCoefficentPositive)
+	if (m_bIsLeadingCoefficentPositive)
 	{
 		// Leading coefficent is positive
-		if (bIsFunctionDegreeEven)
+		if (m_bIsEvenFunction)
 		{
-			//// leading coefficent positive and function degree even
-			//float AsXGoesNegDirectionToStartInterval = 0; 
-			//float FofXGoesToNegDir = 0; 
-
 			m_XGoesNegDir = std::make_pair(NEGINFINITY, INFINITY);
 			m_XGoesPosDir = std::make_pair(INFINITY, INFINITY);
-
-			//IntervalType AsXGoesNegIntervalType = IntervalType::IT_OPEN;
-
-			//float AsXGoesPosDirectionToEndInterval = 0;
-			//float FofXGoesPosDir = 0;
-			//IntervalType AsXGoesPosIntervalType = IntervalType::IT_UNASSIGNED;
 
 		}
 		else
@@ -64,23 +101,20 @@ void PolynomialFunction::SetPolynomialEndBehaviours()
 			// leading coefficent positive and function degree odd
 			m_XGoesNegDir = std::make_pair(NEGINFINITY, NEGINFINITY);
 			m_XGoesPosDir = std::make_pair(INFINITY, INFINITY);
-
 		}
 	}
 	else
 	{
 		// Leading Coefficent is negative
-		if (bIsFunctionDegreeEven)
+		if (m_bIsEvenFunction)
 		{
 			// leading coefficent negative and function degree even
-
 			m_XGoesNegDir = std::make_pair(NEGINFINITY, NEGINFINITY);
 			m_XGoesPosDir = std::make_pair(INFINITY, NEGINFINITY);
 		}
 		else
 		{
 			// leading coefficent negative and function degree odd
-
 			m_XGoesNegDir = std::make_pair(NEGINFINITY, INFINITY);
 			m_XGoesPosDir = std::make_pair(INFINITY, NEGINFINITY);
 		}

@@ -113,26 +113,41 @@ void LinearFunction::AutoCheckSetDegree(const double & a)
 	}
 }
 
-void LinearFunction::AutoSetDomainInterval()
-{
-	m_DomainInterval = std::make_tuple(NEGINFINITY, INFINITY, IntervalType::IT_OPEN);
-	
-	// Linear functions have all real number domain/ranges
-	// really dont need this variable in this class anymore but I can change it around later
-	m_Domain = Domain::NegInfinityToPosInfinity;
-}
-
-void LinearFunction::AutoSetRangeInterval()
-{
-	m_RangeInterval = std::make_tuple(NEGINFINITY, INFINITY, IntervalType::IT_OPEN);
-
-	// really dont need this variable in this class anymore but I can change it around later
-	m_Range = Range::NegInfinityToPosInfinity;
-}
+//void LinearFunction::AutoSetDomainInterval()
+//{
+//	m_DomainInterval = std::make_tuple(NEGINFINITY, INFINITY, IntervalType::IT_OPEN);
+//	
+//	// Linear functions have all real number domain/ranges
+//	// really dont need this variable in this class anymore but I can change it around later
+//	//m_Domain = Domain::NegInfinityToPosInfinity;
+//}
+//
+//void LinearFunction::AutoSetRangeInterval()
+//{
+//	m_RangeInterval = std::make_tuple(NEGINFINITY, INFINITY, IntervalType::IT_OPEN);
+//
+//	// really dont need this variable in this class anymore but I can change it around later
+//	//m_Range = Range::NegInfinityToPosInfinity;
+//}
 
 void LinearFunction::FindCriticalPoints()
 {
+	// linear functions dont have any critical points
+}
 
+void LinearFunction::SetDefaultDomainInterval()
+{
+	m_DomainInterval = std::make_tuple(NEGINFINITY, INFINITY, IntervalType::IT_OPEN);
+
+}
+
+void LinearFunction::SetDefaultRangeInterval()
+{
+	m_RangeInterval = std::make_tuple(NEGINFINITY, INFINITY, IntervalType::IT_OPEN);
+}
+
+void LinearFunction::SetIncreasingDecreasingIntervals()
+{
 }
 
 

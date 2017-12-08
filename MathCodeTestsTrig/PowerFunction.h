@@ -29,7 +29,7 @@ using std::endl;
 
 
 template <int Exponent>
-class PowerFunction : PolynomialFunction
+class PowerFunction : public PolynomialFunction
 {
 private:
 	// assigned on Initialization
@@ -43,6 +43,10 @@ private:
 	//PowerFunction<Exponent - 1> m_DerivativeFunction = PowerFunction<Exponent - 1>(1,1,0,0);
 
 	//void AutoSetPowerDerivativeFunction(PowerFunction<Exponent>& InFunc);
+	virtual void FindCriticalPoints() override;
+	virtual void SetDefaultDomainInterval() override;
+	virtual void SetDefaultRangeInterval() override;
+	virtual void SetIncreasingDecreasingIntervals() override;
 
 public:
 
@@ -271,5 +275,24 @@ public:
 
 #endif
 
+template<int Exponent>
+inline void PowerFunction<Exponent>::FindCriticalPoints()
+{
+	
+}
 
+template<int Exponent>
+inline void PowerFunction<Exponent>::SetDefaultDomainInterval()
+{
+}
 
+template<int Exponent>
+inline void PowerFunction<Exponent>::SetDefaultRangeInterval()
+{
+}
+
+template<int Exponent>
+inline void PowerFunction<Exponent>::SetIncreasingDecreasingIntervals()
+{
+
+}

@@ -55,23 +55,21 @@ private:
 	double m_c = 0;
 	double m_d = 0;
 
-	pair<double, double> m_JustAAndDCubic = pair<double, double>(0, 0);
-	tuple<double, double, double> m_ACDForm;
-
-
 	bool m_bIsInAAndDForm = false;
 	bool m_bIsInACDForm = false;
 
-	inline tuple<double, double, double> GetACD() const
-	{
-		return tuple<double, double, double>(m_a, m_c, m_d);
-	}
 
-	QuadraticFunction m_DerivativeFunction;// = QuadraticFunction(1, 0, 0);
+	pair<double, double> m_JustAAndDCubic = pair<double, double>(0, 0);
+	tuple<double, double, double> m_ACDForm;
 	
+
 	// The function has horizontal tanget lines at these x values
 	std::vector<double> m_HorizontalTangentLines;
 	
+	QuadraticFunction m_DerivativeFunction;// = QuadraticFunction(1, 0, 0);
+
+	inline tuple<double, double, double> GetACD() const { return tuple<double, double, double>(m_a, m_c, m_d); } // pretty sure this is not needed
+
 	inline void AutoSetHorizontalTangetLines()
 	{
 		std::vector<double> DerivZerosVec = m_DerivativeFunction.GetAllZerosVec();
@@ -80,8 +78,16 @@ private:
 
 	virtual void FindCriticalPoints() override;
 	
+	virtual void SetDefaultDomainInterval() override;
+	virtual void SetDefaultRangeInterval() override;
+
+	virtual void SetIncreasingDecreasingIntervals() override;
+
+	
 
 public:
+
+	void FindGlobalExtremums();
 
 	CubicFunction() = default;
 	//CubicFunction(const CubicFunction&) = default;
@@ -94,10 +100,9 @@ public:
 	{
 		m_PolyFunctionType = PolynomialFunctionType::CUBIC;
 
-		// TODO: might have to change this later?
-		// Linear functions have all real number domain/ranges
-		m_Domain = Domain::NegInfinityToPosInfinity;
-		m_Range = Range::NegInfinityToPosInfinity;
+		SetDefaultDomainInterval();
+		SetDefaultRangeInterval();
+
 
 		if (b == 0 && c == 0)
 		{
@@ -111,37 +116,22 @@ public:
 			m_bIsInACDForm = true;
 		}
 
-
-		//CubicFunction CopyHelp(m_a, m_b, m_c, m_d);
+		SetDegree(3);
+		SetLeadingCoefficent(m_a);
+		SetPolynomialEndBehaviours();
+		
 		AutoSetCubicDerivativeFunction(*this);
-		// Here I will Use the Derivative function to automatically set the zeros 
+
+		// Here I will Use the Derivative function to automatically set the zeros for horizontal tangent liens
 		AutoSetHorizontalTangetLines();
+
 
 		m_AbsoluteMaximum = NAN;
 		m_AbsoluteMinimum = NAN;
 
+		FindCriticalPoints();
 	}
 	
-	std::string GetFunctionString() const;
-
-	inline pair<double, double> GetAAndDCubicFuncForm() const { return m_JustAAndDCubic; }
-
-	inline tuple<double, double, double, double> GetABCD() const
-	{
-		return tuple<double, double, double, double>(m_a, m_b, m_c, m_d);
-	}
-
-	
-	inline QuadraticFunction GetDerivativeFunction() const { return m_DerivativeFunction; }
-	inline void SetDerivativeFunction(QuadraticFunction& InFunc) { m_DerivativeFunction = InFunc; }
-
-	bool GetIsFuncInAAndDForm() const { return m_bIsInAAndDForm; }
-	bool GetIsFuncInACDForm() const { return m_bIsInACDForm; }
-
-
-	tuple<double, double, double> GetACDForm() const { return m_ACDForm; }
-
-
 	// Runs the full function form version
 	double operator()(const double& x) const
 	{
@@ -154,6 +144,28 @@ public:
 		return TermOne + TermTwo + TermThree + TermFour;
 	}
 
+
+	inline pair<double, double> GetAAndDCubicFuncForm() const { return m_JustAAndDCubic; }
+	inline tuple<double, double, double, double> GetABCD() const{	return tuple<double, double, double, double>(m_a, m_b, m_c, m_d);}
+	inline tuple<double, double, double> GetACDForm() const { return m_ACDForm; }
+	
+	inline QuadraticFunction GetDerivativeFunction() const { return m_DerivativeFunction; }
+	inline void SetDerivativeFunction(QuadraticFunction& InFunc) { m_DerivativeFunction = InFunc; }
+
+	inline bool GetIsFuncInAAndDForm() const { return m_bIsInAAndDForm; }
+	inline bool GetIsFuncInACDForm() const { return m_bIsInACDForm; }
+
+
+	std::vector<double> GetZerosOfDerivative() const { return m_HorizontalTangentLines; }
+
+
+
+
+
+
+	
+	
+	std::string GetFunctionString() const;
 	void PrintFunction() const;
 	void PrintHorizontalTangetLineXValues() const;
 };

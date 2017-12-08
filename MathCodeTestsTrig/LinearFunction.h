@@ -67,16 +67,17 @@ private:
 	void AutoCheckSetDegree(const double& a);
 
 
-	void AutoSetDomainInterval();
-	void AutoSetRangeInterval();
+	//void AutoSetDomainInterval();
+	//void AutoSetRangeInterval();
 	
 	ConstantFunction m_DerivativeFunction = ConstantFunction(1);
 
 
 	virtual void FindCriticalPoints() override;
 
-
-
+	virtual void SetDefaultDomainInterval() override;
+	virtual void SetDefaultRangeInterval() override;
+	virtual void SetIncreasingDecreasingIntervals() override;
 public:
 
 	//void CheckIsContinuousFunction();
@@ -98,8 +99,8 @@ public:
 		m_PolyFunctionType = PolynomialFunctionType::LINEAR;
 
 
-		AutoSetDomainInterval();
-		AutoSetRangeInterval();
+		SetDefaultDomainInterval();
+		SetDefaultRangeInterval();
 
 
 		SetLeadingCoefficent(m_a);

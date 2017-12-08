@@ -81,7 +81,7 @@ private:
 	bool m_bIsFunctionVertexForm = false;
 
 
-	void PrintFunctionEndBehavior() const;
+	//void PrintFunctionEndBehavior() const;
 	void PrintParabolaOpensDirection() const;
 
 
@@ -90,8 +90,6 @@ private:
 	// Open Down means function is upside down bowl shape
 	inline void SetParabolaOpeningDirection(const double& LeadingCoefficent);
 
-	void AutoSetDomainInterval();
-	void AutoSetRangeInterval();
 
 	void AutoSetVertexFromGeneralForm();
 	void AutoSetVertexFromVertexForm(const double& h, const double& k);
@@ -99,13 +97,17 @@ private:
 
 	//virtual void FindCriticalPoints() override;
 
+	virtual void SetDefaultDomainInterval() override;
+	virtual void SetDefaultRangeInterval() override;
+
 	//void FindGlobalExtremums();
+	virtual void SetIncreasingDecreasingIntervals() override;
 
 public:
 
 	virtual void FindCriticalPoints() override;
-
 	void FindGlobalExtremums();
+
 
 	 QuadraticFunction() = default;
 	 QuadraticFunction(const QuadraticFunction&) = default;
@@ -120,19 +122,20 @@ public:
 			throw std::exception("a cannot == 0 for quadratic func initalization (general form constructor)");
 
 		AutoSetVertexFromGeneralForm();
-		AutoSetDomainInterval();
+		SetDefaultDomainInterval();
 	
 
 		// Qudratic degree is 2 and also even 
 		SetDegree(2); 
 		SetLeadingCoefficent(m_a);
 		SetPolynomialEndBehaviours();
-		SetIsEvenFunction(true);
+
+		//SetIsEvenFunction(true);
 		SetParabolaOpeningDirection(a);
 		m_bIsFunctionGeneralForm = true;
 
 		// This needs to be called after ParabolaOpensDirection and After the VertexYCord has been set
-		AutoSetRangeInterval();
+		SetDefaultRangeInterval();
 
 		// Normal polynomials are continuous 
 		SetIsContinuousFunction(true);

@@ -80,15 +80,21 @@ QuadraticFunction::QuadraticFunction(const std::string& FuncForm)
 	}
 
 
+	SetDefaultDomainInterval();
+
 	// Qudratic degree is 2 and also even 
 	SetDegree(2);
 	SetLeadingCoefficent(m_a);
 	SetPolynomialEndBehaviours();
-	SetIsEvenFunction(true);
+
+	//SetIsEvenFunction(true);
 	SetParabolaOpeningDirection(a);
 	AutoSetVertexFromVertexForm(h, k);
 
 	m_bIsFunctionVertexForm = true;
+
+	// This needs to be called after ParabolaOpensDirection and After the VertexYCord has been set
+	SetDefaultRangeInterval();
 
 	// Normal polynomials are continuous 
 	SetIsContinuousFunction(true);
@@ -185,23 +191,23 @@ void QuadraticFunction::SetTheMaxMinValue(double InNum)
 
 }
 
-void QuadraticFunction::PrintFunctionEndBehavior() const
-{
-	if (m_EndBehavior == EndBehavior::AsXGoesToPosOrNegInfinityFOfXGoesToPosInfinity)
-	{
-		std::cout << "As X goes to positive or negative infinity f(x) goes to positive infinity\n";
-	}
-	else if (m_EndBehavior == EndBehavior::AsXGoesToPosOrNegInfinityFOfXGoesToNegInfinity)
-	{
-		std::cout << "As X goes to positive or negative infinity f(x) goes to negative infinity\n";
-	}
-	else
-	{
-		// not implemented...
-
-	}
-
-}
+//void QuadraticFunction::PrintFunctionEndBehavior() const
+//{
+//	if (m_EndBehavior == EndBehavior::AsXGoesToPosOrNegInfinityFOfXGoesToPosInfinity)
+//	{
+//		std::cout << "As X goes to positive or negative infinity f(x) goes to positive infinity\n";
+//	}
+//	else if (m_EndBehavior == EndBehavior::AsXGoesToPosOrNegInfinityFOfXGoesToNegInfinity)
+//	{
+//		std::cout << "As X goes to positive or negative infinity f(x) goes to negative infinity\n";
+//	}
+//	else
+//	{
+//		// not implemented...
+//
+//	}
+//
+//}
 
 void QuadraticFunction::PrintParabolaOpensDirection() const
 {
@@ -237,17 +243,21 @@ inline void QuadraticFunction::SetParabolaOpeningDirection(const double & Leadin
 
 
 
-void QuadraticFunction::AutoSetDomainInterval()
+void QuadraticFunction::AutoSetVertexFromVertexForm(const double& h, const double& k)
 {
-	m_DomainInterval = std::make_tuple(NEGINFINITY, INFINITY, IntervalType::IT_OPEN);
+	m_VertexX = h;
+	m_VertexY = k;
 
-	// quadratic functions have all real number domain/ranges
-	// really dont need this variable in this class anymore but I can change it around later
-	m_Domain = Domain::NegInfinityToPosInfinity;
-
+	return;
 }
 
-void QuadraticFunction::AutoSetRangeInterval()
+void QuadraticFunction::SetDefaultDomainInterval()
+{
+	// quadratic functions have all real number domain/ranges
+	m_DomainInterval = std::make_tuple(NEGINFINITY, INFINITY, IntervalType::IT_OPEN);
+}
+
+void QuadraticFunction::SetDefaultRangeInterval()
 {
 	switch (m_ParabolaOpens)
 	{
@@ -274,12 +284,9 @@ void QuadraticFunction::AutoSetRangeInterval()
 	}
 }
 
-void QuadraticFunction::AutoSetVertexFromVertexForm(const double& h, const double& k)
+void QuadraticFunction::SetIncreasingDecreasingIntervals()
 {
-	m_VertexX = h;
-	m_VertexY = k;
 
-	return;
 }
 
 void QuadraticFunction::AutoSetVertexFromGeneralForm()
@@ -332,7 +339,7 @@ void QuadraticFunction::PrintBasicFunctionInfo() const
 {
 	std::cout << "Starting to print basic function info\n";
 
-	PrintFunctionEndBehavior();
+	//PrintFunctionEndBehavior();
 	PrintParabolaOpensDirection();
 	std::cout << std::endl;
 	PrintAllZeros();
@@ -416,6 +423,8 @@ void QuadraticFunction::FindCriticalPoints()
 	LinearFunction DerivativeFunc = GetDerivativeFunction();
 	std::vector<double> CriticalPoints = DerivativeFunc.GetAllZerosVec();
 
+	std::sort(CriticalPoints.begin(), CriticalPoints.end(), std::less<double>());
+
 	// if f'(c) is undefined its a critical point of f
 	// AKA (This Derivative is defined for all real numbers) so this doesnt matter
 	//if (std::isnan(CriticalValue))
@@ -431,56 +440,40 @@ void QuadraticFunction::FindCriticalPoints()
 	for (int i = 0; i < AmountOfCriticalPoints; ++i)
 	{
 		double CriticalPoint = CriticalPoints[i];
-		m_CriticalPoints.push_back(CriticalPoint);
-		double CriticalValue = DerivativeFunc(CriticalPoint);
+		//m_AllCriticalPoints.push_back(CriticalPoint);
+		//double CriticalValue = DerivativeFunc(CriticalPoint);
+		double OutputOfQuadraticFromLinearZero = operator()(CriticalPoint);
 
 
+		Point PointOfIntrest(CriticalPoint, OutputOfQuadraticFromLinearZero);
 
-		Point PointOfIntrest(CriticalPoint, CriticalValue);
+	
 
-		double CriticalValueForNonDerivativeFunction = operator()(CriticalPoint);
-		m_CriticalValueCordPoints.push_back(Point(CriticalPoint, CriticalValueForNonDerivativeFunction));
-
-		bool bGoesFromNegativeToPositiveAroundCriticalPoint = ((DerivativeFunc(CriticalPoint - 0.1) < 0) && (DerivativeFunc(CriticalPoint + 0.1) > 0));
-		
-		if (bGoesFromNegativeToPositiveAroundCriticalPoint)
+		if (CriticalPointIsALocalMinimum(DerivativeFunc, CriticalPoint))
 		{
-			// Local min point
 			m_LocalMinimumPoints.push_back(PointOfIntrest);
-
+			m_AllPotentialExtrenums.push_back(PointOfIntrest);
 		}
-		else
+
+		if (CriticalPointIsALocalMaximum(DerivativeFunc, CriticalPoint))
 		{
 			// goes from positive to negative (local max)
 			m_LocalMaximumPoints.push_back(PointOfIntrest);
+			m_AllPotentialExtrenums.push_back(PointOfIntrest);
 		}
+
+		if (CriticalPointIsNeitherALocalMaxOrLocalMin(DerivativeFunc, CriticalPoint))
+		{
+			m_CriticalPointsNotLocalMaxOrMins.push_back(PointOfIntrest);
+		}
+
+		m_AllCriticalPoints.push_back(CriticalPoint);
+		//double CriticalValueForNonDerivativeFunction = operator()(CriticalPoint);
+		//m_AllPotentialExtrenums.push_back(Point(CriticalPoint, CriticalValueForNonDerivativeFunction));
 	}
-
-
-	// One can distinguish whether a critical point is a local maximum or local minimum by using the first derivative test, 
-	// second derivative test, or higher-order derivative test, given sufficient differentiability.
-	std::sort(m_CriticalPoints.begin(), m_CriticalPoints.end(), std::less<double>());
-
-	cout << "Printing all Critical Points\n";
-	for (int i = 0; i < m_CriticalPoints.size(); ++i)
-	{
-		cout << "x = " <<  m_CriticalPoints[i] << endl;
-	}
-	cout << endl;
-
-	cout << "Printing all LocalMax Points\n";
-	for (int i = 0; i < m_LocalMaximumPoints.size(); ++i)
-	{
-		cout << "(" << m_LocalMaximumPoints[i].first << "," << m_LocalMaximumPoints[i].second << ")" << endl;
-	}
-	cout << endl;
-
-	cout << "Printing all LocalMin Points\n";
-	for (int i = 0; i < m_LocalMinimumPoints.size(); ++i)
-	{
-		cout << "(" << m_LocalMinimumPoints[i].first << "," << m_LocalMinimumPoints[i].second << ")" << endl;
-	}
-	cout << endl;
+	
+	SetIncreasingDecreasingIntervals();
+	PrintRelatedCriticalPointData();
 
 
 	//FindGlobalExtremums();
@@ -495,6 +488,13 @@ void QuadraticFunction::FindGlobalExtremums()
 
 	IntervalType DomainInterval = std::get<2>(GetDomainInterval());
 
+	// NOTE: If we have closed the interval from a normal domain or neg inf - pos inf 
+	// we are guarnteed to have a max and min and they could be at those end points,
+	// so we need to do a separate test for them and add them.
+
+	// If we still have the open interval, we dont need to do that,
+	// and we just test from the max and min points that we already have
+
 	if (DomainInterval == IntervalType::IT_CLOSED)
 	{
 		cout << "Closed Interval" << endl;
@@ -507,7 +507,7 @@ void QuadraticFunction::FindGlobalExtremums()
 		else
 		{
 			double StartOfIntervalCriticalPointValue = operator()(StartOfCriticalPointsInterval);
-			m_CriticalValueCordPoints.push_back(Point(StartOfCriticalPointsInterval, StartOfIntervalCriticalPointValue));
+			m_AllPotentialExtrenums.push_back(Point(StartOfCriticalPointsInterval, StartOfIntervalCriticalPointValue));
 		}
 
 
@@ -519,33 +519,33 @@ void QuadraticFunction::FindGlobalExtremums()
 		else
 		{
 			double EndOfIntervalCriticalPointValue = operator()(EndOfCriticalPointsInterval);
-			m_CriticalValueCordPoints.push_back(Point(EndOfCriticalPointsInterval, EndOfIntervalCriticalPointValue));
+			m_AllPotentialExtrenums.push_back(Point(EndOfCriticalPointsInterval, EndOfIntervalCriticalPointValue));
 		}
 
 		cout << "Closed Part2" << endl;
 
 
-		if (m_CriticalValueCordPoints.size() > 1)
+		if (m_AllPotentialExtrenums.size() > 1)
 		{
 			cout << "Test1" << endl;
 
-			cout << m_CriticalValueCordPoints.size();
+			cout << m_AllPotentialExtrenums.size();
 
-			std::sort(m_CriticalValueCordPoints.begin(), m_CriticalValueCordPoints.end(), [](auto &left, auto &right)
+			std::sort(m_AllPotentialExtrenums.begin(), m_AllPotentialExtrenums.end(), [](auto &left, auto &right)
 			{
 				return left.second < right.second;
 			});
 
 			cout << "Printing all potentials for Global Externums Points\n";
-			for (int i = 0; i < m_CriticalValueCordPoints.size(); ++i)
+			for (int i = 0; i < m_AllPotentialExtrenums.size(); ++i)
 			{
-				cout << "(" << m_CriticalValueCordPoints[i].first << "," << m_CriticalValueCordPoints[i].second << ")" << endl;
+				cout << "(" << m_AllPotentialExtrenums[i].first << "," << m_AllPotentialExtrenums[i].second << ")" << endl;
 			}
 
-			SetAbsoluteMinimum(m_CriticalValueCordPoints.front().first);
-			SetAbsoluteMaximum(m_CriticalValueCordPoints.back().first);
+			SetAbsoluteMinimum(m_AllPotentialExtrenums.front().first);
+			SetAbsoluteMaximum(m_AllPotentialExtrenums.back().first);
 		}
-		else if (m_CriticalValueCordPoints.size() == 1)
+		else if (m_AllPotentialExtrenums.size() == 1)
 		{
 			cout << "Test2" << endl;
 			

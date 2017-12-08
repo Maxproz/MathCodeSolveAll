@@ -31,8 +31,8 @@ private:
 	// If not growth its decay
 	bool m_bIsExponentialGrowthFunc = true;
 
-	Domain m_Domain;
-	Range m_Range;
+	//Domain m_Domain;
+	//Range m_Range;
 
 	EndBehavior m_AsXGoesPosEndBehavior;
 	EndBehavior m_AsXGoesNegEndBehavior;
@@ -57,25 +57,25 @@ public:
 		{
 			// growth
 			m_bIsExponentialGrowthFunc = true;
-			m_Domain = Domain::NegInfinityToPosInfinity;
-			m_Range = Range::ExclusiveZeroToPosInfinity;
+			//m_Domain = Domain::NegInfinityToPosInfinity;
+			//m_Range = Range::ExclusiveZeroToPosInfinity;
 			// Increasing on (neg inf to pos inf)
 			// b^x -> pos inf AS x -> pos inf 
 			// b^x -> 0 AS x -> neg inf
-			m_AsXGoesPosEndBehavior = EndBehavior::AsXGoesToPosInfinityFOfXGoesToPosInfinity;
-			m_AsXGoesNegEndBehavior = EndBehavior::AsXGoesToNegInfinityFOfXGoesToZero;
+			//m_AsXGoesPosEndBehavior = EndBehavior::AsXGoesToPosInfinityFOfXGoesToPosInfinity;
+			//m_AsXGoesNegEndBehavior = EndBehavior::AsXGoesToNegInfinityFOfXGoesToZero;
 		}
 		else if (b > 0 && b < 1)
 		{
 			// decay
 			m_bIsExponentialGrowthFunc = false;
-			m_Domain = Domain::NegInfinityToPosInfinity;
-			m_Range = Range::ExclusiveZeroToPosInfinity;
+			//m_Domain = Domain::NegInfinityToPosInfinity;
+			//m_Range = Range::ExclusiveZeroToPosInfinity;
 			// decreasing on (neg inf to pos inf)
 			// b^x -> 0 AS x -> pos inf 
 			// b^x -> pos inf AS x -> neg inf
-			m_AsXGoesPosEndBehavior = EndBehavior::AsXGoesToPosInfinityFOfXGoesToZero;
-			m_AsXGoesNegEndBehavior = EndBehavior::AsXGoesToNegInfinityFOfXGoesToPosInfinity;
+			//m_AsXGoesPosEndBehavior = EndBehavior::AsXGoesToPosInfinityFOfXGoesToZero;
+			//m_AsXGoesNegEndBehavior = EndBehavior::AsXGoesToNegInfinityFOfXGoesToPosInfinity;
 		}
 		else if (b == 1)
 		{

@@ -13,6 +13,19 @@ void QuarticFunction::FindCriticalPoints()
 
 }
 
+void QuarticFunction::SetDefaultDomainInterval()
+{
+}
+
+void QuarticFunction::SetDefaultRangeInterval()
+{
+}
+
+void QuarticFunction::SetIncreasingDecreasingIntervals()
+{
+
+}
+
 QuarticFunction QuarticFunction::operator+(QuarticFunction const & rhs) const
 {
 	double NewA = m_a + rhs.m_a;

@@ -18,7 +18,7 @@ const double my_gravityfeet(32);  // f/s^2
 
 typedef pair<double, double> Point;
 typedef std::tuple<float, float, IntervalType> Interval;
-typedef std::pair<float, float> FuncEndBehavior;
+typedef std::pair<float, float> EndBehavior;
 
 
 #endif

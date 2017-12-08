@@ -450,10 +450,31 @@ int main()
 		//TestQuad.FindCriticalPoints();
 		//TestQuad.FindGlobalExtremums();
 
-		QuadraticFunction TestQuad(1, -4, 3);
-		//TestQuad.RestrictDomain(Interval(1, 4, IntervalType::IT_CLOSED));
-		TestQuad.FindCriticalPoints();
-		TestQuad.FindGlobalExtremums();
+		//QuadraticFunction TestQuad(1, -4, 3);
+		////TestQuad.RestrictDomain(Interval(1, 4, IntervalType::IT_CLOSED));
+		//TestQuad.FindCriticalPoints();
+		//TestQuad.FindGlobalExtremums();
+
+
+		//QuadraticFunction TestQuad(1, 2, 0);
+		//Interval RestrictQuadDomain = std::make_tuple<float,float,IntervalType>(-2.f, 0.f, IntervalType::IT_CLOSED);
+		
+		//UseRollesTheromQuadraticFunction(TestQuad, RestrictQuadDomain);
+
+		//CubicFunction TestCubeic(1, 0, -4, 0);
+		//Interval RestrictQuadDomain = std::make_tuple<float, float, IntervalType>(-2.f, 2.f, IntervalType::IT_CLOSED);
+		//UseRollesTheromCubicFunction(TestCubeic, RestrictQuadDomain);
+
+		//QuadraticFunction TestQuad(-16, 0, 200);
+		//UsingMeanValueTheromRock(TestQuad);
+
+
+		
+		CubicFunction TestCubic(-1, 1.5, 18, 0);
+		TestCubic.PrintIncreasingDecreasingIntervals();
+		TestCubic.FindGlobalExtremums();
+
+
 	}
 	catch (const std::exception& ex)
 	{

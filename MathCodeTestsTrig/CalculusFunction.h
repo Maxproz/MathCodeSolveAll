@@ -7,6 +7,7 @@
 
 #include <functional>
 #include <algorithm>    // std::find_if
+#include <vector>
 
 /* old includes before refactor */
 #include "Circle.h"
@@ -46,6 +47,134 @@ double GetSlope(const Point& FirstPoint, const Point& SecondPoint);
 
 void PrintSlopeInterceptForm(const Point& Point, const double& Slope);
 
+
+// Rolle's therom
+
+inline void UseRollesTheromQuadraticFunction(const QuadraticFunction& InFunc, const Interval& ClosedInterval)
+{
+	QuadraticFunction LocalFunc = InFunc;
+
+	LocalFunc.RestrictDomain(ClosedInterval);
+
+	// Since InFunc is a polynomial, it is continuous and differentiable everywhere
+
+	double ClosedIntervalStart = std::get<0>(ClosedInterval);
+	double ClosedIntervalStartResult = LocalFunc(ClosedIntervalStart);
+
+	double ClosedIntervalEnd = std::get<1>(ClosedInterval);
+	double ClosedIntervalEndResult = LocalFunc(ClosedIntervalStart);
+
+	if (ClosedIntervalStartResult == ClosedIntervalEndResult)
+	{
+		// Then there is at least one c between these where the derivative is 0
+		double c = LocalFunc.GetDerivativeFunction().GetAllZerosVec()[0];
+		std::cout << "The derivative is zero when c = " << c << std::endl;
+	}
+	else
+	{
+		std::cout << "Rolles therom doesnt apply to this function" << std::endl;
+	}
+}
+
+inline void UseRollesTheromCubicFunction(const CubicFunction& InFunc, const Interval& ClosedInterval)
+{
+	CubicFunction LocalFunc = InFunc;
+
+	LocalFunc.RestrictDomain(ClosedInterval);
+
+	// Since InFunc is a polynomial, it is continuous and differentiable everywhere
+
+	double ClosedIntervalStart = std::get<0>(ClosedInterval);
+	double ClosedIntervalStartResult = LocalFunc(ClosedIntervalStart);
+
+	double ClosedIntervalEnd = std::get<1>(ClosedInterval);
+	double ClosedIntervalEndResult = LocalFunc(ClosedIntervalStart);
+
+	std::vector<double> PointSatifiesRollesTherom;
+
+	if (ClosedIntervalStartResult == ClosedIntervalEndResult)
+	{
+		for (const auto& Val : LocalFunc.GetDerivativeFunction().GetAllZerosVec())
+		{
+			// Then there is at least one c between these where the derivative is 0
+			if (Val >= ClosedIntervalStart && Val <= ClosedIntervalEnd)
+			{
+				PointSatifiesRollesTherom.push_back(Val);
+
+			}
+		}
+		
+		std::cout << "f'(c) = 0 when " << std::endl;
+		for (const auto& c : PointSatifiesRollesTherom)
+		{
+			std::cout << "x = " << c << std::endl;
+		}
+		std::cout << std::endl;
+
+	}
+	else
+	{
+		std::cout << "Rolles therom doesnt apply to this function" << std::endl;
+	}
+}
+
+
+inline void UsingMeanValueTheromRock(const QuadraticFunction& InFunc)
+{
+	QuadraticFunction LocalFunc = InFunc;
+
+	// 1. Determine how long it takes before the rock hits the ground.
+	// When InFunc = 0
+	const double TimeWhenRockIsDropped = 0;
+	double TimeWhenRockHitsGroundPositiveNumber = 0;
+
+	auto TimesWhenRockHisGround = InFunc.GetAllZerosVec();
+	for (auto& Times : TimesWhenRockHisGround)
+	{
+		if (Times > 0)
+		{
+			TimeWhenRockHitsGroundPositiveNumber = Times;
+		}
+	}
+
+
+	// 2. Find the average velocity of the rock for when the rock is released and the rock hits the ground.
+	double AverageVelocityNumerator = (InFunc(TimeWhenRockHitsGroundPositiveNumber)) - InFunc(TimeWhenRockIsDropped);
+	double AverageVelocityDenominator = TimeWhenRockHitsGroundPositiveNumber - TimeWhenRockIsDropped;
+
+	double AverageVelocityForRockDropDuration = AverageVelocityNumerator / AverageVelocityDenominator; // feet/sec
+
+
+	// 3. Find the time t guaranteed by the Mean Value Theorem when the instantaneous velocity of the rock is AverageVelocityForRockDropDuration
+	// Make sure input is continuous over [TimeWhenRockIsDropped,TimeWhenRockHitsGroundPositiveNumber]
+	// and differentiable over (TimeWhenRockIsDropped, TimeWhenRockHitsGroundPositiveNumber)
+	LocalFunc.RestrictDomain(Interval((float)TimeWhenRockIsDropped, (float)TimeWhenRockHitsGroundPositiveNumber, IntervalType::IT_CLOSED));
+	// Since InFunc is a polynomial, it is continuous and differentiable everywhere
+
+
+	std::vector<double> PointSatifiesMeanValueTherom;
+	LinearFunction DerivativeFunction = LocalFunc.GetDerivativeFunction();
+	double LocalA = DerivativeFunction.GetA();
+	double LocalB = DerivativeFunction.GetB();
+
+	double LHS = AverageVelocityForRockDropDuration;
+	FlipSign(LocalB);
+	double LHSB = LHS + LocalB;
+	double c = LHSB / LocalA;
+
+	PointSatifiesMeanValueTherom.push_back(c);
+
+
+	// Therefore, c seconds after the rock is dropped, the instantaneous velocity equals the average velocity of the rock during its free fall: AverageVelocityForRockDropDuration ft/sec.
+
+
+
+	std::cout << c << " seconds after the rock is dropped, the instantaneous velocity equals the average velocity of the rock during its free fall: " << AverageVelocityForRockDropDuration << 
+		 " ft/sec " << std::endl;
+
+	std::cout << std::endl;
+
+}
 
 
 //PROBLEM - SOLVING STRATEGY : IMPLICIT DIFFERENTIATION

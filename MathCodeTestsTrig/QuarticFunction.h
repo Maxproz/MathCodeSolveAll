@@ -33,6 +33,9 @@ private:
 
 	virtual void FindCriticalPoints() override;
 
+	virtual void SetDefaultDomainInterval() override;
+	virtual void SetDefaultRangeInterval() override;
+	virtual void SetIncreasingDecreasingIntervals() override;
 
 protected:
 	

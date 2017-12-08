@@ -61,6 +61,10 @@ private:
 
 
 	virtual void FindCriticalPoints() override;
+	
+	virtual void SetDefaultDomainInterval() override;
+	virtual void SetDefaultRangeInterval() override;
+	virtual void SetIncreasingDecreasingIntervals() override;
 
 public:
 
@@ -331,6 +335,22 @@ public:
 
 template<typename NumFunc, typename DenomFunc>
 inline void RationalFunction<NumFunc, DenomFunc>::FindCriticalPoints()
+{
+
+}
+
+template<typename NumFunc, typename DenomFunc>
+inline void RationalFunction<NumFunc, DenomFunc>::SetDefaultDomainInterval()
+{
+}
+
+template<typename NumFunc, typename DenomFunc>
+inline void RationalFunction<NumFunc, DenomFunc>::SetDefaultRangeInterval()
+{
+}
+
+template<typename NumFunc, typename DenomFunc>
+inline void RationalFunction<NumFunc, DenomFunc>::SetIncreasingDecreasingIntervals()
 {
 
 }

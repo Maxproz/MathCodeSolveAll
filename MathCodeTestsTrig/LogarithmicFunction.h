@@ -32,8 +32,8 @@ private:
 	//double m_a;
 	double m_b;
 
-	Domain m_Domain;
-	Range m_Range;
+	//Domain m_Domain;
+	//Range m_Range;
 
 
 	// THE DERIVATIVE OF THE NATURAL LOGARITHMIC FUNCTION
@@ -66,8 +66,8 @@ public:
 
 		if (b > 0 && b != 1)
 		{
-			m_Domain = Domain::ExclusiveZeroToPosInfinity;
-			m_Range = Range::NegInfinityToPosInfinity;
+			//m_Domain = Domain::ExclusiveZeroToPosInfinity;
+			//m_Range = Range::NegInfinityToPosInfinity;
 
 			// satisfies: where log_b(x) = y if and only if b^y = x
 			const double InputForTest = 8;

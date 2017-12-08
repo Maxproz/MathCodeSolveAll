@@ -14,6 +14,19 @@ void ConstantFunction::FindCriticalPoints()
 
 }
 
+void ConstantFunction::SetDefaultDomainInterval()
+{
+}
+
+void ConstantFunction::SetDefaultRangeInterval()
+{
+}
+
+void ConstantFunction::SetIncreasingDecreasingIntervals()
+{
+
+}
+
 QuadraticFunction ConstantFunction::operator*(const QuadraticFunction & rhs) const
 {
 	double OutQuadA(0);
