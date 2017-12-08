@@ -48,6 +48,54 @@ double GetSlope(const Point& FirstPoint, const Point& SecondPoint);
 void PrintSlopeInterceptForm(const Point& Point, const double& Slope);
 
 
+inline void SecondDerivativeTestCubic(const CubicFunction& InFunc)
+{
+	QuadraticFunction FirstDerivative = InFunc.GetDerivativeFunction();
+	LinearFunction SecondDerivative = FirstDerivative.GetDerivativeFunction();
+
+	if (FirstDerivative.GetAllZerosVec().size() > 1)
+	{
+		double FirstZero = FirstDerivative.GetAllZerosVec()[0];
+		double SecondZero = FirstDerivative.GetAllZerosVec()[1];
+
+		if (SecondDerivative(FirstZero) < 0)
+		{
+			std::cout << "Local Maximum at x = " << FirstZero << std::endl;
+		}
+		else if (SecondDerivative(FirstZero) > 0)
+		{
+			std::cout << "Local Minimum at x = " << FirstZero << std::endl;
+		}
+		else
+		{
+			std::cout << "Second Derivative Test Inconclusive for first zero" << std::endl;
+		}
+		
+		std::cout << std::endl;
+
+		if (SecondDerivative(SecondZero) < 0)
+		{
+			std::cout << "Local Maximum at x = " << SecondZero << std::endl;
+		}
+		else if (SecondDerivative(SecondZero) > 0)
+		{
+			std::cout << "Local Minimum at x = " << SecondZero << std::endl;
+		}
+		else
+		{
+			std::cout << "Second Derivative Test Inconclusive for second zero" << std::endl;
+		}
+
+	}
+	else
+	{
+		throw std::logic_error("Error in SecondDerivativeTestCubic(const CubicFunction& InFunc)");
+	}
+}
+
+
+
+
 // Rolle's therom
 
 inline void UseRollesTheromQuadraticFunction(const QuadraticFunction& InFunc, const Interval& ClosedInterval)

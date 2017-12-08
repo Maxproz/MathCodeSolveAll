@@ -162,6 +162,85 @@ void CubicFunction::SetIncreasingDecreasingIntervals()
 
 }
 
+void CubicFunction::PrintConcaveIntervalData() const
+{
+
+	if (GetInflectionPoints().size() > 0)
+	{
+		std::cout << "Printing Concave Up intervals of function:\n";
+		for (const auto& Intervals : m_ConcaveUpIntervals)
+		{
+			std::cout << "from (" << Intervals.first << "," << Intervals.second << ")" << " the function is concave up\n";
+		} std::cout << std::endl;
+
+
+		std::cout << "Printing Concave Down intervals of function:\n";
+		for (const auto& Intervals : m_ConcaveDownIntervals)
+		{
+			std::cout << "from (" << Intervals.first << "," << Intervals.second << ")" << " the function is concave down\n";
+		} std::cout << std::endl;
+
+
+		std::cout << "Since the function changes concavity at " << GetInflectionPoints()[0].first << std::endl;
+		std::cout << "The point " << "(" << GetInflectionPoints()[0].first << ", " <<
+			GetInflectionPoints()[0].second << ")" << " is an inflection point \n";
+	}
+}
+
+
+
+void CubicFunction::AutoSetCubicInflectionPoints()
+{
+	std::vector<double> XInflectionPoints = GetDerivativeFunction().GetDerivativeFunction().GetAllZerosVec();
+	double YInflectionPoint = operator()(XInflectionPoints[0]);
+
+	Point XYInflectionPointOfCubic(XInflectionPoints[0], YInflectionPoint);
+
+	m_InflectionPoints.push_back(XYInflectionPointOfCubic);
+
+	AutoSetConcaveUpAndDownIntervals();
+}
+
+void CubicFunction::AutoSetConcaveUpAndDownIntervals()
+{
+	// Only one inflection point if a cubic even has one.
+	std::vector<Point> InflectPoints = GetInflectionPoints();
+
+	if (InflectPoints.empty())
+	{
+		throw std::logic_error("This should not be empty? AutoSetConcaveUpAndDownIntervals()");
+	}
+
+	double XInflection = InflectPoints[0].first;
+
+	// create the intervals to test.
+
+	double FirstIntervalStart = std::get<0>(GetDomainInterval());
+	double FirstIntervalEnd = XInflection;
+
+	if (IsCubicConcaveUpOverInterval(FirstIntervalStart, FirstIntervalEnd))
+	{
+		AddAdditionalConcaveUpInterval(Point(FirstIntervalStart, FirstIntervalEnd));
+	}
+	if (IsCubicConcaveDownOverInterval(FirstIntervalStart, FirstIntervalEnd))
+	{
+		AddAdditionalConcaveDownInterval(Point(FirstIntervalStart, FirstIntervalEnd));
+	}
+
+	double SecondIntervalStart = XInflection;
+	double SecondIntervalEnd = std::get<1>(GetDomainInterval());
+
+	if (IsCubicConcaveUpOverInterval(SecondIntervalStart, SecondIntervalEnd))
+	{
+		AddAdditionalConcaveUpInterval(Point(SecondIntervalStart, SecondIntervalEnd));
+	}
+	if (IsCubicConcaveDownOverInterval(SecondIntervalStart, SecondIntervalEnd))
+	{
+		AddAdditionalConcaveDownInterval(Point(SecondIntervalStart, SecondIntervalEnd));
+	}
+
+}
+
 void CubicFunction::FindGlobalExtremums()
 {
 	IntervalType DomainInterval = std::get<2>(GetDomainInterval());
@@ -323,6 +402,94 @@ void CubicFunction::FindGlobalExtremums()
 		cout << endl;
 	}
 }
+
+bool CubicFunction::IsCubicConcaveUpOverInterval(
+	const double& ClosedIntervalStart,
+	const double& ClosedIntervalEnd)
+{
+	QuadraticFunction FirstDerivative = GetDerivativeFunction();
+	LinearFunction SecondDerivative = FirstDerivative.GetDerivativeFunction();
+
+	double LocalClosedInvervalStart = ClosedIntervalStart;
+	double LocalClosedInvervalEnd = ClosedIntervalEnd;
+
+	if (ClosedIntervalStart == NEGINFINITY)
+	{
+		LocalClosedInvervalStart = 10 * (-1);
+	}
+
+	if (ClosedIntervalEnd == INFINITY)
+	{
+		LocalClosedInvervalEnd = 10;
+	}
+
+	double OpenIntervalStart = LocalClosedInvervalStart + 0.1;
+	double OpenIntervalEnd = LocalClosedInvervalEnd - 0.1;
+
+
+	for (; OpenIntervalStart <= OpenIntervalEnd; )
+	{
+		if (!(SecondDerivative(OpenIntervalStart) > 0))
+		{
+			//std::cout << "Not Increasing over interval" << std::endl;
+			return false;
+		}
+
+		OpenIntervalStart = OpenIntervalStart + 0.1;
+	}
+
+	// Is Concave up
+
+	return true;
+}
+
+bool CubicFunction::IsCubicConcaveDownOverInterval(
+	const double& ClosedIntervalStart,
+	const double& ClosedIntervalEnd)
+{
+
+	QuadraticFunction FirstDerivative = GetDerivativeFunction();
+	LinearFunction SecondDerivative = FirstDerivative.GetDerivativeFunction();
+
+	double LocalClosedInvervalStart = ClosedIntervalStart;
+	double LocalClosedInvervalEnd = ClosedIntervalEnd;
+
+	if (ClosedIntervalStart == NEGINFINITY)
+	{
+		LocalClosedInvervalStart = 10 * (-1);
+	}
+
+	if (ClosedIntervalEnd == INFINITY)
+	{
+		LocalClosedInvervalEnd = 10;
+	}
+
+	double OpenIntervalStart = LocalClosedInvervalStart + 0.1;
+	double OpenIntervalEnd = LocalClosedInvervalEnd - 0.1;
+
+
+	for (; OpenIntervalStart <= OpenIntervalEnd; )
+	{
+		if (!(SecondDerivative(OpenIntervalStart) < 0))
+		{
+			//std::cout << "Not decreasing over interval" << std::endl;
+			return false;
+		}
+
+		OpenIntervalStart = OpenIntervalStart + 0.1;
+	}
+
+
+	// Is Concave down
+
+	return true;
+
+
+}
+
+
+
+
 
 std::string CubicFunction::GetFunctionString() const
 {

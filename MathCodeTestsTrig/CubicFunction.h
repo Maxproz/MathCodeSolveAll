@@ -66,6 +66,11 @@ private:
 	// The function has horizontal tanget lines at these x values
 	std::vector<double> m_HorizontalTangentLines;
 	
+	std::vector<std::pair<double, double>> m_ConcaveUpIntervals;
+	std::vector<std::pair<double, double>> m_ConcaveDownIntervals;
+
+	std::vector<Point> m_InflectionPoints;
+
 	QuadraticFunction m_DerivativeFunction;// = QuadraticFunction(1, 0, 0);
 
 	inline tuple<double, double, double> GetACD() const { return tuple<double, double, double>(m_a, m_c, m_d); } // pretty sure this is not needed
@@ -76,6 +81,9 @@ private:
 		m_HorizontalTangentLines = (DerivZerosVec);
 	}
 
+	void AutoSetCubicInflectionPoints();
+	void AutoSetConcaveUpAndDownIntervals();
+
 	virtual void FindCriticalPoints() override;
 	
 	virtual void SetDefaultDomainInterval() override;
@@ -83,11 +91,21 @@ private:
 
 	virtual void SetIncreasingDecreasingIntervals() override;
 
-	
+
+
 
 public:
 
 	void FindGlobalExtremums();
+
+	void PrintConcaveIntervalData() const;
+
+
+	std::vector<Point> GetInflectionPoints() const { return m_InflectionPoints; }
+	std::vector<std::pair<double, double>> GetConcaveUpIntervals() const { return m_ConcaveUpIntervals; }
+	std::vector<std::pair<double, double>> GetConcaveDownIntervals() const { return m_ConcaveDownIntervals; }
+	void AddAdditionalConcaveUpInterval(const std::pair<double, double>& Interval) { m_ConcaveUpIntervals.push_back(Interval); }
+	void AddAdditionalConcaveDownInterval(const std::pair<double, double>& Interval) { m_ConcaveDownIntervals.push_back(Interval); }
 
 	CubicFunction() = default;
 	//CubicFunction(const CubicFunction&) = default;
@@ -122,6 +140,7 @@ public:
 		
 		AutoSetCubicDerivativeFunction(*this);
 
+		AutoSetCubicInflectionPoints();
 		// Here I will Use the Derivative function to automatically set the zeros for horizontal tangent liens
 		AutoSetHorizontalTangetLines();
 
@@ -158,8 +177,10 @@ public:
 
 	std::vector<double> GetZerosOfDerivative() const { return m_HorizontalTangentLines; }
 
-
-
+	bool IsCubicConcaveUpOverInterval(const double& ClosedIntervalStart,
+		const double& ClosedIntervalEnd);
+	bool IsCubicConcaveDownOverInterval(const double& ClosedIntervalStart,
+		const double& ClosedIntervalEnd);
 
 
 

@@ -470,11 +470,16 @@ int main()
 
 
 		
-		CubicFunction TestCubic(-1, 1.5, 18, 0);
+		//CubicFunction TestCubic(-1, 1.5, 18, 0);
+		CubicFunction TestCubic(1, -6, 9, 30);
 		TestCubic.PrintIncreasingDecreasingIntervals();
+		std::cout << std::endl;
 		TestCubic.FindGlobalExtremums();
-
-
+		std::cout << std::endl;
+		TestCubic.PrintConcaveIntervalData();
+		std::cout << std::endl;
+		SecondDerivativeTestCubic(TestCubic);
+			
 	}
 	catch (const std::exception& ex)
 	{
